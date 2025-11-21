@@ -115,14 +115,45 @@ let data = {
     lastVisit: null
 };
 
-// Support 团队成员（从后端加载）
-let supportMembers = [];
+// Support 团队成员（从后端加载，带备用数据）
+let supportMembers = [
+    { id: 'noah', name: '@Noah', nameEn: '@Noah', role: '当晚的大厨', roleEn: 'Chef of the Night', description: '有少量素食选项', descriptionEn: 'Some vegetarian options available', isDefault: true, category: 'food' },
+    { id: 'krystal', name: '@Krystal', nameEn: '@Krystal', role: '提拉米苏大师', roleEn: 'Tiramisu Master', description: '', descriptionEn: '', isDefault: true, category: 'dessert' },
+    { id: 'lizhehao', name: '@李哲豪', nameEn: '@Li Zhehao', role: '调酒师', roleEn: 'Bartender', description: '酒水管够！要喝酒的就别开车来了！提供水和软饮料', descriptionEn: 'Plenty of drinks! Don\'t drive if you\'re drinking! Water and soft drinks provided', isDefault: true, category: 'drinks' },
+    { id: 'geyuxin', name: '@葛语歆', nameEn: '@Ge Yuxin', role: '📷 CCD摄影师', roleEn: '📷 CCD Photographer', description: '总能发现别人自拍都没注意到的双下巴。', descriptionEn: 'Always spots the double chin that others miss in their selfies.', isDefault: true },
+    { id: 'westonfang', name: '@Professor Weston Fang', nameEn: '@Professor Weston Fang', role: '🎓 Academic指导', roleEn: '🎓 Academic Advisor', description: '正在造火星无人机', descriptionEn: 'Building Mars drones', isDefault: true },
+    { id: 'sherryhua', name: '@Sherry Hua', nameEn: '@Sherry Hua', role: '🍹 逃酒经验分享', roleEn: '🍹 Drinking Escape Expert', description: '能从任何酒局中优雅逃酒的Real Master', descriptionEn: 'The real master of elegantly escaping any drinking game', isDefault: true },
+    { id: 'frank', name: '@Frank @Henry @沈艺如', nameEn: '@Frank @Henry @Shen Yiru', role: '🏋️‍♂️ 健身教练', roleEn: '🏋️‍♂️ Fitness Coach', description: '让你又酸又爽，想直接在旁边的GYM做三组卧推。', descriptionEn: 'Makes you sore and happy - you\'ll want to do bench presses at the gym next door.', isDefault: true },
+    { id: 'kimi', name: '@Kimi', nameEn: '@Kimi', role: '🥑 高级营养师', roleEn: '🥑 Senior Nutritionist', description: '一边说少吃碳水，一边偷偷啃掉三个麦芬。（真的大厨）', descriptionEn: 'Says eat less carbs while secretly devouring three muffins. (Actually a great chef)', isDefault: true },
+    { id: 'carrie', name: '@Carrie', nameEn: '@Carrie', role: '💅 抽皮条大王 可以代抽皮条', roleEn: '💅 Skin Peeling Master (can do it for you)', description: '"不怕皮厚，只怕不抽。"', descriptionEn: '"Don\'t fear thick skin, only fear not peeling."', isDefault: true },
+    { id: 'zhangtianen', name: '@张天恩', nameEn: '@Zhang Tianen', role: '📸 网红经验分享', roleEn: '📸 Influencer Tips', description: '经典名言"我从小就爱说脏话"', descriptionEn: 'Classic quote: "I\'ve loved swearing since childhood"', isDefault: true },
+    { id: 'ishan', name: '@Ishan', nameEn: '@Ishan', role: '🕉️ 印度语学习', roleEn: '🕉️ Hindi Lessons', description: '🙏 啊ki苦力hoyahoban～', descriptionEn: '🙏 Ahki kuli hoyahoban～', isDefault: true },
+    { id: 'lianshuitian', name: '@连水天', nameEn: '@Lian Shuitian', role: '🧋 奶茶大王', roleEn: '🧋 Bubble Tea Master', description: '一杯全糖少冰，甜过你的恋爱史。', descriptionEn: 'Full sugar, light ice - sweeter than your love story.', isDefault: true },
+    { id: 'jessica', name: '@Jessica', nameEn: '@Jessica', role: '📈 炒股', roleEn: '📈 Stock Trading', description: '她的股票走势图看起来像心电图。', descriptionEn: 'Her stock chart looks like an EKG.', isDefault: true },
+    { id: 'racing', name: '@任怡静', nameEn: '@Ren Yijing', role: '🏍️ 飙车经验分享', roleEn: '🏍️ Racing Tips', description: '红灯？你别闹了😎', descriptionEn: 'Red light? You\'re joking😎', isDefault: true },
+    { id: 'church', name: '@Krystal @Thomas', nameEn: '@Krystal @Thomas', role: '🙏 教会经验分享', roleEn: '🙏 Church Experience', description: 'UNC 最温柔。', descriptionEn: 'The gentlest at UNC.', isDefault: true },
+    { id: 'linguist', name: '@Zhongyu', nameEn: '@Zhongyu', role: '🗣️ 语言学家', roleEn: '🗣️ Linguist', description: '"农""浓"', descriptionEn: '"Nong" "Nong"', isDefault: true }
+];
 
-// 导航菜单项（从后端加载）
-let navMenuItems = [];
+// 导航菜单项（从后端加载，带备用数据）
+let navMenuItems = [
+    { id: 'home', label: '🏠 首页', labelEn: '🏠 Home', target: 'hero' },
+    { id: 'info', label: '📍 派对信息', labelEn: '📍 Party Info', target: 'info' },
+    { id: 'schedule', label: '⏰ 时间安排', labelEn: '⏰ Schedule', target: 'schedule' },
+    { id: 'team', label: '✨ 派对团队', labelEn: '✨ Team', target: 'team' },
+    { id: 'foodies', label: '🐱 小馋猫列表', labelEn: '🐱 Foodie List', target: 'foodies' },
+    { id: 'drinking', label: '🍺 逃酒排行榜', labelEn: '🍺 Drinking', target: 'drinking' },
+    { id: 'games', label: '🎮 游戏', labelEn: '🎮 Games', target: 'games' }
+];
 
-// 时间安排（从后端加载）
-let timeline = [];
+// 时间安排（从后端加载，带备用数据）
+let timeline = [
+    { time: '7:30 PM', event: '🍰 制作提拉米苏（对制作提拉米苏感兴趣的朋友可以提前来）', eventEn: '🍰 Tiramisu Making (Early birds welcome!)' },
+    { time: '8:30 PM', event: '🎉 派对正式开始😍', eventEn: '🎉 Party Officially Starts😍' },
+    { time: '9:00 PM', event: '🍜 夜宵时间', eventEn: '🍜 Late Night Snacks' },
+    { time: '10:00 PM', event: '🎮 游戏时间', eventEn: '🎮 Game Time' },
+    { time: '11:00 PM', event: '🎵 Party Mode', eventEn: '🎵 Party Mode' }
+];
 
 // 选中的vibe选项（临时存储）
 let selectedVibes = new Set();
