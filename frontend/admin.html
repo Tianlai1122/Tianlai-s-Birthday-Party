@@ -1569,6 +1569,7 @@
                     draggedElement = e.target;
                     draggedIndex = parseInt(e.target.dataset.index);
                     e.target.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
                 }
             });
 
@@ -1580,6 +1581,7 @@
 
             container.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
                 const afterElement = getDragAfterElement(container, e.clientY);
                 const dragging = container.querySelector('.dragging');
 
@@ -1593,14 +1595,18 @@
             container.addEventListener('drop', (e) => {
                 e.preventDefault();
 
-                // 获取新的顺序
+                // 获取当前 DOM 中的顺序
                 const items = Array.from(container.querySelectorAll('.compact-list-item'));
-                const newOrder = items.map(item => parseInt(item.dataset.index));
 
-                // 重新排列数据数组
-                const newArray = newOrder.map(index => dataArray[index]);
+                // 根据 DOM 顺序重新排列数据数组
+                const reorderedArray = items.map((item, newIndex) => {
+                    const oldIndex = parseInt(item.dataset.index);
+                    return dataArray[oldIndex];
+                });
+
+                // 更新原数组
                 dataArray.length = 0;
-                dataArray.push(...newArray);
+                dataArray.push(...reorderedArray);
 
                 // 重新渲染
                 renderCallback();
