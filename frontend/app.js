@@ -1628,8 +1628,19 @@ function renderCategoryMembers(category, containerId) {
     const allMembers = [...supportOnlyMembers, ...customMembers];
     console.log(`✅ Rendering support:`, allMembers.length, 'total members');
 
-    // 创建"我也想帮忙"卡片模板
-    const addMemberCard = `
+    // 创建"我也想帮忙"卡片模板（中间的卡片）
+    const addMemberCardMiddle = `
+        <div class="team-card add-member-card" onclick="openAddMemberModal()" style="cursor: pointer;">
+            <div class="role">✨</div>
+            <div class="name" style="font-size: 1.3rem; margin-top: 10px;">
+                <span data-i18n="team.wantToHelpAlso">今晚我也想帮忙！</span>
+            </div>
+            <div style="font-size: 2.5rem; margin-top: 15px;">➕</div>
+        </div>
+    `;
+
+    // 创建"我还想帮忙"卡片模板（后面的卡片）
+    const addMemberCardEnd = `
         <div class="team-card add-member-card" onclick="openAddMemberModal()" style="cursor: pointer;">
             <div class="role">✨</div>
             <div class="name" style="font-size: 1.3rem; margin-top: 10px;">
@@ -1681,14 +1692,15 @@ function renderCategoryMembers(category, containerId) {
 
         allCards.push(memberCard);
 
-        // 每隔 4-5 个成员插入一个"我也想帮忙"卡片
+        // 每隔 5 个成员插入一个"我也想帮忙"卡片（中间的卡片）
         if ((index + 1) % 5 === 0 && index < allMembers.length - 1) {
-            allCards.push(addMemberCard);
+            allCards.push(addMemberCardMiddle);
         }
     });
 
-    // 在最后也添加一个"我也想帮忙"卡片
-    allCards.push(addMemberCard);
+    // 在最后添加两个"我还想帮忙"卡片
+    allCards.push(addMemberCardEnd);
+    allCards.push(addMemberCardEnd);
 
     container.innerHTML = allCards.join('');
 }
