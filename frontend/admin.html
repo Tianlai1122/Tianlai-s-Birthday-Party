@@ -519,6 +519,7 @@
                 <!-- 派对基本信息编辑 -->
                 <div class="data-section">
                     <h2>🎉 派对基本信息</h2>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">✏️ 直接在输入框中编辑内容，然后点击"保存"按钮</p>
                     <div class="edit-form">
                         <div class="form-group">
                             <label>派对标题</label>
@@ -547,6 +548,7 @@
                 <!-- 时间安排编辑 -->
                 <div class="data-section">
                     <h2>⏰ 时间安排</h2>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">✏️ 直接在输入框中编辑时间和事件，编辑时会有金色边框提示</p>
                     <div id="timeline-editor"></div>
                     <button onclick="addTimelineItem()" class="btn btn-primary" style="margin-top: 15px;">➕ 添加时间点</button>
                     <button onclick="saveTimeline()" class="btn btn-success" style="margin-top: 15px;">💾 保存时间安排</button>
@@ -560,7 +562,7 @@
                 <!-- Support 团队成员管理 -->
                 <div class="data-section">
                     <h2>👥 Support 团队成员管理</h2>
-                    <p style="opacity: 0.8; margin-bottom: 20px;">管理默认的 Support 团队成员（13位）</p>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">✏️ 直接在输入框中编辑成员信息，编辑时会有金色边框提示。管理默认的 Support 团队成员（13位）</p>
                     <div id="support-members-editor"></div>
                     <button onclick="addSupportMember()" class="btn btn-primary" style="margin-top: 15px;">➕ 添加新成员</button>
                     <button onclick="saveSupportMembers()" class="btn btn-success" style="margin-top: 15px;">💾 保存成员信息</button>
@@ -1128,23 +1130,23 @@
         function renderSupportMembersEditor() {
             const container = document.getElementById('support-members-editor');
             const html = currentSupportMembers.map((member, index) => `
-                <div class="member-card-edit">
+                <div class="member-card-edit" id="member-card-${index}">
                     <div class="member-info">
                         <div class="form-group">
                             <label>ID</label>
-                            <input type="text" value="${member.id}" onchange="updateSupportMember(${index}, 'id', this.value)" style="background: rgba(255,255,255,0.05);" readonly>
+                            <input type="text" value="${member.id}" style="background: rgba(255,255,255,0.05);" readonly>
                         </div>
                         <div class="form-group">
                             <label>名字</label>
-                            <input type="text" value="${member.name}" onchange="updateSupportMember(${index}, 'name', this.value)">
+                            <input type="text" value="${member.name}" oninput="updateSupportMember(${index}, 'name', this.value)">
                         </div>
                         <div class="form-group">
                             <label>角色</label>
-                            <input type="text" value="${member.role}" onchange="updateSupportMember(${index}, 'role', this.value)">
+                            <input type="text" value="${member.role}" oninput="updateSupportMember(${index}, 'role', this.value)">
                         </div>
                         <div class="form-group">
                             <label>描述</label>
-                            <textarea onchange="updateSupportMember(${index}, 'description', this.value)">${member.description || ''}</textarea>
+                            <textarea oninput="updateSupportMember(${index}, 'description', this.value)">${member.description || ''}</textarea>
                         </div>
                     </div>
                     <div class="member-actions">
@@ -1155,9 +1157,18 @@
             container.innerHTML = html;
         }
 
-        // 更新 Support 成员
+        // 更新 Support 成员（实时更新）
         function updateSupportMember(index, field, value) {
             currentSupportMembers[index][field] = value;
+
+            // 添加视觉反馈
+            const card = document.getElementById(`member-card-${index}`);
+            if (card) {
+                card.style.border = '2px solid #fbbf24';
+                setTimeout(() => {
+                    card.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                }, 500);
+            }
         }
 
         // 删除 Support 成员
@@ -1206,15 +1217,15 @@
         function renderTimelineEditor() {
             const container = document.getElementById('timeline-editor');
             const html = currentTimeline.map((item, index) => `
-                <div class="edit-form" style="margin-bottom: 15px;">
+                <div class="edit-form" id="timeline-item-${index}" style="margin-bottom: 15px;">
                     <div style="display: grid; grid-template-columns: 150px 1fr auto; gap: 15px; align-items: start;">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label>时间</label>
-                            <input type="text" value="${item.time}" onchange="updateTimelineItem(${index}, 'time', this.value)">
+                            <input type="text" value="${item.time}" oninput="updateTimelineItem(${index}, 'time', this.value)">
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label>事件</label>
-                            <input type="text" value="${item.event}" onchange="updateTimelineItem(${index}, 'event', this.value)">
+                            <input type="text" value="${item.event}" oninput="updateTimelineItem(${index}, 'event', this.value)">
                         </div>
                         <div style="padding-top: 28px;">
                             <button onclick="deleteTimelineItem(${index})" class="btn btn-danger btn-small">🗑️</button>
@@ -1225,9 +1236,18 @@
             container.innerHTML = html;
         }
 
-        // 更新时间安排项
+        // 更新时间安排项（实时更新）
         function updateTimelineItem(index, field, value) {
             currentTimeline[index][field] = value;
+
+            // 添加视觉反馈
+            const item = document.getElementById(`timeline-item-${index}`);
+            if (item) {
+                item.style.border = '2px solid #fbbf24';
+                setTimeout(() => {
+                    item.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                }, 500);
+            }
         }
 
         // 删除时间安排项
