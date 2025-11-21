@@ -127,6 +127,11 @@ async function connectDatabase() {
 
 // 加载数据
 async function loadData() {
+    // 保存初始化的 supportMembers、navMenuItems、timeline
+    const initialSupportMembers = data.supportMembers;
+    const initialNavMenuItems = data.navMenuItems;
+    const initialTimeline = data.timeline;
+
     if (useDatabase && supabase) {
         try {
             const { data: savedData, error } = await supabase
@@ -140,8 +145,19 @@ async function loadData() {
             }
 
             if (savedData && savedData.data) {
-                data = savedData.data;
+                data = { ...data, ...savedData.data };
                 console.log('✅ 从 Supabase 加载数据成功');
+
+                // 确保 supportMembers、navMenuItems、timeline 不被覆盖
+                if (!data.supportMembers || data.supportMembers.length === 0) {
+                    data.supportMembers = initialSupportMembers;
+                }
+                if (!data.navMenuItems || data.navMenuItems.length === 0) {
+                    data.navMenuItems = initialNavMenuItems;
+                }
+                if (!data.timeline || data.timeline.length === 0) {
+                    data.timeline = initialTimeline;
+                }
                 return;
             }
         } catch (error) {
@@ -152,8 +168,20 @@ async function loadData() {
     // 降级到文件系统
     try {
         const fileData = await fs.readFile(DATA_FILE, 'utf8');
-        data = JSON.parse(fileData);
+        const loadedData = JSON.parse(fileData);
+        data = { ...data, ...loadedData };
         console.log('✅ 从文件系统加载数据');
+
+        // 确保 supportMembers、navMenuItems、timeline 不被覆盖
+        if (!data.supportMembers || data.supportMembers.length === 0) {
+            data.supportMembers = initialSupportMembers;
+        }
+        if (!data.navMenuItems || data.navMenuItems.length === 0) {
+            data.navMenuItems = initialNavMenuItems;
+        }
+        if (!data.timeline || data.timeline.length === 0) {
+            data.timeline = initialTimeline;
+        }
     } catch (error) {
         console.log('📝 创建新数据');
         await saveData();
