@@ -1698,8 +1698,7 @@ function renderCategoryMembers(category, containerId) {
         }
     });
 
-    // 在最后添加两个"我还想帮忙"卡片
-    allCards.push(addMemberCardEnd);
+    // 在最后添加一个"我还想帮忙"卡片
     allCards.push(addMemberCardEnd);
 
     container.innerHTML = allCards.join('');

@@ -52,7 +52,7 @@ const translations = {
         'team.likeButton': '给她点赞',
         'team.comment': '留言',
         'team.addMember': '添加成员',
-        'team.wantToHelpAlso': '今晚我也想帮忙！',
+        'team.wantToHelpAlso': '今晚我想帮忙！',
         'team.wantToHelp': '今晚我还想帮忙！',
         'team.addMemberTitle': '今晚我还想帮忙！',
         'team.memberNamePlaceholder': '成员名字',
