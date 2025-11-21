@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 生日派对 - 11.22</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 语言切换按钮 -->
+    <div class="language-switcher">
+        <button id="lang-btn" onclick="toggleLanguage()" class="lang-btn">
+            <span id="lang-icon"></span>
+            <span id="lang-text"></span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <div class="date-badge">11.22.2025</div>
+            <h1 class="glitch" data-text="🎂 Tianlai's Birthday Party" data-i18n="hero.title">🎂 Tianlai's Birthday Party</h1>
+            <p class="subtitle" data-i18n="hero.subtitle">Wuhu～～～～起飞</p>
+            <div class="countdown" id="countdown"></div>
+        </div>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- 基本信息 -->
+    <section id="info" class="section info-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="info.title">📍 派对信息</h2>
+            <div class="info-grid">
+                <div class="info-card time-card">
+                    <div class="icon">🕗</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">⏰ 时间</h3>
+                    <p style="font-size: 1.8rem; font-weight: 700; color: #ff6b9d; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5);">
+                        11月22日 (周六)
+                    </p>
+                    <p style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 15px; text-shadow: 0 3px 15px rgba(255, 107, 157, 0.8);">
+                        晚上 8:30
+                    </p>
+
+                </div>
+                <div class="info-card clickable-card" onclick="copyAddressCard()">
+                    <div class="icon">📍</div>
+                    <h3 data-i18n="info.location">地点</h3>
+                    <p id="address-text">411 Flemington Rd, Chapel Hill, NC 27517</p>
+                    <p class="small" data-i18n="info.clickToCopy">点击卡片复制地址</p>
+
+                    <!-- Google Map 按钮 -->
+                    <button onclick="event.stopPropagation(); openGoogleMap()" class="btn btn-primary" style="margin-top: 15px; width: 100%; font-size: 1rem;">
+                        🗺️ 在 Google Map 中打开
+                    </button>
+
+                    <div class="location-image" onclick="event.stopPropagation(); openImageModal('Club Lounge Position.png')">
+                        <img src="Club Lounge Position.png" alt="位置说明">
+                        <p class="small" data-i18n="info.clickToView">点击查看大图</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">ℹ️</div>
+                    <h3 data-i18n="info.title">派对须知</h3>
+                    <p data-i18n="info.dress">没有Dress Code，穿的舒适美丽帅气就行！</p>
+                    <p data-i18n="info.gift">不用带礼物，如果一定要带，带点吃的喝的就行！</p>
+                    <p data-i18n="info.contact">有急事给寿星打电话：9843693627 <span class="highlight">984-369-3627</span></p>
+                </div>
+            </div>
+
+            <div class="notice-box">
+                <div class="notice-item">
+                    <p>🚗 停车在入口处</p>
+                    <div class="parking-image">
+                        <img src="Parking.png" alt="停车位置" onclick="openImageModal(this.src)">
+                        <p class="small">点击查看大图</p>
+                    </div>
+                </div>
+                <p>🚬 请勿在室内吸烟，室外火炉处可以吸烟！</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间安排 -->
+    <section id="schedule" class="section schedule-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="schedule.title">⏰ 时间安排</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time">7:30 PM</div>
+                    <div class="event" data-i18n="schedule.tiramisu">🍰 制作提拉米苏（对制作提拉米苏感兴趣的朋友可以提前来）</div>
+                </div>
+                <div class="timeline-item highlight">
+                    <div class="time">8:30 PM</div>
+                    <div class="event" data-i18n="schedule.start">🎉 派对正式开始😍</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">9:00 PM</div>
+                    <div class="event" data-i18n="schedule.snacks">🍜 开始提供夜宵</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">11:00 PM</div>
+                    <div class="event" data-i18n="schedule.cake">🎂 吃蛋糕</div>
+                </div>
+                <div class="timeline-item highlight">
+                    <div class="time">11:00 PM+</div>
+                    <div class="event" data-i18n="schedule.after">🎊 After Party开始</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队介绍 -->
+    <section id="team" class="section team-section">
+        <div class="container">
+            <h2 class="section-title">✨ 派对团队</h2>
+            
+            <div class="team-category">
+                <h3>🎵 音乐</h3>
+                <div class="team-grid">
+                    <div class="team-card" data-member="yudi">
+                        <div class="role">当晚的DJ</div>
+                        <div class="name">@Yudi</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('yudi')">
+                                😍 <span class="like-count" id="likes-yudi">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('yudi', 'Yudi')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="music-links">
+                    <a href="https://163cn.tv/Vkvp4VS" target="_blank" class="music-link">
+                        🎵 11.22 DINNER 歌单
+                    </a>
+                    <a href="https://163cn.tv/VkuMnAl" target="_blank" class="music-link">
+                        🎵 11.22 AFTER 11 歌单
+                    </a>
+                    <p class="music-note">
+                        歌单分为两个，一个是11点之前，就餐的时候听的歌单偏向流行音乐，JAZZ，古典等等，一个是11点之后，party的时候。<br>
+                        点击共享歌单可以添加歌曲
+                    </p>
+                </div>
+            </div>
+
+            <div class="team-category">
+                <h3>🍜 夜宵</h3>
+                <div class="team-grid" id="food-team-grid">
+                    <div class="team-card" data-member="noah">
+                        <div class="role">当晚的大厨</div>
+                        <div class="name">@Noah</div>
+                        <div class="note">有少量素食选项</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('noah')">
+                                😍 <span class="like-count" id="likes-noah">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('noah', 'Noah')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-category">
+                <h3>🍰 饭后点心</h3>
+                <div class="team-grid" id="dessert-team-grid">
+                    <div class="team-card" data-member="krystal">
+                        <div class="role">提拉米苏大师</div>
+                        <div class="name">@Krystal</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('krystal')">
+                                😍 <span class="like-count" id="likes-krystal">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('krystal', 'Krystal')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-category">
+                <h3>🍷 酒水</h3>
+                <div class="team-grid" id="drinks-team-grid">
+                    <div class="team-card" data-member="lizhehao">
+                        <div class="role">调酒师</div>
+                        <div class="name">@李哲豪</div>
+                        <div class="note">酒水管够！要喝酒的就别开车来了！</div>
+                        <div class="note">提供水和软饮料</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('lizhehao')">
+                                😍 <span class="like-count" id="likes-lizhehao">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('lizhehao', '李哲豪')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-category">
+                <h3>🎯 今晚提供现场Support的嘉宾</h3>
+                <div class="team-grid" id="support-team-grid">
+                    <!-- Support 成员将通过 JavaScript 动态渲染 -->
+                    <!-- "我也想帮忙"按钮将在最后渲染 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 小馋猫列表 -->
+    <section id="foodies" class="section interactive-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="foodies.title">🐱 小馋猫列表</h2>
+            <p class="section-desc" data-i18n="foodies.subtitle">想吃夜宵的小伙伴快来报名！</p>
+
+            <div class="interactive-box">
+                <input type="text" id="foodie-name" data-i18n="foodies.placeholder" placeholder="输入你的名字" class="input-field">
+                <button onclick="addFoodie()" class="btn btn-primary" data-i18n="foodies.button">我是小馋猫 🐱</button>
+            </div>
+
+            <div id="foodies-list" class="list-display"></div>
+        </div>
+    </section>
+
+    <!-- 逃酒排行榜 -->
+    <section id="drinking" class="section interactive-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="drinking.title">🍺 逃酒排行榜</h2>
+            <p class="section-desc" data-i18n="drinking.rules">规则：每5个俯卧撑可以代替半杯 | 一杯等于100口</p>
+
+            <div class="interactive-box">
+                <input type="text" id="drinker-name" data-i18n="drinking.namePlaceholder" placeholder="输入你的名字" class="input-field">
+                <input type="number" id="drink-count" data-i18n="drinking.countPlaceholder" placeholder="我要逃几杯" min="1" class="input-field">
+                <button onclick="addDrinker()" class="btn btn-primary" data-i18n="drinking.button">加入排行榜 🍻</button>
+            </div>
+
+            <div id="drinking-leaderboard" class="leaderboard"></div>
+        </div>
+    </section>
+
+    <!-- 游戏 -->
+    <section id="games" class="section games-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="games.title">🎮 游戏</h2>
+
+            <!-- 桌游和其他游戏 -->
+            <h3 class="game-category-title">🎲 桌游 & 其他游戏</h3>
+            <div class="games-grid">
+                <div class="game-card" onclick="openGameModal('texas-holdem')">
+                    <div class="game-icon">♠️</div>
+                    <div class="game-name" data-i18n="games.texasHoldem">德州扑克</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('mahjong')">
+                    <div class="game-icon">🀄️</div>
+                    <div class="game-name" data-i18n="games.mahjong">上海麻将</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('landlord')">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-name" data-i18n="games.landlord">斗地主</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('pool')">
+                    <div class="game-icon">🎱</div>
+                    <div class="game-name" data-i18n="games.pool">桌球</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('switch')">
+                    <div class="game-icon">🎮</div>
+                    <div class="game-name" data-i18n="games.switch">Switch</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+            </div>
+
+            <!-- 喝酒游戏 -->
+            <h3 class="game-category-title">🍺 喝酒游戏</h3>
+            <div class="games-grid">
+                <div class="game-card" onclick="openGameModal('xiaojie')">
+                    <div class="game-icon">🎴</div>
+                    <div class="game-name" data-i18n="games.xiaojie">小姐牌</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('789')">
+                    <div class="game-icon">🎲</div>
+                    <div class="game-name">789</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('ten-half')">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-name" data-i18n="games.tenHalf">十点半</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('titanic')">
+                    <div class="game-icon">🚢</div>
+                    <div class="game-name">泰坦尼克</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('blow-cards')">
+                    <div class="game-icon">💨</div>
+                    <div class="game-name">吹扑克牌</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('phone-bomb')">
+                    <div class="game-icon">💣</div>
+                    <div class="game-name">手机炸弹</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('pyramid')">
+                    <div class="game-icon">🔺</div>
+                    <div class="game-name">金字塔</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('pingpong')">
+                    <div class="game-icon">🏓</div>
+                    <div class="game-name" data-i18n="games.pingpong">乒乓球</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('rage-cage')">
+                    <div class="game-icon">🍺</div>
+                    <div class="game-name" data-i18n="games.rageCage">Rage Cage</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+                <div class="game-card" onclick="openGameModal('ride-bus')">
+                    <div class="game-icon">🚌</div>
+                    <div class="game-name" data-i18n="games.rideBus">Ride the Bus</div>
+                    <div class="game-hint" data-i18n="games.hint">点击查看教程</div>
+                </div>
+            </div>
+
+            <!-- 游戏组局大厅 -->
+            <div style="margin-top: 60px; margin-bottom: 40px;">
+                <h2 class="section-title" style="text-align: center; margin-bottom: 20px;">🎮 游戏组局大厅</h2>
+                <p class="section-desc" style="text-align: center; margin-bottom: 30px;">看看今晚大家想玩什么游戏，点击"+1"加入！</p>
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button onclick="openCreateLobbyModal()" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 30px;">
+                        🎮 我想组局
+                    </button>
+                </div>
+
+                <div id="game-lobbies-container" class="lobbies-grid">
+                    <!-- 组局卡片将通过 JavaScript 动态渲染 -->
+                </div>
+            </div>
+
+            <!-- Preference Poll -->
+            <div class="vibe-poll">
+                <h3 data-i18n="vibe.title">✨ Preference Poll: What's your vibe?</h3>
+                <p class="poll-subtitle" data-i18n="vibe.subtitle">选择你今晚想玩的类型（可多选）</p>
+
+                <div class="vibe-options">
+                    <div class="vibe-option" data-vibe="drinking">
+                        <div class="vibe-icon">🍺</div>
+                        <div class="vibe-name" data-i18n="vibe.drinking">Drinking Games</div>
+                        <div class="vibe-count">0 <span data-i18n="vibe.votes">votes</span></div>
+                        <div class="vibe-bar">
+                            <div class="vibe-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="vibe-option" data-vibe="card">
+                        <div class="vibe-icon">🃏</div>
+                        <div class="vibe-name" data-i18n="vibe.card">Card Games</div>
+                        <div class="vibe-count">0 <span data-i18n="vibe.votes">votes</span></div>
+                        <div class="vibe-bar">
+                            <div class="vibe-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="vibe-option" data-vibe="board">
+                        <div class="vibe-icon">🎲</div>
+                        <div class="vibe-name" data-i18n="vibe.board">Board Games</div>
+                        <div class="vibe-count">0 <span data-i18n="vibe.votes">votes</span></div>
+                        <div class="vibe-bar">
+                            <div class="vibe-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="vibe-option" data-vibe="video">
+                        <div class="vibe-icon">🎮</div>
+                        <div class="vibe-name" data-i18n="vibe.video">Video Games</div>
+                        <div class="vibe-count">0 <span data-i18n="vibe.votes">votes</span></div>
+                        <div class="vibe-bar">
+                            <div class="vibe-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="vibe-option" data-vibe="chill">
+                        <div class="vibe-icon">🛋️</div>
+                        <div class="vibe-name" data-i18n="vibe.chill">Just Chilling</div>
+                        <div class="vibe-count">0 <span data-i18n="vibe.votes">votes</span></div>
+                        <div class="vibe-bar">
+                            <div class="vibe-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vibe-submit">
+                    <input type="text" id="vibe-voter-name" data-i18n="vibe.namePlaceholder" placeholder="输入你的名字" class="input-field">
+                    <button onclick="submitVibeVote()" class="btn btn-primary" data-i18n="vibe.button">提交投票</button>
+                </div>
+
+                <div id="vibe-voters-list" class="vibe-voters"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>希望大家都能玩的开心！🎉</p>
+        <p class="small">Made with ❤️ for an amazing party</p>
+    </footer>
+
+
+
+    <!-- 游戏教程模态窗口 -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeGameModal()">&times;</span>
+            <h2 id="modal-game-title" class="modal-title"></h2>
+            <div id="modal-game-content" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 图片查看模态窗口 -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content image-modal-content">
+            <span class="modal-close" onclick="closeImageModal()">&times;</span>
+            <img id="modal-image" src="" alt="查看大图">
+        </div>
+    </div>
+
+    <!-- 留言模态窗口 -->
+    <div id="comment-modal" class="modal">
+        <div class="modal-content comment-modal-content">
+            <span class="modal-close" onclick="closeCommentModal()">&times;</span>
+            <h2 class="modal-title">
+                💬 <span data-i18n="comment.titlePrefix">给</span> <span id="comment-member-name"></span> <span data-i18n="comment.titleSuffix">留言</span>
+            </h2>
+            <div class="modal-body">
+                <!-- 留言表单 -->
+                <div class="comment-form">
+                    <input type="text" id="comment-author" placeholder="你的名字" data-i18n-placeholder="comment.namePlaceholder" class="comment-input">
+                    <textarea id="comment-text" placeholder="写下你想说的话..." data-i18n-placeholder="comment.textPlaceholder" class="comment-textarea" rows="4"></textarea>
+                    <button onclick="submitComment()" class="submit-comment-btn">
+                        <span data-i18n="comment.submit">发送留言</span>
+                    </button>
+                </div>
+
+                <!-- 留言列表 -->
+                <div class="comments-list">
+                    <h3 data-i18n="comment.listTitle">所有留言</h3>
+                    <div id="comments-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- 添加成员模态窗口 -->
+    <div id="add-member-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="modal-close" onclick="closeAddMemberModal()">&times;</span>
+            <h2 class="modal-title">➕ <span data-i18n="team.addMemberTitle">今晚我也想帮忙！</span></h2>
+            <div class="modal-body">
+                <div class="comment-form">
+                    <input type="text" id="new-member-name" placeholder="Name" class="comment-input">
+                    <label for="new-member-role" style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600;">我想...</label>
+                    <select id="new-member-role" class="comment-input" onchange="handleRoleChange()">
+                        <option value="">请选择...</option>
+                        <option value="做一道菜">做一道菜</option>
+                        <option value="帮寿星挡酒">帮寿星挡酒</option>
+                        <option value="扛寿星回家">扛寿星回家</option>
+                        <option value="接送人🚗">接送人🚗</option>
+                        <option value="带大家玩游戏！">带大家玩游戏！</option>
+                        <option value="调酒">调酒</option>
+                        <option value="帮忙做提拉米苏">帮忙做提拉米苏</option>
+                        <option value="帮忙打扫卫生">帮忙打扫卫生</option>
+                        <option value="帮忙布置">帮忙布置</option>
+                        <option value="custom">其他（自定义输入）</option>
+                    </select>
+                    <input type="text" id="new-member-role-custom" placeholder="请输入你想做的事..." class="comment-input" style="display: none; margin-top: 10px;">
+                    <textarea id="new-member-message" placeholder="留言（选填）" class="comment-input" style="margin-top: 15px; min-height: 80px; resize: vertical;"></textarea>
+                    <button onclick="addNewMember()" class="submit-comment-btn">
+                        <span data-i18n="team.addMemberBtn">添加</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建游戏组局模态窗口 -->
+    <div id="create-lobby-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCreateLobbyModal()">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">🎮 发起游戏组局</h2>
+            </div>
+            <div class="modal-body">
+                <div class="comment-form">
+                    <label for="lobby-organizer" style="display: block; margin-bottom: 5px; font-weight: 600;">发起人姓名</label>
+                    <input type="text" id="lobby-organizer" placeholder="Name" class="comment-input">
+
+                    <label for="lobby-game" style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600;">选择游戏 *</label>
+                    <select id="lobby-game" class="comment-input">
+                        <option value="">请选择游戏...</option>
+                        <option value="德州扑克">🃏 德州扑克</option>
+                        <option value="麻将">🀄 麻将</option>
+                        <option value="斗地主">🎴 斗地主</option>
+                        <option value="桌球">🎱 桌球</option>
+                        <option value="Switch">🎮 Switch</option>
+                        <option value="《小姐牌》">👸 《小姐牌》</option>
+                        <option value="789">7️⃣8️⃣9️⃣ 789</option>
+                        <option value="十点半">🔟 十点半</option>
+                        <option value="泰坦尼克">🚢 泰坦尼克</option>
+                        <option value="吹扑克牌">🃏 吹扑克牌</option>
+                        <option value="手机炸弹">📱 手机炸弹</option>
+                        <option value="金字塔">🔺 金字塔</option>
+                        <option value="乒乓球">🏓 乒乓球</option>
+                        <option value="Rage Cage">😡 Rage Cage</option>
+                        <option value="Ride the Bus">🚌 Ride the Bus</option>
+                        <option value="Beer Pong">🍺 Beer Pong</option>
+                    </select>
+
+                    <label for="lobby-time" style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600;">开始时间（选填）</label>
+                    <input type="text" id="lobby-time" placeholder="例如：今晚10:00、11点后、吃完饭" class="comment-input">
+
+                    <label for="lobby-message" style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600;">留言（选填）</label>
+                    <textarea id="lobby-message" placeholder="例如：求搭子、新手友好、高手勿扰" class="comment-input" style="min-height: 80px; resize: vertical;"></textarea>
+
+                    <button onclick="createGameLobby()" class="submit-comment-btn">
+                        🎮 发起组局
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
