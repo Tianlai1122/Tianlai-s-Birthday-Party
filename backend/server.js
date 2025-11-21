@@ -401,23 +401,28 @@ adminApp.get('/', (req, res) => {
 async function start() {
     await loadData();
 
+    // 检查是否在 Render 环境（只启动主应用）
+    const isRender = process.env.RENDER === 'true';
+
     mainApp.listen(MAIN_PORT, () => {
         console.log(`
 ╔════════════════════════════════════════╗
 ║   🎉 生日派对服务器已启动！            ║
 ║                                        ║
-║   主页面: http://localhost:${MAIN_PORT}       ║
-║   管理后台: http://localhost:${ADMIN_PORT}     ║
-║                                        ║
+║   API 服务: http://localhost:${MAIN_PORT}       ║
+${!isRender ? `║   管理后台: http://localhost:${ADMIN_PORT}     ║` : ''}
 ║   数据文件: ${DATA_FILE}
 ║                                        ║
 ╚════════════════════════════════════════╝
         `);
     });
 
-    adminApp.listen(ADMIN_PORT, () => {
-        console.log(`✅ 管理后台已在端口 ${ADMIN_PORT} 启动`);
-    });
+    // 只在本地开发时启动管理后台的第二个端口
+    if (!isRender) {
+        adminApp.listen(ADMIN_PORT, () => {
+            console.log(`✅ 管理后台已在端口 ${ADMIN_PORT} 启动`);
+        });
+    }
 }
 
 // 启动服务器
