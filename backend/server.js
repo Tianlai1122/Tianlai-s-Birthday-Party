@@ -16,7 +16,7 @@ const corsOptions = {
     origin: [
         'http://localhost:5173',
         'http://localhost:3000',
-        'https://YOUR_FRONTEND_URL.vercel.app', // 👈 部署前端后，替换这里的 URL
+        'https://tianlai-s-birthday-party.vercel.app',
         /\.vercel\.app$/ // 允许所有 vercel.app 子域名
     ],
     credentials: true,
