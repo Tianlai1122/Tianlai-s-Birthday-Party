@@ -597,7 +597,7 @@ async function submitComment() {
             document.getElementById('comment-author').value = '';
             document.getElementById('comment-text').value = '';
             renderComments(currentCommentMember);
-            // 更新徽章数量
+            // 更新徽章数量和派对留言总计
             updateCommentBadges();
         }
     } catch (error) {
@@ -644,18 +644,25 @@ function renderComments(memberId) {
 
 // 更新所有成员的留言数量徽章
 function updateCommentBadges() {
-    // 获取所有成员 ID（包括默认成员和自定义成员）
+    // 获取所有成员 ID（包括默认成员、Support成员和自定义成员）
     const defaultMembers = ['yudi', 'noah', 'krystal', 'lizhehao'];
+    const supportMemberIds = supportMembers ? supportMembers.map(m => m.id) : [];
     const customMemberIds = data.customMembers ? data.customMembers.map(m => m.id) : [];
-    const allMembers = [...defaultMembers, ...customMemberIds];
+    const allMembers = [...defaultMembers, ...supportMemberIds, ...customMemberIds];
 
-    allMembers.forEach(memberId => {
+    // 移除重复的成员 ID
+    const uniqueMembers = [...new Set(allMembers)];
+
+    let totalComments = 0;
+
+    uniqueMembers.forEach(memberId => {
         const badge = document.getElementById(`comment-badge-${memberId}`);
         if (badge) {
             const count = data.memberComments && data.memberComments[memberId]
                 ? data.memberComments[memberId].length
                 : 0;
             badge.textContent = count;
+            totalComments += count;
 
             // 如果有留言，显示徽章；否则隐藏
             if (count > 0) {
@@ -665,6 +672,12 @@ function updateCommentBadges() {
             }
         }
     });
+
+    // 更新派对留言总计数
+    const totalCommentsElement = document.getElementById('total-comments-count');
+    if (totalCommentsElement) {
+        totalCommentsElement.textContent = totalComments;
+    }
 }
 
 // Krystal 点赞（保留兼容性）
