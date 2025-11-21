@@ -308,6 +308,7 @@ function renderAll() {
     renderVibeVotes();
     updateKrystalLikes();
     updateAllMemberLikes();
+    updateCommentBadges();
 }
 
 // 小馋猫列表
@@ -1411,8 +1412,9 @@ function renderAllTeamMembers() {
     renderCategoryMembers('drinks', 'drinks-team-grid');
     renderCategoryMembers('support', 'support-team-grid');
 
-    // 更新点赞数
+    // 更新点赞数和留言数
     updateAllMemberLikes();
+    updateCommentBadges();
     console.log('✅ renderAllTeamMembers() completed');
 }
 
