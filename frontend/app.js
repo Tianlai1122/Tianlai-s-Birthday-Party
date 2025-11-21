@@ -145,6 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderGameLobbies();
     // 启动自动刷新
     startLobbyAutoRefresh();
+    startTeamMembersAutoRefresh();
 
     // 确保翻译应用到动态生成的内容
     if (typeof applyLanguage === 'function') {
@@ -1941,5 +1942,60 @@ function startLobbyAutoRefresh() {
 function stopLobbyAutoRefresh() {
     if (lobbyAutoRefreshInterval) {
         clearInterval(lobbyAutoRefreshInterval);
+    }
+}
+
+// ==================== Support 成员和导航菜单自动刷新 ====================
+
+let teamMembersAutoRefreshInterval;
+
+// 刷新 Support 成员和导航菜单
+async function refreshTeamMembersAndNav() {
+    try {
+        const response = await fetch(`${API_URL}/data`);
+        if (response.ok) {
+            const serverData = await response.json();
+
+            // 检查 Support 成员是否有变化
+            if (serverData.supportMembers && Array.isArray(serverData.supportMembers)) {
+                const oldOrder = supportMembers.map(m => m.id).join(',');
+                const newOrder = serverData.supportMembers.map(m => m.id).join(',');
+
+                if (oldOrder !== newOrder) {
+                    console.log('🔄 Support 成员顺序已更新');
+                    supportMembers = serverData.supportMembers;
+                    renderAllTeamMembers();
+                }
+            }
+
+            // 检查导航菜单是否有变化
+            if (serverData.navMenuItems && Array.isArray(serverData.navMenuItems)) {
+                const oldOrder = navMenuItems.map(m => m.id).join(',');
+                const newOrder = serverData.navMenuItems.map(m => m.id).join(',');
+
+                if (oldOrder !== newOrder) {
+                    console.log('🔄 导航菜单顺序已更新');
+                    navMenuItems = serverData.navMenuItems;
+                    renderNavMenu();
+                }
+            }
+        }
+    } catch (error) {
+        console.error('刷新 Support 成员失败:', error);
+    }
+}
+
+// 启动 Support 成员和导航菜单自动刷新
+function startTeamMembersAutoRefresh() {
+    // 每10秒刷新一次
+    teamMembersAutoRefreshInterval = setInterval(() => {
+        refreshTeamMembersAndNav();
+    }, 10000);
+}
+
+// 停止 Support 成员自动刷新
+function stopTeamMembersAutoRefresh() {
+    if (teamMembersAutoRefreshInterval) {
+        clearInterval(teamMembersAutoRefreshInterval);
     }
 }
