@@ -1,9 +1,9 @@
 // API 配置 - 环境自适应
 // 本地开发：http://localhost:3000/api
-// 线上部署：https://你的后端域名.onrender.com/api
+// 线上部署：https://tianlai-s-birthday-party.onrender.com/api
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:3000/api'
-    : 'https://YOUR_BACKEND_URL.onrender.com/api'; // 👈 部署后端后，替换这里的 URL
+    : 'https://tianlai-s-birthday-party.onrender.com/api';
 
 // 数据存储
 let data = {

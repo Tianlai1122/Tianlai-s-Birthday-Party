@@ -370,14 +370,31 @@ function registerRoutes(app) {
 registerRoutes(mainApp);
 registerRoutes(adminApp);
 
-// 主应用专用路由 - 只提供 index.html
+// 主应用根路由 - API 健康检查
 mainApp.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.json({
+        status: 'ok',
+        message: '🎉 Tianlai Birthday Party API is running!',
+        version: '1.0.0',
+        endpoints: {
+            foodies: '/api/foodies',
+            drinkers: '/api/drinkers',
+            members: '/api/member-likes',
+            comments: '/api/member-comments',
+            customMembers: '/api/custom-members',
+            gameLobbies: '/api/game-lobbies',
+            vibeVotes: '/api/vibe-votes'
+        }
+    });
 });
 
-// 管理应用专用路由 - 只提供 admin.html
+// 管理应用根路由 - 管理 API 健康检查
 adminApp.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'admin.html'));
+    res.json({
+        status: 'ok',
+        message: '🎉 Admin API is running!',
+        note: 'Admin frontend is hosted on Vercel'
+    });
 });
 
 // 启动服务器
