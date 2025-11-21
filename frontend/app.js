@@ -1627,7 +1627,21 @@ function renderCategoryMembers(category, containerId) {
     const allMembers = [...supportMembers, ...customMembers];
     console.log(`✅ Rendering support:`, allMembers.length, 'total members');
 
-    const memberCards = allMembers.map(member => {
+    // 创建"我也想帮忙"卡片模板
+    const addMemberCard = `
+        <div class="team-card add-member-card" onclick="openAddMemberModal()" style="cursor: pointer;">
+            <div class="role">✨</div>
+            <div class="name" style="font-size: 1.3rem; margin-top: 10px;">
+                <span data-i18n="team.wantToHelp">今晚我也想帮忙！</span>
+            </div>
+            <div style="font-size: 2.5rem; margin-top: 15px;">➕</div>
+        </div>
+    `;
+
+    // 生成所有成员卡片，并在中间随机插入"我也想帮忙"卡片
+    let allCards = [];
+
+    allMembers.forEach((member, index) => {
         const deleteBtn = member.isDefault ? '' :
             `<button onclick="deleteMember('${member.id}')" class="delete-member-btn" title="删除成员">🗑️</button>`;
 
@@ -1644,7 +1658,7 @@ function renderCategoryMembers(category, containerId) {
         // 处理描述显示 - 支持双语
         const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
 
-        return `
+        const memberCard = `
             <div class="team-card" data-member="${member.id}">
                 ${deleteBtn}
                 <div class="role-name-container">
@@ -1663,20 +1677,19 @@ function renderCategoryMembers(category, containerId) {
                 </div>
             </div>
         `;
-    }).join('');
 
-    // 添加"我也想帮忙"卡片
-    const addMemberCard = `
-        <div class="team-card add-member-card" onclick="openAddMemberModal()" style="cursor: pointer;">
-            <div class="role">✨</div>
-            <div class="name" style="font-size: 1.3rem; margin-top: 10px;">
-                <span data-i18n="team.wantToHelp">今晚我也想帮忙！</span>
-            </div>
-            <div style="font-size: 2.5rem; margin-top: 15px;">➕</div>
-        </div>
-    `;
+        allCards.push(memberCard);
 
-    container.innerHTML = memberCards + addMemberCard;
+        // 每隔 4-5 个成员插入一个"我也想帮忙"卡片
+        if ((index + 1) % 5 === 0 && index < allMembers.length - 1) {
+            allCards.push(addMemberCard);
+        }
+    });
+
+    // 在最后也添加一个"我也想帮忙"卡片
+    allCards.push(addMemberCard);
+
+    container.innerHTML = allCards.join('');
 }
 
 // 处理角色选择变化
