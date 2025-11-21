@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Tianlai's Club - Virtual Party Scene</title>
+    <link rel="stylesheet" href="party-scene.css">
+    <!-- Cropper.js for manual image cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="party-header">
+        <div class="container">
+            <h1>🎉 Tianlai's Club</h1>
+            <p class="subtitle">Join the virtual party! Upload your photo and create your character.</p>
+            <button class="btn-primary" id="join-party-btn">Join the Party</button>
+        </div>
+    </header>
+
+    <!-- Party Scene Canvas -->
+    <section class="party-scene-section">
+        <div class="container">
+            <div class="scene-header">
+                <h2>Party Scene</h2>
+                <div class="scene-stats">
+                    <span id="character-count">0</span> / 50 characters
+                </div>
+            </div>
+            <div class="canvas-wrapper">
+                <canvas id="party-canvas" width="1200" height="800"></canvas>
+            </div>
+            <div class="scene-controls">
+                <button class="btn-secondary" id="refresh-scene-btn">🔄 Refresh</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Your Character</h2>
+                <button class="modal-close" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Upload Photo -->
+                <div class="step" id="step-upload">
+                    <h3>Step 1: Upload Your Photo</h3>
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="photo-input" accept="image/jpeg,image/png,image/jpg" hidden>
+                        <div class="upload-placeholder">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Click to upload or drag & drop</p>
+                            <small>JPG or PNG, max 5MB</small>
+                        </div>
+                    </div>
+                    <div class="error-message" id="upload-error"></div>
+                </div>
+
+                <!-- Step 2: Crop Photo -->
+                <div class="step hidden" id="step-crop">
+                    <h3>Step 2: Crop Your Face</h3>
+                    <div class="crop-container">
+                        <img id="crop-image" src="" alt="Crop preview">
+                    </div>
+                    <div class="step-actions">
+                        <button class="btn-secondary" id="back-to-upload-btn">← Back</button>
+                        <button class="btn-primary" id="confirm-crop-btn">Confirm Crop →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customize Character -->
+                <div class="step hidden" id="step-customize">
+                    <h3>Step 3: Customize Your Character</h3>
+                    
+                    <div class="avatar-preview">
+                        <img id="avatar-preview" src="" alt="Avatar preview">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="display-name">Nickname *</label>
+                        <input type="text" id="display-name" maxlength="20" placeholder="Enter your nickname" required>
+                        <small class="char-count"><span id="name-count">0</span>/20</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Body Style</label>
+                        <div class="option-grid">
+                            <label class="option-card">
+                                <input type="radio" name="bodyStyle" value="casual" checked>
+                                <div class="option-content">
+                                    <span class="option-icon">👕</span>
+                                    <span class="option-label">Casual</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="bodyStyle" value="formal">
+                                <div class="option-content">
+                                    <span class="option-icon">🤵</span>
+                                    <span class="option-label">Formal</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="bodyStyle" value="party">
+                                <div class="option-content">
+                                    <span class="option-icon">🎉</span>
+                                    <span class="option-label">Party</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Transport</label>
+                        <div class="option-grid">
+                            <label class="option-card">
+                                <input type="radio" name="transport" value="walk" checked>
+                                <div class="option-content">
+                                    <span class="option-icon">🚶</span>
+                                    <span class="option-label">Walk</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="transport" value="balloon">
+                                <div class="option-content">
+                                    <span class="option-icon">🎈</span>
+                                    <span class="option-label">Balloon</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="transport" value="skate">
+                                <div class="option-content">
+                                    <span class="option-icon">🛹</span>
+                                    <span class="option-label">Skate</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Action</label>
+                        <div class="option-grid">
+                            <label class="option-card">
+                                <input type="radio" name="action" value="idle" checked>
+                                <div class="option-content">
+                                    <span class="option-icon">🧍</span>
+                                    <span class="option-label">Idle</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="action" value="wave">
+                                <div class="option-content">
+                                    <span class="option-icon">👋</span>
+                                    <span class="option-label">Wave</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="action" value="dance">
+                                <div class="option-content">
+                                    <span class="option-icon">💃</span>
+                                    <span class="option-label">Dance</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn-secondary" id="back-to-crop-btn">← Back</button>
+                        <button class="btn-primary" id="create-character-btn">Create Character 🎉</button>
+                    </div>
+                    <div class="error-message" id="create-error"></div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-overlay hidden" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <p>Creating your character...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Info Modal -->
+    <div class="modal" id="character-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2 id="character-name">Character Name</h2>
+                <button class="modal-close" id="close-character-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="character-info">
+                    <img id="character-avatar" src="" alt="Character avatar">
+                    <div class="character-details">
+                        <p><strong>Joined:</strong> <span id="character-joined"></span></p>
+                        <p><strong>Likes:</strong> <span id="character-likes">0</span> ❤️</p>
+                        <button class="btn-primary btn-small" id="like-character-btn">❤️ Like</button>
+                    </div>
+                </div>
+                
+                <div class="messages-section">
+                    <h3>Messages</h3>
+                    <div class="messages-list" id="messages-list">
+                        <p class="no-messages">No messages yet. Be the first to leave one!</p>
+                    </div>
+                    <div class="message-form">
+                        <textarea id="message-input" placeholder="Leave a message (max 200 chars)" maxlength="200"></textarea>
+                        <small class="char-count"><span id="message-count">0</span>/200</small>
+                        <button class="btn-primary btn-small" id="send-message-btn">Send Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="utils/validations.js"></script>
+    <script src="state-manager.js"></script>
+    <script src="canvas-renderer.js"></script>
+    <script src="upload-modal.js"></script>
+    <script src="party-scene.js"></script>
+</body>
+</html>
+

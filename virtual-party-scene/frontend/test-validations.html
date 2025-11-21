@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Tests - Virtual Party Scene</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .test-group {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .test-group h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .test-case {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-case.pass {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .test-case.fail {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .test-case .icon {
+            font-size: 1.2em;
+        }
+
+        .test-case .description {
+            flex: 1;
+        }
+
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary h2 {
+            margin-bottom: 10px;
+        }
+
+        .summary .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .summary .stat {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Validation Test Suite</h1>
+        <p style="color: #666; margin-bottom: 20px;">Testing all input validation functions</p>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button onclick="runAllTests()">▶️ Run All Tests</button>
+            <button onclick="location.reload()">🔄 Reset</button>
+        </div>
+
+        <div id="testResults"></div>
+        <div id="summary" style="display: none;"></div>
+    </div>
+
+    <script src="utils/validations.js"></script>
+    <script>
+        let totalTests = 0;
+        let passedTests = 0;
+        let failedTests = 0;
+
+        function runTest(description, testFn) {
+            totalTests++;
+            try {
+                const result = testFn();
+                if (result) {
+                    passedTests++;
+                    return { pass: true, description };
+                } else {
+                    failedTests++;
+                    return { pass: false, description };
+                }
+            } catch (error) {
+                failedTests++;
+                return { pass: false, description: `${description} (Error: ${error.message})` };
+            }
+        }
+
+        function displayTest(result) {
+            const testCase = document.createElement('div');
+            testCase.className = `test-case ${result.pass ? 'pass' : 'fail'}`;
+            testCase.innerHTML = `
+                <span class="icon">${result.pass ? '✅' : '❌'}</span>
+                <span class="description">${result.description}</span>
+            `;
+            return testCase;
+        }
+
+        function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const summaryDiv = document.getElementById('summary');
+            resultsDiv.innerHTML = '';
+            summaryDiv.style.display = 'none';
+            totalTests = 0;
+            passedTests = 0;
+            failedTests = 0;
+
+            // Image File Validation Tests
+            const imageGroup = document.createElement('div');
+            imageGroup.className = 'test-group';
+            imageGroup.innerHTML = '<h2>📸 Image File Validation</h2>';
+
+            // Test valid JPG
+            imageGroup.appendChild(displayTest(runTest(
+                'Valid JPG file (1MB)',
+                () => {
+                    const file = new File(['x'.repeat(1024 * 1024)], 'test.jpg', { type: 'image/jpeg' });
+                    const result = validateImageFile(file);
+                    return result.valid === true;
+                }
+            )));
+
+            // Test valid PNG
+            imageGroup.appendChild(displayTest(runTest(
+                'Valid PNG file (2MB)',
+                () => {
+                    const file = new File(['x'.repeat(2 * 1024 * 1024)], 'test.png', { type: 'image/png' });
+                    const result = validateImageFile(file);
+                    return result.valid === true;
+                }
+            )));
+
+            // Test file too large
+            imageGroup.appendChild(displayTest(runTest(
+                'File too large (6MB) - should fail',
+                () => {
+                    const file = new File(['x'.repeat(6 * 1024 * 1024)], 'test.jpg', { type: 'image/jpeg' });
+                    const result = validateImageFile(file);
+                    return result.valid === false && result.error.includes('5MB');
+                }
+            )));
+
+            // Test invalid file type
+            imageGroup.appendChild(displayTest(runTest(
+                'Invalid file type (PDF) - should fail',
+                () => {
+                    const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+                    const result = validateImageFile(file);
+                    return result.valid === false && result.error.includes('JPG or PNG');
+                }
+            )));
+
+            // Test GIF (not allowed)
+            imageGroup.appendChild(displayTest(runTest(
+                'GIF file - should fail',
+                () => {
+                    const file = new File(['test'], 'test.gif', { type: 'image/gif' });
+                    const result = validateImageFile(file);
+                    return result.valid === false;
+                }
+            )));
+
+            resultsDiv.appendChild(imageGroup);
+
+            // Display Name Validation Tests
+            const nameGroup = document.createElement('div');
+            nameGroup.className = 'test-group';
+            nameGroup.innerHTML = '<h2>👤 Display Name Validation</h2>';
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Valid name: "John"',
+                () => {
+                    const result = validateDisplayName('John');
+                    return result.valid === true;
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Valid name: "Alice Smith"',
+                () => {
+                    const result = validateDisplayName('Alice Smith');
+                    return result.valid === true;
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Valid name: "李明" (Chinese)',
+                () => {
+                    const result = validateDisplayName('李明');
+                    return result.valid === true;
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Empty name - should fail',
+                () => {
+                    const result = validateDisplayName('');
+                    return result.valid === false && result.error.includes('required');
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Whitespace only - should fail',
+                () => {
+                    const result = validateDisplayName('   ');
+                    return result.valid === false;
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Name too long (21 chars) - should fail',
+                () => {
+                    const result = validateDisplayName('a'.repeat(21));
+                    return result.valid === false && result.error.includes('20');
+                }
+            )));
+
+            nameGroup.appendChild(displayTest(runTest(
+                'Exactly 20 chars - should pass',
+                () => {
+                    const result = validateDisplayName('a'.repeat(20));
+                    return result.valid === true;
+                }
+            )));
+
+            resultsDiv.appendChild(nameGroup);
+
+            // Message Validation Tests
+            const messageGroup = document.createElement('div');
+            messageGroup.className = 'test-group';
+            messageGroup.innerHTML = '<h2>💬 Message Validation</h2>';
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Valid message: "Hello!"',
+                () => {
+                    const result = validateMessage('Hello!');
+                    return result.valid === true;
+                }
+            )));
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Valid long message (200 chars)',
+                () => {
+                    const result = validateMessage('a'.repeat(200));
+                    return result.valid === true;
+                }
+            )));
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Empty message - should fail',
+                () => {
+                    const result = validateMessage('');
+                    return result.valid === false && result.error.includes('required');
+                }
+            )));
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Whitespace only - should fail',
+                () => {
+                    const result = validateMessage('   ');
+                    return result.valid === false;
+                }
+            )));
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Message too long (201 chars) - should fail',
+                () => {
+                    const result = validateMessage('a'.repeat(201));
+                    return result.valid === false && result.error.includes('200');
+                }
+            )));
+
+            messageGroup.appendChild(displayTest(runTest(
+                'Message with emoji: "🎉 Party!"',
+                () => {
+                    const result = validateMessage('🎉 Party!');
+                    return result.valid === true;
+                }
+            )));
+
+            resultsDiv.appendChild(messageGroup);
+
+            // Time Formatting Tests
+            const timeGroup = document.createElement('div');
+            timeGroup.className = 'test-group';
+            timeGroup.innerHTML = '<h2>⏰ Time Formatting</h2>';
+
+            timeGroup.appendChild(displayTest(runTest(
+                'Just now (5 seconds ago)',
+                () => {
+                    const date = new Date(Date.now() - 5000);
+                    const result = formatRelativeTime(date);
+                    return result === 'Just now';
+                }
+            )));
+
+            timeGroup.appendChild(displayTest(runTest(
+                '2 minutes ago',
+                () => {
+                    const date = new Date(Date.now() - 2 * 60 * 1000);
+                    const result = formatRelativeTime(date);
+                    return result === '2 minutes ago';
+                }
+            )));
+
+            timeGroup.appendChild(displayTest(runTest(
+                '1 hour ago',
+                () => {
+                    const date = new Date(Date.now() - 60 * 60 * 1000);
+                    const result = formatRelativeTime(date);
+                    return result === '1 hour ago';
+                }
+            )));
+
+            timeGroup.appendChild(displayTest(runTest(
+                '1 day ago',
+                () => {
+                    const date = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                    const result = formatRelativeTime(date);
+                    return result === '1 day ago';
+                }
+            )));
+
+            resultsDiv.appendChild(timeGroup);
+
+            // Display Summary
+            summaryDiv.style.display = 'block';
+            const percentage = ((passedTests / totalTests) * 100).toFixed(1);
+            const status = failedTests === 0 ? '🎉 All Tests Passed!' : '⚠️ Some Tests Failed';
+            
+            summaryDiv.innerHTML = `
+                <div class="summary">
+                    <h2>${status}</h2>
+                    <div class="stats">
+                        <div>
+                            <div>Total Tests</div>
+                            <div class="stat">${totalTests}</div>
+                        </div>
+                        <div>
+                            <div>Passed</div>
+                            <div class="stat" style="color: #c8e6c9;">${passedTests}</div>
+                        </div>
+                        <div>
+                            <div>Failed</div>
+                            <div class="stat" style="color: #ffcdd2;">${failedTests}</div>
+                        </div>
+                        <div>
+                            <div>Success Rate</div>
+                            <div class="stat">${percentage}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Tianlai's Club - 本地演示版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .demo-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 3px solid #ffc107;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .character-count {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .canvas-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #partyCanvas {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #5568d3;
+        }
+
+        .upload-area.drag-over {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        #cropperContainer {
+            max-height: 400px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .option-item {
+            position: relative;
+        }
+
+        .option-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-item input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 4px solid #667eea;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed {
+            background: #22a6b3;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .character-info-modal .character-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .character-info-modal .avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 4px solid #667eea;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .messages-section {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .message-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .message-input-group input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-notice">
+        ⚠️ 本地演示版 - 数据仅保存在浏览器中，刷新页面后会丢失
+    </div>
+
+    <div class="header">
+        <h1>🎉 Tianlai's Club</h1>
+        <p>虚拟派对场景 - 本地演示版</p>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <div class="character-count">
+                角色数量: <span id="characterCount">0</span> / 50
+            </div>
+            <button class="btn-primary" onclick="openUploadModal()">🎊 加入派对</button>
+            <button class="btn-primary" onclick="clearAllCharacters()">🗑️ 清空所有</button>
+        </div>
+
+        <div class="canvas-section">
+            <canvas id="partyCanvas" width="1200" height="700"></canvas>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>创建你的角色</h2>
+                <button class="close-btn" onclick="closeUploadModal()">&times;</button>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+            </div>
+
+            <!-- Step 1: Upload -->
+            <div id="uploadStep" class="step-content">
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <p style="font-size: 3em; margin-bottom: 10px;">📸</p>
+                    <p style="font-size: 1.2em; font-weight: 600;">点击或拖拽上传照片</p>
+                    <p style="color: #999; margin-top: 10px;">支持 JPG/PNG，最大 5MB</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png" style="display: none;">
+            </div>
+
+            <!-- Step 2: Crop -->
+            <div id="cropStep" class="step-content" style="display: none;">
+                <div id="cropperContainer"></div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToStep(1)">← 返回</button>
+                    <button class="btn btn-primary" onclick="confirmCrop()">确认裁剪 →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Customize -->
+            <div id="customizeStep" class="step-content" style="display: none;">
+                <div class="avatar-preview">
+                    <img id="avatarPreview" src="" alt="Avatar">
+                </div>
+
+                <div class="form-group">
+                    <label>昵称 *</label>
+                    <input type="text" id="displayName" maxlength="20" placeholder="输入你的昵称">
+                    <div class="error-message" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>身体风格</label>
+                    <div class="option-grid">
+                        <div class="option-item">
+                            <input type="radio" name="bodyStyle" value="casual" id="casual" checked>
+                            <label for="casual">👕 休闲</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="bodyStyle" value="formal" id="formal">
+                            <label for="formal">🤵 正式</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="bodyStyle" value="party" id="party">
+                            <label for="party">🎉 派对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>移动方式</label>
+                    <div class="option-grid">
+                        <div class="option-item">
+                            <input type="radio" name="transport" value="walk" id="walk" checked>
+                            <label for="walk">🚶 走路</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="transport" value="balloon" id="balloon">
+                            <label for="balloon">🎈 气球</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="transport" value="skate" id="skate">
+                            <label for="skate">🛹 滑板</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>动作</label>
+                    <div class="option-grid">
+                        <div class="option-item">
+                            <input type="radio" name="action" value="idle" id="idle" checked>
+                            <label for="idle">🧍 站立</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="action" value="wave" id="wave">
+                            <label for="wave">👋 挥手</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="action" value="dance" id="dance">
+                            <label for="dance">💃 跳舞</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToStep(2)">← 返回</button>
+                    <button class="btn btn-primary" onclick="createCharacter()">创建角色 ✨</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Info Modal -->
+    <div id="characterModal" class="modal character-info-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>角色信息</h2>
+                <button class="close-btn" onclick="closeCharacterModal()">&times;</button>
+            </div>
+            <div id="characterInfo"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script>
+        // 本地存储的角色数据
+        let characters = JSON.parse(localStorage.getItem('partyCharacters') || '[]');
+        let cropper = null;
+        let croppedImageData = null;
+        let currentStep = 1;
+
+        // Canvas 设置
+        const canvas = document.getElementById('partyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 初始化
+        function init() {
+            renderScene();
+            updateCharacterCount();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // 文件上传
+            document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+            
+            // Canvas 点击
+            canvas.addEventListener('click', handleCanvasClick);
+            
+            // 拖拽上传
+            const uploadArea = document.querySelector('.upload-area');
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('drag-over');
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) processFile(file);
+            });
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) processFile(file);
+        }
+
+        function processFile(file) {
+            // 验证文件
+            if (!file.type.match('image/(jpeg|png)')) {
+                alert('请上传 JPG 或 PNG 格式的图片');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('文件大小不能超过 5MB');
+                return;
+            }
+
+            // 读取文件
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showCropper(e.target.result);
+                goToStep(2);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showCropper(imageSrc) {
+            const container = document.getElementById('cropperContainer');
+            container.innerHTML = '<img id="cropImage" src="' + imageSrc + '">';
+            
+            const image = document.getElementById('cropImage');
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.8,
+                responsive: true,
+                background: false
+            });
+        }
+
+        function confirmCrop() {
+            if (!cropper) return;
+            
+            const canvas = cropper.getCroppedCanvas({
+                width: 200,
+                height: 200
+            });
+            
+            croppedImageData = canvas.toDataURL('image/png');
+            document.getElementById('avatarPreview').src = croppedImageData;
+            goToStep(3);
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            
+            // 更新步骤指示器
+            for (let i = 1; i <= 3; i++) {
+                const stepEl = document.getElementById('step' + i);
+                stepEl.classList.remove('active', 'completed');
+                if (i < step) stepEl.classList.add('completed');
+                if (i === step) stepEl.classList.add('active');
+            }
+            
+            // 显示对应步骤
+            document.getElementById('uploadStep').style.display = step === 1 ? 'block' : 'none';
+            document.getElementById('cropStep').style.display = step === 2 ? 'block' : 'none';
+            document.getElementById('customizeStep').style.display = step === 3 ? 'block' : 'none';
+        }
+
+        function createCharacter() {
+            const displayName = document.getElementById('displayName').value.trim();
+            
+            if (!displayName) {
+                const error = document.getElementById('nameError');
+                error.textContent = '请输入昵称';
+                error.classList.add('show');
+                return;
+            }
+            
+            if (characters.length >= 50) {
+                alert('派对已满！最多 50 个角色');
+                return;
+            }
+            
+            const character = {
+                id: Date.now(),
+                displayName,
+                avatarUrl: croppedImageData,
+                bodyStyle: document.querySelector('input[name="bodyStyle"]:checked').value,
+                transport: document.querySelector('input[name="transport"]:checked').value,
+                action: document.querySelector('input[name="action"]:checked').value,
+                position: {
+                    x: Math.random() * (canvas.width - 100) + 50,
+                    y: Math.random() * (canvas.height - 140) + 70
+                },
+                likes: 0,
+                messages: [],
+                joinedAt: new Date().toISOString()
+            };
+            
+            characters.push(character);
+            saveCharacters();
+            renderScene();
+            updateCharacterCount();
+            closeUploadModal();
+            
+            alert('🎉 角色创建成功！');
+        }
+
+        function saveCharacters() {
+            localStorage.setItem('partyCharacters', JSON.stringify(characters));
+        }
+
+        function renderScene() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#e3f2fd');
+            gradient.addColorStop(1, '#fff9c4');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制装饰
+            drawDecorations();
+            
+            // 绘制角色
+            characters.forEach(char => drawCharacter(char));
+        }
+
+        function drawDecorations() {
+            // 绘制彩纸
+            ctx.globalAlpha = 0.3;
+            for (let i = 0; i < 30; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 10 + 5;
+                const colors = ['#ff6b9d', '#667eea', '#ffa502', '#22a6b3'];
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.fillRect(x, y, size, size);
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        function drawCharacter(char) {
+            const { x, y } = char.position;
+            
+            // 身体颜色
+            const bodyColors = {
+                casual: '#4a90e2',
+                formal: '#2c3e50',
+                party: '#ff6b9d'
+            };
+            
+            // 绘制阴影
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.beginPath();
+            ctx.ellipse(x, y + 45, 35, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制移动方式图标
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            const transportIcons = { walk: '🚶', balloon: '🎈', skate: '🛹' };
+            ctx.fillText(transportIcons[char.transport], x - 30, y - 20);
+            
+            // 绘制身体
+            ctx.fillStyle = bodyColors[char.bodyStyle];
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制头像
+            if (char.avatarUrl) {
+                const img = new Image();
+                img.src = char.avatarUrl;
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y - 10, 22, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(img, x - 22, y - 32, 44, 44);
+                ctx.restore();
+                
+                // 头像边框
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(x, y - 10, 22, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // 绘制动作图标
+            const actionIcons = { idle: '🧍', wave: '👋', dance: '💃' };
+            ctx.fillText(actionIcons[char.action], x + 30, y - 20);
+            
+            // 绘制名字
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText(char.displayName, x, y + 50);
+            
+            // 绘制点赞数
+            ctx.font = '12px Arial';
+            ctx.fillText(`❤️ ${char.likes}`, x, y + 65);
+        }
+
+        function handleCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            
+            // 查找点击的角色
+            for (let i = characters.length - 1; i >= 0; i--) {
+                const char = characters[i];
+                const dx = x - char.position.x;
+                const dy = y - char.position.y;
+                
+                if (Math.abs(dx) < 40 && Math.abs(dy) < 70) {
+                    showCharacterInfo(char);
+                    break;
+                }
+            }
+        }
+
+        function showCharacterInfo(char) {
+            const modal = document.getElementById('characterModal');
+            const info = document.getElementById('characterInfo');
+            
+            const joinTime = new Date(char.joinedAt);
+            const timeAgo = getTimeAgo(joinTime);
+            
+            info.innerHTML = `
+                <div class="character-header">
+                    <div class="avatar-large">
+                        <img src="${char.avatarUrl}" style="width: 100%; height: 100%; border-radius: 50%;">
+                    </div>
+                    <h3>${char.displayName}</h3>
+                    <p style="color: #999;">加入于 ${timeAgo}</p>
+                </div>
+                
+                <div class="info-row">
+                    <span>身体风格:</span>
+                    <span>${{ casual: '👕 休闲', formal: '🤵 正式', party: '🎉 派对' }[char.bodyStyle]}</span>
+                </div>
+                <div class="info-row">
+                    <span>移动方式:</span>
+                    <span>${{ walk: '🚶 走路', balloon: '🎈 气球', skate: '🛹 滑板' }[char.transport]}</span>
+                </div>
+                <div class="info-row">
+                    <span>动作:</span>
+                    <span>${{ idle: '🧍 站立', wave: '👋 挥手', dance: '💃 跳舞' }[char.action]}</span>
+                </div>
+                <div class="info-row">
+                    <span>点赞数:</span>
+                    <span>❤️ ${char.likes}</span>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="likeCharacter(${char.id})">
+                    ❤️ 点赞
+                </button>
+                
+                <div class="messages-section">
+                    <h4>留言 (${char.messages.length})</h4>
+                    <div id="messagesList">
+                        ${char.messages.length === 0 ? '<p style="color: #999; text-align: center; padding: 20px;">还没有留言</p>' : 
+                          char.messages.map(m => `
+                            <div class="message-item">
+                                <div style="font-weight: 600;">${m.author}</div>
+                                <div>${m.content}</div>
+                                <div style="color: #999; font-size: 0.9em; margin-top: 5px;">${getTimeAgo(new Date(m.timestamp))}</div>
+                            </div>
+                          `).join('')}
+                    </div>
+                    <div class="message-input-group">
+                        <input type="text" id="messageInput" placeholder="写下你的留言..." maxlength="200">
+                        <button class="btn btn-primary" onclick="sendMessage(${char.id})">发送</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function likeCharacter(id) {
+            const char = characters.find(c => c.id === id);
+            if (char) {
+                char.likes++;
+                saveCharacters();
+                renderScene();
+                showCharacterInfo(char);
+            }
+        }
+
+        function sendMessage(id) {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (!content) {
+                alert('请输入留言内容');
+                return;
+            }
+            
+            const char = characters.find(c => c.id === id);
+            if (char) {
+                char.messages.push({
+                    author: '访客',
+                    content,
+                    timestamp: new Date().toISOString()
+                });
+                saveCharacters();
+                input.value = '';
+                showCharacterInfo(char);
+            }
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return '刚刚';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} 分钟前`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} 小时前`;
+            const days = Math.floor(hours / 24);
+            return `${days} 天前`;
+        }
+
+        function updateCharacterCount() {
+            document.getElementById('characterCount').textContent = characters.length;
+        }
+
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.add('active');
+            goToStep(1);
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            document.getElementById('fileInput').value = '';
+            document.getElementById('displayName').value = '';
+        }
+
+        function closeCharacterModal() {
+            document.getElementById('characterModal').classList.remove('active');
+        }
+
+        function clearAllCharacters() {
+            if (confirm('确定要清空所有角色吗？此操作不可恢复！')) {
+                characters = [];
+                saveCharacters();
+                renderScene();
+                updateCharacterCount();
+            }
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+</html>
+

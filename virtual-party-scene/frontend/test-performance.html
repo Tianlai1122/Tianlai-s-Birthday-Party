@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Test - Virtual Party Scene</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .metric-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .metric-value.good {
+            color: #22a6b3;
+        }
+
+        .metric-value.warning {
+            color: #ffa502;
+        }
+
+        .metric-value.bad {
+            color: #e74c3c;
+        }
+
+        #testCanvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: block;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .status.running {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .status.success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status.error {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Performance Test Suite</h1>
+        <p class="subtitle">Virtual Party Scene - Canvas Rendering Performance</p>
+
+        <!-- Canvas Rendering Test -->
+        <div class="test-section">
+            <h2>📊 Canvas Rendering Performance</h2>
+            <div class="controls">
+                <label>
+                    Characters:
+                    <input type="number" id="charCount" value="10" min="1" max="100">
+                </label>
+                <button onclick="runCanvasTest()">Run Test</button>
+                <button onclick="clearCanvas()">Clear</button>
+            </div>
+            <canvas id="testCanvas" width="800" height="600"></canvas>
+            <div id="canvasResults" class="results" style="display: none;"></div>
+        </div>
+
+        <!-- Memory Test -->
+        <div class="test-section">
+            <h2>💾 Memory Usage</h2>
+            <div class="controls">
+                <button onclick="checkMemory()">Check Memory</button>
+            </div>
+            <div id="memoryResults" class="results" style="display: none;"></div>
+        </div>
+
+        <!-- API Response Time Test -->
+        <div class="test-section">
+            <h2>⚡ API Response Time</h2>
+            <div class="controls">
+                <button onclick="testAPISpeed()">Test API</button>
+            </div>
+            <div id="apiResults" class="results" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Generate mock character data
+        function generateMockCharacters(count) {
+            const characters = [];
+            const bodyStyles = ['casual', 'formal', 'party'];
+            const transports = ['walk', 'balloon', 'skate'];
+            const actions = ['idle', 'wave', 'dance'];
+            
+            for (let i = 0; i < count; i++) {
+                characters.push({
+                    _id: `mock_${i}`,
+                    displayName: `User ${i + 1}`,
+                    avatarUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwMCIgZmlsbD0iIzY2N2VlYSIvPjwvc3ZnPg==',
+                    bodyStyle: bodyStyles[i % 3],
+                    transport: transports[i % 3],
+                    action: actions[i % 3],
+                    position: {
+                        x: Math.random() * (canvas.width - 100) + 50,
+                        y: Math.random() * (canvas.height - 140) + 70
+                    },
+                    likes: Math.floor(Math.random() * 50),
+                    messages: []
+                });
+            }
+            return characters;
+        }
+
+        // Draw a single character
+        function drawCharacter(character) {
+            const { x, y } = character.position;
+            
+            // Body circle
+            const bodyColors = {
+                casual: '#4a90e2',
+                formal: '#2c3e50',
+                party: '#ff6b9d'
+            };
+            
+            ctx.fillStyle = bodyColors[character.bodyStyle];
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Avatar (simplified)
+            ctx.fillStyle = '#667eea';
+            ctx.beginPath();
+            ctx.arc(x, y - 10, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Name
+            ctx.fillStyle = '#333';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(character.displayName, x, y + 50);
+            
+            // Likes
+            ctx.fillText(`❤️ ${character.likes}`, x, y + 65);
+        }
+
+        // Run canvas rendering test
+        async function runCanvasTest() {
+            const count = parseInt(document.getElementById('charCount').value);
+            const resultsDiv = document.getElementById('canvasResults');
+            
+            resultsDiv.innerHTML = '<div class="status running">⏳ Running test...</div>';
+            resultsDiv.style.display = 'block';
+            
+            // Generate characters
+            const characters = generateMockCharacters(count);
+            
+            // Measure rendering time
+            const startTime = performance.now();
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#e3f2fd');
+            gradient.addColorStop(1, '#fff9c4');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw all characters
+            characters.forEach(char => drawCharacter(char));
+            
+            const endTime = performance.now();
+            const renderTime = endTime - startTime;
+            
+            // Calculate FPS
+            const fps = 1000 / renderTime;
+            
+            // Display results
+            const timeClass = renderTime < 100 ? 'good' : renderTime < 300 ? 'warning' : 'bad';
+            const fpsClass = fps > 30 ? 'good' : fps > 15 ? 'warning' : 'bad';
+            
+            resultsDiv.innerHTML = `
+                <div class="status success">✅ Test completed</div>
+                <div class="metric">
+                    <span class="metric-label">Characters Rendered:</span>
+                    <span class="metric-value">${count}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Render Time:</span>
+                    <span class="metric-value ${timeClass}">${renderTime.toFixed(2)} ms</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Estimated FPS:</span>
+                    <span class="metric-value ${fpsClass}">${fps.toFixed(1)} fps</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Target (50 chars):</span>
+                    <span class="metric-value ${renderTime < 500 ? 'good' : 'bad'}">${renderTime < 500 ? '✅ PASS' : '❌ FAIL'} (< 500ms)</span>
+                </div>
+            `;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('canvasResults').style.display = 'none';
+        }
+
+        function checkMemory() {
+            const resultsDiv = document.getElementById('memoryResults');
+            resultsDiv.style.display = 'block';
+            
+            if (performance.memory) {
+                const used = (performance.memory.usedJSHeapSize / 1048576).toFixed(2);
+                const total = (performance.memory.totalJSHeapSize / 1048576).toFixed(2);
+                const limit = (performance.memory.jsHeapSizeLimit / 1048576).toFixed(2);
+                
+                resultsDiv.innerHTML = `
+                    <div class="metric">
+                        <span class="metric-label">Used Memory:</span>
+                        <span class="metric-value">${used} MB</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Total Memory:</span>
+                        <span class="metric-value">${total} MB</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Memory Limit:</span>
+                        <span class="metric-value">${limit} MB</span>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML = '<div class="status error">⚠️ Memory API not available in this browser</div>';
+            }
+        }
+
+        async function testAPISpeed() {
+            const resultsDiv = document.getElementById('apiResults');
+            resultsDiv.innerHTML = '<div class="status running">⏳ Testing API...</div>';
+            resultsDiv.style.display = 'block';
+            
+            const API_URL = 'http://localhost:3000/api/party-scene';
+            
+            try {
+                const startTime = performance.now();
+                const response = await fetch(`${API_URL}/characters`);
+                const endTime = performance.now();
+                
+                const responseTime = endTime - startTime;
+                const data = await response.json();
+                
+                const timeClass = responseTime < 200 ? 'good' : responseTime < 500 ? 'warning' : 'bad';
+                
+                resultsDiv.innerHTML = `
+                    <div class="status success">✅ API is responding</div>
+                    <div class="metric">
+                        <span class="metric-label">Response Time:</span>
+                        <span class="metric-value ${timeClass}">${responseTime.toFixed(2)} ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Characters Count:</span>
+                        <span class="metric-value">${data.count || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Target:</span>
+                        <span class="metric-value ${responseTime < 500 ? 'good' : 'bad'}">${responseTime < 500 ? '✅ PASS' : '❌ FAIL'} (< 500ms)</span>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">❌ API Error</div>
+                    <div class="metric">
+                        <span class="metric-label">Error:</span>
+                        <span class="metric-value bad">${error.message}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Note:</span>
+                        <span class="metric-value">Make sure backend is running on port 3000</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-run initial test
+        window.addEventListener('load', () => {
+            setTimeout(() => runCanvasTest(), 500);
+        });
+    </script>
+</body>
+</html>
+
