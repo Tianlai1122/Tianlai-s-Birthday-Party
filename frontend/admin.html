@@ -809,6 +809,55 @@
         let currentSupportMembers = [];
         let currentTimeline = [];
 
+        // 自动保存通知
+        function showAutoSaveNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(34, 197, 94, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                z-index: 10001;
+                animation: slideIn 0.3s ease-out;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             refreshData();
@@ -1367,6 +1416,11 @@
                 renderNavMenuList();
                 renderTimelineEditor();
                 renderCustomMembersList(data.customMembers || []);
+
+                // 初始化派对信息自动保存
+                setTimeout(() => {
+                    setupPartyInfoAutoSave();
+                }, 100);
             } catch (error) {
                 console.error('加载编辑内容失败:', error);
             }
@@ -1393,8 +1447,8 @@
             `).join('');
             container.innerHTML = html;
 
-            // 添加拖拽事件监听
-            initDragAndDrop('support-members-list', currentSupportMembers, renderSupportMembersEditor);
+            // 添加拖拽事件监听，并添加自动保存回调
+            initDragAndDrop('support-members-list', currentSupportMembers, renderSupportMembersEditor, saveSupportMembersAuto);
         }
 
         // 打开编辑成员模态窗口
@@ -1430,6 +1484,11 @@
 
             renderSupportMembersEditor();
             closeEditMemberModal();
+
+            // 自动保存
+            setTimeout(() => {
+                saveSupportMembersAuto();
+            }, 300);
         }
 
         // 删除 Support 成员
@@ -1454,7 +1513,7 @@
             setTimeout(() => openEditMemberModal(currentSupportMembers.length - 1), 100);
         }
 
-        // 保存 Support 成员
+        // 保存 Support 成员（手动保存）
         async function saveSupportMembers() {
             if (!confirm('确定要保存成员信息吗？')) return;
 
@@ -1473,6 +1532,26 @@
                 }
             } catch (error) {
                 alert('❌ 保存失败: ' + error.message);
+            }
+        }
+
+        // 自动保存 Support 成员（无提示）
+        async function saveSupportMembersAuto() {
+            try {
+                const response = await fetch(`${API_URL}/support-members`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members: currentSupportMembers })
+                });
+
+                if (response.ok) {
+                    console.log('✅ 成员信息已自动保存');
+                    showAutoSaveNotification('✅ 成员顺序已自动保存');
+                } else {
+                    console.error('❌ 自动保存失败');
+                }
+            } catch (error) {
+                console.error('❌ 自动保存失败:', error);
             }
         }
 
@@ -1497,8 +1576,8 @@
             `).join('');
             container.innerHTML = html;
 
-            // 添加拖拽事件监听
-            initDragAndDrop('nav-menu-list', currentNavMenuItems, renderNavMenuList);
+            // 添加拖拽事件监听，并添加自动保存回调
+            initDragAndDrop('nav-menu-list', currentNavMenuItems, renderNavMenuList, saveNavMenuAuto);
         }
 
         // 打开编辑导航菜单模态窗口
@@ -1532,9 +1611,14 @@
 
             renderNavMenuList();
             closeEditNavModal();
+
+            // 自动保存
+            setTimeout(() => {
+                saveNavMenuAuto();
+            }, 300);
         }
 
-        // 保存导航菜单
+        // 保存导航菜单（手动保存）
         async function saveNavMenu() {
             if (!confirm('确定要保存导航菜单吗？')) return;
 
@@ -1556,8 +1640,28 @@
             }
         }
 
+        // 自动保存导航菜单（无提示）
+        async function saveNavMenuAuto() {
+            try {
+                const response = await fetch(`${API_URL}/nav-menu`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ navMenuItems: currentNavMenuItems })
+                });
+
+                if (response.ok) {
+                    console.log('✅ 导航菜单已自动保存');
+                    showAutoSaveNotification('✅ 菜单顺序已自动保存');
+                } else {
+                    console.error('❌ 自动保存失败');
+                }
+            } catch (error) {
+                console.error('❌ 自动保存失败:', error);
+            }
+        }
+
         // ==================== 拖拽排序通用函数 ====================
-        function initDragAndDrop(containerId, dataArray, renderCallback) {
+        function initDragAndDrop(containerId, dataArray, renderCallback, saveCallback) {
             const container = document.getElementById(containerId);
             if (!container) return;
 
@@ -1610,6 +1714,13 @@
 
                 // 重新渲染
                 renderCallback();
+
+                // 自动保存
+                if (saveCallback) {
+                    setTimeout(() => {
+                        saveCallback();
+                    }, 300);
+                }
             });
         }
 
@@ -1651,6 +1762,9 @@
             container.innerHTML = html;
         }
 
+        // 时间安排自动保存定时器
+        let timelineAutoSaveTimer = null;
+
         // 更新时间安排项（实时更新）
         function updateTimelineItem(index, field, value) {
             currentTimeline[index][field] = value;
@@ -1663,6 +1777,12 @@
                     item.style.border = '1px solid rgba(255, 255, 255, 0.1)';
                 }, 500);
             }
+
+            // 自动保存
+            clearTimeout(timelineAutoSaveTimer);
+            timelineAutoSaveTimer = setTimeout(() => {
+                saveTimelineAuto();
+            }, 1500); // 1.5秒后自动保存
         }
 
         // 删除时间安排项
@@ -1678,7 +1798,7 @@
             renderTimelineEditor();
         }
 
-        // 保存时间安排
+        // 保存时间安排（手动保存）
         async function saveTimeline() {
             if (!confirm('确定要保存时间安排吗？')) return;
 
@@ -1700,7 +1820,46 @@
             }
         }
 
-        // 保存派对基本信息
+        // 自动保存时间安排（无提示）
+        async function saveTimelineAuto() {
+            try {
+                const response = await fetch(`${API_URL}/timeline`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ timeline: currentTimeline })
+                });
+
+                if (response.ok) {
+                    console.log('✅ 时间安排已自动保存');
+                    showAutoSaveNotification('✅ 时间安排已自动保存');
+                } else {
+                    console.error('❌ 自动保存失败');
+                }
+            } catch (error) {
+                console.error('❌ 自动保存失败:', error);
+            }
+        }
+
+        // 自动保存派对信息的定时器
+        let partyInfoAutoSaveTimer = null;
+
+        // 为派对信息输入框添加自动保存监听
+        function setupPartyInfoAutoSave() {
+            const inputs = ['edit-party-title', 'edit-party-date', 'edit-party-time', 'edit-party-address', 'edit-party-phone'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', () => {
+                        clearTimeout(partyInfoAutoSaveTimer);
+                        partyInfoAutoSaveTimer = setTimeout(() => {
+                            savePartyInfoAuto();
+                        }, 1500); // 1.5秒后自动保存
+                    });
+                }
+            });
+        }
+
+        // 保存派对基本信息（手动保存）
         async function savePartyInfo() {
             if (!confirm('确定要保存派对信息吗？')) return;
 
@@ -1727,6 +1886,34 @@
                 }
             } catch (error) {
                 alert('❌ 保存失败: ' + error.message);
+            }
+        }
+
+        // 自动保存派对基本信息（无提示）
+        async function savePartyInfoAuto() {
+            const info = {
+                title: document.getElementById('edit-party-title').value,
+                date: document.getElementById('edit-party-date').value,
+                time: document.getElementById('edit-party-time').value,
+                address: document.getElementById('edit-party-address').value,
+                phone: document.getElementById('edit-party-phone').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/party-info`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(info)
+                });
+
+                if (response.ok) {
+                    console.log('✅ 派对信息已自动保存');
+                    showAutoSaveNotification('✅ 派对信息已自动保存');
+                } else {
+                    console.error('❌ 自动保存失败');
+                }
+            } catch (error) {
+                console.error('❌ 自动保存失败:', error);
             }
         }
 
