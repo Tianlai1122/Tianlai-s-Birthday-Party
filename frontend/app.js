@@ -26,6 +26,61 @@ function handleExternalLink(event, url) {
     }
 }
 
+// ==================== 汉堡菜单功能 ====================
+function toggleNavMenu() {
+    const navMenu = document.getElementById('nav-menu');
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+
+    navMenu.classList.toggle('active');
+    hamburgerBtn.classList.toggle('active');
+
+    // 切换 body 滚动
+    if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// 导航到指定 section
+function navigateTo(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        // 平滑滚动到目标 section
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // 关闭菜单
+        setTimeout(() => {
+            toggleNavMenu();
+        }, 300);
+    }
+}
+
+// 点击菜单外部关闭菜单
+document.addEventListener('click', (e) => {
+    const navMenu = document.getElementById('nav-menu');
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+
+    if (navMenu && hamburgerBtn) {
+        // 如果菜单是打开的，且点击的不是菜单或汉堡按钮
+        if (navMenu.classList.contains('active') &&
+            !navMenu.contains(e.target) &&
+            !hamburgerBtn.contains(e.target)) {
+            toggleNavMenu();
+        }
+    }
+});
+
+// ESC 键关闭菜单
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const navMenu = document.getElementById('nav-menu');
+        if (navMenu && navMenu.classList.contains('active')) {
+            toggleNavMenu();
+        }
+    }
+});
+
 // 数据存储
 let data = {
     foodies: [],

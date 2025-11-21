@@ -67,9 +67,19 @@ const translations = {
         'comment.listTitle': '所有留言',
         'team.likes': '个赞',
         
+        // Navigation Menu
+        'nav.title': '导航菜单',
+        'nav.home': '🏠 首页',
+        'nav.info': '📍 派对信息',
+        'nav.schedule': '⏰ 时间安排',
+        'nav.team': '✨ 派对团队',
+        'nav.foodies': '🐱 小馋猫列表',
+        'nav.drinking': '🍺 逃酒排行榜',
+        'nav.games': '🎮 游戏',
+
         // Foodies Section
         'foodies.title': '🐱 小馋猫列表',
-        'foodies.subtitle': '想吃夜宵的朋友请报名！',
+        'foodies.subtitle': '如果觉得自己是小馋猫的，想吃夜宵的，请留下自己的名字！',
         'foodies.placeholder': '输入你的名字',
         'foodies.button': '我是小馋猫',
         'foodies.empty': '还没有小馋猫报名~',
@@ -197,9 +207,19 @@ const translations = {
         'comment.listTitle': 'All Comments',
         'team.likes': 'likes',
         
+        // Navigation Menu
+        'nav.title': 'Navigation',
+        'nav.home': '🏠 Home',
+        'nav.info': '📍 Party Info',
+        'nav.schedule': '⏰ Schedule',
+        'nav.team': '✨ Team',
+        'nav.foodies': '🐱 Foodie List',
+        'nav.drinking': '🍺 Drinking',
+        'nav.games': '🎮 Games',
+
         // Foodies Section
         'foodies.title': '🐱 Foodie List',
-        'foodies.subtitle': 'Sign up if you want late night snacks!',
+        'foodies.subtitle': 'If you think you\'re a foodie and want late night snacks, please leave your name!',
         'foodies.placeholder': 'Enter your name',
         'foodies.button': 'I\'m a Foodie',
         'foodies.empty': 'No foodies yet~',

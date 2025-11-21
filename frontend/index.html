@@ -10,6 +10,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 汉堡菜单按钮 -->
+    <button class="hamburger-menu" id="hamburger-btn" onclick="toggleNavMenu()" aria-label="导航菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- 导航菜单 -->
+    <nav class="nav-menu" id="nav-menu">
+        <div class="nav-menu-header">
+            <h3 data-i18n="nav.title">导航菜单</h3>
+            <button class="nav-close-btn" onclick="toggleNavMenu()" aria-label="关闭菜单">✕</button>
+        </div>
+        <ul class="nav-menu-list">
+            <li><a href="#hero" onclick="navigateTo('hero')" data-i18n="nav.home">🏠 首页</a></li>
+            <li><a href="#info" onclick="navigateTo('info')" data-i18n="nav.info">📍 派对信息</a></li>
+            <li><a href="#schedule" onclick="navigateTo('schedule')" data-i18n="nav.schedule">⏰ 时间安排</a></li>
+            <li><a href="#team" onclick="navigateTo('team')" data-i18n="nav.team">✨ 派对团队</a></li>
+            <li><a href="#foodies" onclick="navigateTo('foodies')" data-i18n="nav.foodies">🐱 小馋猫列表</a></li>
+            <li><a href="#drinking" onclick="navigateTo('drinking')" data-i18n="nav.drinking">🍺 逃酒排行榜</a></li>
+            <li><a href="#games" onclick="navigateTo('games')" data-i18n="nav.games">🎮 游戏</a></li>
+        </ul>
+    </nav>
+
     <!-- 语言切换按钮 -->
     <div class="language-switcher">
         <button id="lang-btn" onclick="toggleLanguage()" class="lang-btn">
@@ -236,7 +260,7 @@
     <section id="foodies" class="section interactive-section">
         <div class="container">
             <h2 class="section-title" data-i18n="foodies.title">🐱 小馋猫列表</h2>
-            <p class="section-desc" data-i18n="foodies.subtitle">想吃夜宵的小伙伴快来报名！</p>
+            <p class="section-desc" data-i18n="foodies.subtitle">如果觉得自己是小馋猫的，想吃夜宵的，请留下自己的名字！</p>
 
             <div class="interactive-box">
                 <input type="text" id="foodie-name" data-i18n="foodies.placeholder" placeholder="输入你的名字" class="input-field">
