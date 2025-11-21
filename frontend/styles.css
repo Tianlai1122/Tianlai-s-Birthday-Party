@@ -683,7 +683,56 @@ body {
     margin-top: 10px;
 }
 
+/* ==================== Support 卡片专项优化 ==================== */
+#support-team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+    max-width: 100%;
+}
 
+#support-team-grid .team-card {
+    max-width: 100%;
+    padding: 25px 20px;
+}
+
+#support-team-grid .role {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+#support-team-grid .name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+#support-team-grid .description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#support-team-grid .team-actions {
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#support-team-grid .like-btn,
+#support-team-grid .comment-btn {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .music-links, .video-links {
     display: flex;
@@ -1119,8 +1168,22 @@ body {
     color: var(--primary);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ==================== 响应式设计 ==================== */
+
+/* 平板设备 (769px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    #support-team-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 大手机 (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
     .info-grid {
         grid-template-columns: 1fr;
     }
@@ -1131,7 +1194,13 @@ body {
     }
 
     .team-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    #support-team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 
     .games-grid {
@@ -1147,6 +1216,90 @@ body {
     .admin-content {
         width: 90vw;
         right: -15vw;
+    }
+}
+
+/* 小手机 (< 480px) */
+@media (max-width: 480px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    #support-team-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    #support-team-grid .team-card {
+        padding: 20px 15px;
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .vibe-options {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .admin-content {
+        width: 95vw;
+        right: -2.5vw;
+    }
+}
+
+/* ==================== 移动设备触摸优化 ==================== */
+@media (hover: none) and (pointer: coarse) {
+    /* 移动设备特定样式 */
+    .team-card {
+        padding: 25px 20px;
+    }
+
+    #support-team-grid .team-card {
+        padding: 25px 18px;
+    }
+
+    .team-actions {
+        gap: 12px;
+    }
+
+    .like-btn,
+    .comment-btn {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+
+    #support-team-grid .like-btn,
+    #support-team-grid .comment-btn {
+        min-height: 48px;
+        padding: 12px 14px;
+    }
+
+    /* 移除 hover 缩放效果，改为点击反馈 */
+    .team-card:hover {
+        transform: none;
+    }
+
+    .team-card:active {
+        transform: scale(0.98);
+    }
+
+    .like-btn:active,
+    .comment-btn:active {
+        transform: scale(0.95);
     }
 }
 
