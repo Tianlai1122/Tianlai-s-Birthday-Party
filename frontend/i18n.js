@@ -58,6 +58,15 @@ const translations = {
         'team.memberRolePlaceholder': '角色/职责',
         'team.addMemberBtn': '添加',
 
+        // Noah, Krystal, 李哲豪
+        'team.noah.role': '当晚的大厨',
+        'team.noah.note': '有少量素食选项',
+        'team.krystal.role': '提拉米苏大师',
+        'team.lizhehao.name': '@李哲豪',
+        'team.lizhehao.role': '调酒师',
+        'team.lizhehao.note1': '酒水管够！要喝酒的就别开车来了！',
+        'team.lizhehao.note2': '提供水和软饮料',
+
         // Comment Section
         'comment.titlePrefix': '给',
         'comment.titleSuffix': '留言',
@@ -197,6 +206,15 @@ const translations = {
         'team.memberNamePlaceholder': 'Member Name',
         'team.memberRolePlaceholder': 'Role/Responsibility',
         'team.addMemberBtn': 'Add',
+
+        // Noah, Krystal, 李哲豪
+        'team.noah.role': 'Chef of the Night',
+        'team.noah.note': 'Some vegetarian options available',
+        'team.krystal.role': 'Tiramisu Master',
+        'team.lizhehao.name': '@Li Zhehao',
+        'team.lizhehao.role': 'Bartender',
+        'team.lizhehao.note1': 'Plenty of drinks! Don\'t drive if you\'re drinking!',
+        'team.lizhehao.note2': 'Water and soft drinks provided',
 
         // Comment Section
         'comment.titlePrefix': 'Leave a comment for',
