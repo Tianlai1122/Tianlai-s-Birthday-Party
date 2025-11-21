@@ -1182,10 +1182,24 @@
 
         // 保存 Support 成员
         async function saveSupportMembers() {
-            if (!confirm('确定要保存成员信息吗？这将更新 app.js 文件。')) return;
+            if (!confirm('确定要保存成员信息吗？')) return;
 
-            alert('⚠️ 注意：此功能需要手动更新 app.js 文件中的 defaultSupportMembers 数组。\n\n请复制以下内容到 app.js：\n\n' +
-                JSON.stringify(currentSupportMembers, null, 2));
+            try {
+                const response = await fetch(`${API_URL}/support-members`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members: currentSupportMembers })
+                });
+
+                if (response.ok) {
+                    alert('✅ 成员信息已保存！');
+                    refreshData();
+                } else {
+                    alert('❌ 保存失败！');
+                }
+            } catch (error) {
+                alert('❌ 保存失败: ' + error.message);
+            }
         }
 
         // 渲染时间安排编辑器
@@ -1231,12 +1245,30 @@
 
         // 保存时间安排
         async function saveTimeline() {
-            alert('⚠️ 注意：此功能需要手动更新 index.html 和 i18n.js 文件。\n\n时间安排数据：\n\n' +
-                JSON.stringify(currentTimeline, null, 2));
+            if (!confirm('确定要保存时间安排吗？')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/timeline`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ timeline: currentTimeline })
+                });
+
+                if (response.ok) {
+                    alert('✅ 时间安排已保存！');
+                    refreshData();
+                } else {
+                    alert('❌ 保存失败！');
+                }
+            } catch (error) {
+                alert('❌ 保存失败: ' + error.message);
+            }
         }
 
         // 保存派对基本信息
         async function savePartyInfo() {
+            if (!confirm('确定要保存派对信息吗？')) return;
+
             const info = {
                 title: document.getElementById('edit-party-title').value,
                 date: document.getElementById('edit-party-date').value,
@@ -1245,8 +1277,22 @@
                 phone: document.getElementById('edit-party-phone').value
             };
 
-            alert('⚠️ 注意：此功能需要手动更新 index.html 和 i18n.js 文件。\n\n派对信息：\n\n' +
-                JSON.stringify(info, null, 2));
+            try {
+                const response = await fetch(`${API_URL}/party-info`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(info)
+                });
+
+                if (response.ok) {
+                    alert('✅ 派对信息已保存！');
+                    refreshData();
+                } else {
+                    alert('❌ 保存失败！');
+                }
+            } catch (error) {
+                alert('❌ 保存失败: ' + error.message);
+            }
         }
 
         // 渲染自定义成员列表

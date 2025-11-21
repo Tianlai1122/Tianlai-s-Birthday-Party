@@ -41,7 +41,22 @@ let data = {
     memberLikes: {},
     memberComments: {},
     customMembers: [],
+    supportMembers: [],
     gameLobbies: [],
+    partyInfo: {
+        title: "Noah's 22nd Birthday Party 🎉",
+        date: "November 22, 2025 (Friday)",
+        time: "8:30 PM - Late",
+        address: "301 W Rosemary St, Chapel Hill, NC 27516",
+        phone: "919-360-8558"
+    },
+    timeline: [
+        { time: '7:30 PM', event: '🍰 制作提拉米苏（对制作提拉米苏感兴趣的朋友可以提前来）' },
+        { time: '8:30 PM', event: '🎉 派对正式开始😍' },
+        { time: '9:00 PM', event: '🍜 夜宵时间' },
+        { time: '10:00 PM', event: '🎮 游戏时间' },
+        { time: '11:00 PM', event: '🎵 Party Mode' }
+    ],
     visits: 0,
     lastVisit: null,
     visitHistory: []
@@ -223,6 +238,49 @@ function registerRoutes(app) {
         data.customMembers = customMembers;
         await saveData();
         res.json({ success: true, customMembers: data.customMembers });
+    });
+
+    // Support 成员管理
+    app.post('/api/support-members', async (req, res) => {
+        const { members } = req.body;
+
+        if (!members || !Array.isArray(members)) {
+            return res.status(400).json({ error: '成员数据无效' });
+        }
+
+        if (!data.supportMembers) {
+            data.supportMembers = [];
+        }
+
+        data.supportMembers = members;
+        await saveData();
+        res.json({ success: true, supportMembers: data.supportMembers });
+    });
+
+    // 派对基本信息管理
+    app.post('/api/party-info', async (req, res) => {
+        const { title, date, time, address, phone } = req.body;
+
+        if (!data.partyInfo) {
+            data.partyInfo = {};
+        }
+
+        data.partyInfo = { title, date, time, address, phone };
+        await saveData();
+        res.json({ success: true, partyInfo: data.partyInfo });
+    });
+
+    // 时间安排管理
+    app.post('/api/timeline', async (req, res) => {
+        const { timeline } = req.body;
+
+        if (!timeline || !Array.isArray(timeline)) {
+            return res.status(400).json({ error: '时间安排数据无效' });
+        }
+
+        data.timeline = timeline;
+        await saveData();
+        res.json({ success: true, timeline: data.timeline });
     });
 
     // ==================== 游戏组局 API ====================
