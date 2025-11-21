@@ -15,14 +15,34 @@ function handleExternalLink(event, url) {
     if (isWeChatBrowser()) {
         event.preventDefault();
 
-        // 在微信中显示提示
-        const message = '🔗 请点击右上角"..."，选择"在浏览器中打开"来访问歌单';
-        alert(message);
+        // 在微信中，先尝试直接打开
+        const opened = window.open(url, '_blank');
 
-        // 同时尝试用 window.open 打开（某些情况下可能有效）
-        setTimeout(() => {
-            window.open(url, '_blank');
-        }, 500);
+        // 如果无法打开，显示提示
+        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+            setTimeout(() => {
+                const message = '🔗 请点击右上角"..."，选择"在浏览器中打开"来访问歌单\n\n或者复制链接在浏览器中打开：\n' + url;
+
+                // 创建一个更友好的提示框
+                if (confirm(message + '\n\n点击"确定"复制链接')) {
+                    // 尝试复制链接到剪贴板
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(url).then(() => {
+                            alert('✅ 链接已复制到剪贴板！');
+                        }).catch(() => {
+                            alert('链接：' + url);
+                        });
+                    } else {
+                        // 降级方案：显示链接让用户手动复制
+                        prompt('请复制以下链接：', url);
+                    }
+                }
+            }, 100);
+        }
+    } else {
+        // 非微信浏览器，直接跳转
+        // 不阻止默认行为，让 <a> 标签的 target="_blank" 生效
+        return true;
     }
 }
 
