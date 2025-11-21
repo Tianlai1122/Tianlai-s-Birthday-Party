@@ -1133,8 +1133,8 @@
                 <div class="member-card-edit" id="member-card-${index}">
                     <div class="member-info">
                         <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" value="${member.id}" style="background: rgba(255,255,255,0.05);" readonly>
+                            <label>ID <span style="opacity: 0.6; font-size: 0.85rem;">(唯一标识符)</span></label>
+                            <input type="text" value="${member.id}" oninput="updateSupportMember(${index}, 'id', this.value)">
                         </div>
                         <div class="form-group">
                             <label>名字</label>
