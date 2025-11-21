@@ -1664,7 +1664,7 @@
             }
         }
 
-        // ==================== 拖拽排序通用函数 ====================
+        // ==================== 拖拽排序通用函数（支持桌面和移动设备） ====================
         const dragState = {};
 
         function initDragAndDrop(containerId, dataArray, renderCallback, saveCallback) {
@@ -1678,11 +1678,16 @@
                 oldContainer.removeEventListener('dragend', dragState[containerId].dragend);
                 oldContainer.removeEventListener('dragover', dragState[containerId].dragover);
                 oldContainer.removeEventListener('drop', dragState[containerId].drop);
+                oldContainer.removeEventListener('touchstart', dragState[containerId].touchstart);
+                oldContainer.removeEventListener('touchmove', dragState[containerId].touchmove);
+                oldContainer.removeEventListener('touchend', dragState[containerId].touchend);
             }
 
             let draggedElement = null;
             let draggedIndex = null;
+            let touchStartY = 0;
 
+            // ========== 桌面拖拽事件 ==========
             const dragstartHandler = (e) => {
                 if (e.target.classList.contains('compact-list-item')) {
                     draggedElement = e.target;
@@ -1713,7 +1718,44 @@
 
             const dropHandler = (e) => {
                 e.preventDefault();
+                finalizeDragAndDrop();
+            };
 
+            // ========== 移动设备触摸事件 ==========
+            const touchstartHandler = (e) => {
+                const item = e.target.closest('.compact-list-item');
+                if (item) {
+                    draggedElement = item;
+                    draggedIndex = parseInt(item.dataset.index);
+                    touchStartY = e.touches[0].clientY;
+                    item.classList.add('dragging');
+                }
+            };
+
+            const touchmoveHandler = (e) => {
+                if (!draggedElement) return;
+                e.preventDefault();
+
+                const touchY = e.touches[0].clientY;
+                const afterElement = getDragAfterElement(container, touchY);
+                const dragging = container.querySelector('.dragging');
+
+                if (afterElement == null) {
+                    container.appendChild(dragging);
+                } else {
+                    container.insertBefore(dragging, afterElement);
+                }
+            };
+
+            const touchendHandler = (e) => {
+                if (draggedElement) {
+                    draggedElement.classList.remove('dragging');
+                    finalizeDragAndDrop();
+                }
+            };
+
+            // 完成拖拽操作
+            function finalizeDragAndDrop() {
                 // 获取当前 DOM 中的顺序
                 const items = Array.from(container.querySelectorAll('.compact-list-item'));
 
@@ -1736,13 +1778,19 @@
                         saveCallback();
                     }, 300);
                 }
-            };
+
+                draggedElement = null;
+                draggedIndex = null;
+            }
 
             // 添加事件监听器
             container.addEventListener('dragstart', dragstartHandler);
             container.addEventListener('dragend', dragendHandler);
             container.addEventListener('dragover', dragoverHandler);
             container.addEventListener('drop', dropHandler);
+            container.addEventListener('touchstart', touchstartHandler, false);
+            container.addEventListener('touchmove', touchmoveHandler, false);
+            container.addEventListener('touchend', touchendHandler, false);
 
             // 保存事件处理器以便后续移除
             dragState[containerId] = {
@@ -1750,7 +1798,10 @@
                 dragstart: dragstartHandler,
                 dragend: dragendHandler,
                 dragover: dragoverHandler,
-                drop: dropHandler
+                drop: dropHandler,
+                touchstart: touchstartHandler,
+                touchmove: touchmoveHandler,
+                touchend: touchendHandler
             };
         }
 
