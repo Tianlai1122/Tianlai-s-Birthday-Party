@@ -231,14 +231,19 @@ function initCountdown() {
 // 加载数据
 async function loadData() {
     try {
+        console.log('📡 Fetching data from:', `${API_URL}/data`);
         const response = await fetch(`${API_URL}/data`);
         if (response.ok) {
             const serverData = await response.json();
+            console.log('✅ Server data received:', serverData);
             data = { ...data, ...serverData };
 
             // 加载 Support 成员
             if (serverData.supportMembers && Array.isArray(serverData.supportMembers)) {
                 supportMembers = serverData.supportMembers;
+                console.log(`✅ Loaded ${supportMembers.length} support members:`, supportMembers);
+            } else {
+                console.warn('⚠️ No supportMembers in server data');
             }
 
             // 加载导航菜单
@@ -250,8 +255,11 @@ async function loadData() {
             if (serverData.timeline && Array.isArray(serverData.timeline)) {
                 timeline = serverData.timeline;
             }
+        } else {
+            console.error('❌ Failed to fetch data:', response.status);
         }
     } catch (error) {
+        console.error('❌ Error loading data:', error);
         console.log('使用本地数据');
         // 从 localStorage 加载
         const localData = localStorage.getItem('partyData');
@@ -259,6 +267,7 @@ async function loadData() {
             data = JSON.parse(localData);
             if (data.supportMembers && Array.isArray(data.supportMembers)) {
                 supportMembers = data.supportMembers;
+                console.log(`✅ Loaded ${supportMembers.length} support members from localStorage`);
             }
             if (data.navMenuItems && Array.isArray(data.navMenuItems)) {
                 navMenuItems = data.navMenuItems;
