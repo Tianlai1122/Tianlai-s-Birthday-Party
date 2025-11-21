@@ -1538,6 +1538,7 @@
         // 自动保存 Support 成员（无提示）
         async function saveSupportMembersAuto() {
             try {
+                console.log('📤 正在保存 Support 成员顺序:', currentSupportMembers.map(m => m.name));
                 const response = await fetch(`${API_URL}/support-members`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1545,10 +1546,11 @@
                 });
 
                 if (response.ok) {
-                    console.log('✅ 成员信息已自动保存');
+                    const result = await response.json();
+                    console.log('✅ 成员信息已自动保存:', result);
                     showAutoSaveNotification('✅ 成员顺序已自动保存');
                 } else {
-                    console.error('❌ 自动保存失败');
+                    console.error('❌ 自动保存失败，状态码:', response.status);
                 }
             } catch (error) {
                 console.error('❌ 自动保存失败:', error);
@@ -1643,6 +1645,7 @@
         // 自动保存导航菜单（无提示）
         async function saveNavMenuAuto() {
             try {
+                console.log('📤 正在保存导航菜单顺序:', currentNavMenuItems.map(m => m.label));
                 const response = await fetch(`${API_URL}/nav-menu`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1650,10 +1653,11 @@
                 });
 
                 if (response.ok) {
-                    console.log('✅ 导航菜单已自动保存');
+                    const result = await response.json();
+                    console.log('✅ 导航菜单已自动保存:', result);
                     showAutoSaveNotification('✅ 菜单顺序已自动保存');
                 } else {
-                    console.error('❌ 自动保存失败');
+                    console.error('❌ 自动保存失败，状态码:', response.status);
                 }
             } catch (error) {
                 console.error('❌ 自动保存失败:', error);
@@ -1661,29 +1665,40 @@
         }
 
         // ==================== 拖拽排序通用函数 ====================
+        const dragState = {};
+
         function initDragAndDrop(containerId, dataArray, renderCallback, saveCallback) {
             const container = document.getElementById(containerId);
             if (!container) return;
 
+            // 移除旧的事件监听器（如果存在）
+            if (dragState[containerId]) {
+                const oldContainer = dragState[containerId].container;
+                oldContainer.removeEventListener('dragstart', dragState[containerId].dragstart);
+                oldContainer.removeEventListener('dragend', dragState[containerId].dragend);
+                oldContainer.removeEventListener('dragover', dragState[containerId].dragover);
+                oldContainer.removeEventListener('drop', dragState[containerId].drop);
+            }
+
             let draggedElement = null;
             let draggedIndex = null;
 
-            container.addEventListener('dragstart', (e) => {
+            const dragstartHandler = (e) => {
                 if (e.target.classList.contains('compact-list-item')) {
                     draggedElement = e.target;
                     draggedIndex = parseInt(e.target.dataset.index);
                     e.target.classList.add('dragging');
                     e.dataTransfer.effectAllowed = 'move';
                 }
-            });
+            };
 
-            container.addEventListener('dragend', (e) => {
+            const dragendHandler = (e) => {
                 if (e.target.classList.contains('compact-list-item')) {
                     e.target.classList.remove('dragging');
                 }
-            });
+            };
 
-            container.addEventListener('dragover', (e) => {
+            const dragoverHandler = (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 const afterElement = getDragAfterElement(container, e.clientY);
@@ -1694,25 +1709,25 @@
                 } else {
                     container.insertBefore(dragging, afterElement);
                 }
-            });
+            };
 
-            container.addEventListener('drop', (e) => {
+            const dropHandler = (e) => {
                 e.preventDefault();
 
                 // 获取当前 DOM 中的顺序
                 const items = Array.from(container.querySelectorAll('.compact-list-item'));
 
                 // 根据 DOM 顺序重新排列数据数组
-                const reorderedArray = items.map((item, newIndex) => {
-                    const oldIndex = parseInt(item.dataset.index);
-                    return dataArray[oldIndex];
+                const reorderedArray = items.map((item) => {
+                    const index = parseInt(item.dataset.index);
+                    return dataArray[index];
                 });
 
                 // 更新原数组
                 dataArray.length = 0;
                 dataArray.push(...reorderedArray);
 
-                // 重新渲染
+                // 重新渲染（这会更新 data-index）
                 renderCallback();
 
                 // 自动保存
@@ -1721,7 +1736,22 @@
                         saveCallback();
                     }, 300);
                 }
-            });
+            };
+
+            // 添加事件监听器
+            container.addEventListener('dragstart', dragstartHandler);
+            container.addEventListener('dragend', dragendHandler);
+            container.addEventListener('dragover', dragoverHandler);
+            container.addEventListener('drop', dropHandler);
+
+            // 保存事件处理器以便后续移除
+            dragState[containerId] = {
+                container,
+                dragstart: dragstartHandler,
+                dragend: dragendHandler,
+                dragover: dragoverHandler,
+                drop: dropHandler
+            };
         }
 
         function getDragAfterElement(container, y) {
