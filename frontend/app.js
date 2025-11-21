@@ -1484,16 +1484,15 @@ function renderCategoryMembers(category, containerId) {
         customMembers = data.customMembers.filter(m => m.category === category);
     }
 
-    console.log(`✅ Rendering ${category}:`, customMembers.length, 'custom members');
+    console.log(`✅ Rendering ${category}:`, customMembers.length, 'custom members, supportMembers count:', supportMembers.length);
 
     // 对于 food、dessert、drinks 分类，先渲染该分类的 supportMembers，再追加自定义成员
     if (category === 'food' || category === 'dessert' || category === 'drinks') {
-        // 清空容器
-        container.innerHTML = '';
-
         // 渲染该分类的 supportMembers（如 Noah、Krystal）
         const categoryMembers = supportMembers.filter(m => m.category === category);
         const currentLang = localStorage.getItem('language') || 'zh';
+
+        console.log(`📊 Category ${category} has ${categoryMembers.length} support members`);
 
         const categoryCards = categoryMembers.map(member => {
             let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
@@ -1522,7 +1521,10 @@ function renderCategoryMembers(category, containerId) {
             `;
         }).join('');
 
-        container.innerHTML = categoryCards;
+        // 只有当有 support members 或自定义成员时才更新容器
+        if (categoryCards || customMembers.length > 0) {
+            container.innerHTML = categoryCards;
+        }
 
         // 如果没有自定义成员，直接返回
         if (customMembers.length === 0) {
