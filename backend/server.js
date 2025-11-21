@@ -49,6 +49,8 @@ let data = {
     memberComments: {},
     customMembers: [],
     supportMembers: [
+        { id: 'noah', name: '@Noah', nameEn: '@Noah', role: '当晚的大厨', roleEn: 'Chef of the Night', description: '有少量素食选项', descriptionEn: 'Some vegetarian options available', isDefault: true, category: 'food' },
+        { id: 'krystal', name: '@Krystal', nameEn: '@Krystal', role: '提拉米苏大师', roleEn: 'Tiramisu Master', description: '', descriptionEn: '', isDefault: true, category: 'dessert' },
         { id: 'geyuxin', name: '@葛语歆', nameEn: '@Ge Yuxin', role: '📷 CCD摄影师', roleEn: '📷 CCD Photographer', description: '总能发现别人自拍都没注意到的双下巴。', descriptionEn: 'Always spots the double chin that others miss in their selfies.', isDefault: true },
         { id: 'westonfang', name: '@Professor Weston Fang', nameEn: '@Professor Weston Fang', role: '🎓 Academic指导', roleEn: '🎓 Academic Advisor', description: '正在造火星无人机', descriptionEn: 'Building Mars drones', isDefault: true },
         { id: 'sherryhua', name: '@Sherry Hua', nameEn: '@Sherry Hua', role: '🍹 逃酒经验分享', roleEn: '🍹 Drinking Escape Expert', description: '能从任何酒局中优雅逃酒的Real Master', descriptionEn: 'The real master of elegantly escaping any drinking game', isDefault: true },

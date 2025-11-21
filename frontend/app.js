@@ -1486,11 +1486,43 @@ function renderCategoryMembers(category, containerId) {
 
     console.log(`✅ Rendering ${category}:`, customMembers.length, 'custom members');
 
-    // 对于 food、dessert、drinks 分类，只追加自定义成员，不替换整个容器
+    // 对于 food、dessert、drinks 分类，先渲染该分类的 supportMembers，再追加自定义成员
     if (category === 'food' || category === 'dessert' || category === 'drinks') {
-        // 移除之前添加的自定义成员卡片（保留固定成员）
-        const existingCustomCards = container.querySelectorAll('.team-card[data-custom="true"]');
-        existingCustomCards.forEach(card => card.remove());
+        // 清空容器
+        container.innerHTML = '';
+
+        // 渲染该分类的 supportMembers（如 Noah、Krystal）
+        const categoryMembers = supportMembers.filter(m => m.category === category);
+        const currentLang = localStorage.getItem('language') || 'zh';
+
+        const categoryCards = categoryMembers.map(member => {
+            let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
+            if (displayName && !displayName.startsWith('@')) {
+                displayName = '@' + displayName;
+            }
+
+            const displayRole = currentLang === 'en' && member.roleEn ? member.roleEn : member.role;
+            const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
+
+            return `
+                <div class="team-card" data-member="${member.id}">
+                    <div class="role">${displayRole}</div>
+                    <div class="name">${displayName}</div>
+                    ${displayDescription ? `<div class="description">${displayDescription}</div>` : ''}
+                    <div class="team-actions">
+                        <button class="like-btn" onclick="likeMember('${member.id}')">
+                            😍 <span class="like-count" id="likes-${member.id}">0</span>
+                        </button>
+                        <button class="comment-btn" onclick="openCommentModal('${member.id}', '${displayName}')">
+                            💬 <span data-i18n="team.comment">留言</span>
+                            <span class="comment-badge" id="comment-badge-${member.id}">0</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = categoryCards;
 
         // 如果没有自定义成员，直接返回
         if (customMembers.length === 0) {
