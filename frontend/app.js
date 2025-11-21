@@ -1536,10 +1536,13 @@ function renderCategoryMembers(category, containerId) {
     // 对于 food、dessert、drinks 分类，先渲染该分类的 supportMembers，再追加自定义成员
     if (category === 'food' || category === 'dessert' || category === 'drinks') {
         // 渲染该分类的 supportMembers（如 Noah、Krystal）
+        console.log(`🔍 Processing category: ${category}`);
+        console.log(`📋 All supportMembers:`, supportMembers);
+
         const categoryMembers = supportMembers.filter(m => m.category === category);
         const currentLang = localStorage.getItem('language') || 'zh';
 
-        console.log(`📊 Category ${category} has ${categoryMembers.length} support members`);
+        console.log(`📊 Category ${category} has ${categoryMembers.length} support members:`, categoryMembers);
 
         const categoryCards = categoryMembers.map(member => {
             let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
