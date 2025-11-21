@@ -299,13 +299,19 @@ function renderNavMenu() {
 // 渲染时间安排
 function renderTimeline() {
     const timelineContainer = document.querySelector('.timeline');
-    if (!timelineContainer || timeline.length === 0) return;
+    if (!timelineContainer || timeline.length === 0) {
+        console.warn('⚠️ Timeline container not found or timeline is empty');
+        return;
+    }
 
+    // 从 localStorage 获取当前语言
     const currentLang = localStorage.getItem('language') || 'zh';
+    console.log(`📅 Rendering timeline in ${currentLang} language`);
 
     const html = timeline.map((item, index) => {
         // 根据当前语言选择显示内容
         const displayEvent = currentLang === 'en' && item.eventEn ? item.eventEn : item.event;
+        console.log(`  Event ${index}: ${item.event} -> ${displayEvent}`);
 
         // 第二个项目（派对开始）和最后一个项目（After Party）高亮显示
         const isHighlight = index === 1 || index === timeline.length - 1;
@@ -320,6 +326,7 @@ function renderTimeline() {
     }).join('');
 
     timelineContainer.innerHTML = html;
+    console.log('✅ Timeline rendered successfully');
 }
 
 // 保存数据
