@@ -1530,10 +1530,8 @@ function renderCategoryMembers(category, containerId) {
             `;
         }).join('');
 
-        // 只有当有 support members 或自定义成员时才更新容器
-        if (categoryCards || customMembers.length > 0) {
-            container.innerHTML = categoryCards;
-        }
+        // 总是更新容器（即使是空的，也要清空之前的内容）
+        container.innerHTML = categoryCards;
 
         // 如果没有自定义成员，直接返回
         if (customMembers.length === 0) {
