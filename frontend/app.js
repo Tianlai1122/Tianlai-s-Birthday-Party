@@ -541,6 +541,9 @@ function openCommentModal(memberId, memberName) {
 
     // 渲染留言列表
     renderComments(memberId);
+
+    // 更新徽章（确保显示最新的留言数）
+    updateCommentBadges();
 }
 
 function closeCommentModal() {
@@ -593,6 +596,8 @@ async function submitComment() {
             document.getElementById('comment-author').value = '';
             document.getElementById('comment-text').value = '';
             renderComments(currentCommentMember);
+            // 更新徽章数量
+            updateCommentBadges();
         }
     } catch (error) {
         console.error('留言失败:', error);
@@ -1235,9 +1240,21 @@ function closeGameModal() {
 
 // 点击模态窗口外部关闭
 document.addEventListener('click', (e) => {
-    const modal = document.getElementById('game-modal');
-    if (e.target === modal) {
+    const gameModal = document.getElementById('game-modal');
+    if (e.target === gameModal) {
         closeGameModal();
+    }
+
+    // 留言模态窗口点击外部关闭
+    const commentModal = document.getElementById('comment-modal');
+    if (e.target === commentModal) {
+        closeCommentModal();
+    }
+
+    // 图片模态窗口点击外部关闭
+    const imageModal = document.getElementById('image-modal');
+    if (e.target === imageModal) {
+        closeImageModal();
     }
 });
 
@@ -1245,6 +1262,8 @@ document.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeGameModal();
+        closeCommentModal();
+        closeImageModal();
     }
 });
 
