@@ -1623,8 +1623,9 @@ function renderCategoryMembers(category, containerId) {
         return;
     }
 
-    // 对于 support 分类，包含从后端加载的成员
-    const allMembers = [...supportMembers, ...customMembers];
+    // 对于 support 分类，只包含没有 category 字段的成员（排除 Noah、Krystal、李哲豪）
+    const supportOnlyMembers = supportMembers.filter(m => !m.category);
+    const allMembers = [...supportOnlyMembers, ...customMembers];
     console.log(`✅ Rendering support:`, allMembers.length, 'total members');
 
     // 创建"我也想帮忙"卡片模板
