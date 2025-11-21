@@ -869,9 +869,9 @@ body {
 
 /* Games Section */
 .games-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
     margin-bottom: 50px;
     justify-content: center;
     max-width: 100%;
@@ -879,8 +879,8 @@ body {
 
 .game-card {
     background: rgba(255, 255, 255, 0.05);
-    padding: 30px 20px;
-    border-radius: 15px;
+    padding: 15px 10px;
+    border-radius: 12px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
@@ -897,19 +897,19 @@ body {
 }
 
 .game-card .game-icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
+    font-size: 2.2rem;
+    margin-bottom: 6px;
 }
 
 .game-card .game-name {
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.85rem;
 }
 
 .game-card .game-hint {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--accent);
-    margin-top: 8px;
+    margin-top: 4px;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -955,15 +955,15 @@ body {
 
 .vibe-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
     margin-bottom: 30px;
 }
 
 .vibe-option {
     background: rgba(255, 255, 255, 0.05);
-    padding: 15px 12px;
-    border-radius: 12px;
+    padding: 10px 8px;
+    border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.1);
     text-align: center;
     cursor: pointer;
@@ -985,20 +985,20 @@ body {
 }
 
 .vibe-icon {
-    font-size: 2.2rem;
-    margin-bottom: 6px;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
 }
 
 .vibe-name {
     font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 6px;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
 }
 
 .vibe-count {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--accent);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .vibe-bar {
@@ -1121,20 +1121,26 @@ body {
     .info-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .timeline-item {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .team-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
-    
+
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
-    
+
+    .vibe-options {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
     .admin-content {
         width: 90vw;
         right: -15vw;
