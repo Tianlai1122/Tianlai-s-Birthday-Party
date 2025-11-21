@@ -21,7 +21,7 @@ function handleExternalLink(event, url) {
         // 如果无法打开，显示提示
         if (!opened || opened.closed || typeof opened.closed === 'undefined') {
             setTimeout(() => {
-                const message = '🔗 请点击右上角"..."，选择"在浏览器中打开"来访问歌单\n\n或者复制链接在浏览器中打开：\n' + url;
+                const message = '🎵 共享歌单加载完成后请点击"打开网易云音乐"\n\n如果无法打开，请点击右上角"..."，选择"在浏览器中打开"\n\n或者复制链接在浏览器中打开：\n' + url;
 
                 // 创建一个更友好的提示框
                 if (confirm(message + '\n\n点击"确定"复制链接')) {
