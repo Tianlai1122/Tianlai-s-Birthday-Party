@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+const { MongoClient } = require('mongodb');
 
 // 创建两个 Express 应用
 const mainApp = express();
@@ -10,6 +11,12 @@ const adminApp = express();
 const MAIN_PORT = process.env.PORT || 3000;
 const ADMIN_PORT = 3001;
 const DATA_FILE = path.join(__dirname, 'party-data.json');
+
+// MongoDB 配置
+const MONGODB_URI = process.env.MONGODB_URI || null;
+let mongoClient = null;
+let db = null;
+let useDatabase = false;
 
 // CORS 配置 - 允许 Vercel 前端访问
 const corsOptions = {
@@ -85,25 +92,79 @@ let data = {
     visitHistory: []
 };
 
+// 连接 MongoDB
+async function connectDatabase() {
+    if (!MONGODB_URI) {
+        console.log('⚠️  未配置 MONGODB_URI，使用文件系统存储（数据会在重新部署时丢失）');
+        useDatabase = false;
+        return;
+    }
+
+    try {
+        mongoClient = new MongoClient(MONGODB_URI);
+        await mongoClient.connect();
+        db = mongoClient.db('birthday-party');
+        useDatabase = true;
+        console.log('✅ MongoDB 连接成功！数据将持久化保存');
+    } catch (error) {
+        console.error('❌ MongoDB 连接失败，降级使用文件系统:', error.message);
+        useDatabase = false;
+    }
+}
+
 // 加载数据
 async function loadData() {
+    if (useDatabase && db) {
+        try {
+            const collection = db.collection('party-data');
+            const savedData = await collection.findOne({ _id: 'main' });
+            if (savedData) {
+                delete savedData._id; // 移除 MongoDB 的 _id 字段
+                data = savedData;
+                console.log('✅ 从 MongoDB 加载数据成功');
+                return;
+            }
+        } catch (error) {
+            console.error('从 MongoDB 加载数据失败:', error);
+        }
+    }
+
+    // 降级到文件系统
     try {
         const fileData = await fs.readFile(DATA_FILE, 'utf8');
         data = JSON.parse(fileData);
-        console.log('数据已加载');
+        console.log('✅ 从文件系统加载数据');
     } catch (error) {
-        console.log('创建新数据文件');
+        console.log('📝 创建新数据');
         await saveData();
     }
 }
 
 // 保存数据
 async function saveData() {
+    // 保存到 MongoDB
+    if (useDatabase && db) {
+        try {
+            const collection = db.collection('party-data');
+            await collection.updateOne(
+                { _id: 'main' },
+                { $set: { ...data, _id: 'main' } },
+                { upsert: true }
+            );
+            console.log('✅ 数据已保存到 MongoDB');
+        } catch (error) {
+            console.error('❌ 保存到 MongoDB 失败:', error);
+        }
+    }
+
+    // 同时保存到文件系统（作为备份）
     try {
         await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
-        console.log('数据已保存');
+        if (!useDatabase) {
+            console.log('✅ 数据已保存到文件系统');
+        }
     } catch (error) {
-        console.error('保存数据失败:', error);
+        console.error('❌ 保存到文件系统失败:', error);
     }
 }
 
@@ -493,6 +554,7 @@ adminApp.get('/', (req, res) => {
 
 // 启动服务器
 async function start() {
+    await connectDatabase();
     await loadData();
 
     // 检查是否在 Render 环境（只启动主应用）
@@ -505,7 +567,7 @@ async function start() {
 ║                                        ║
 ║   API 服务: http://localhost:${MAIN_PORT}       ║
 ${!isRender ? `║   管理后台: http://localhost:${ADMIN_PORT}     ║` : ''}
-║   数据文件: ${DATA_FILE}
+║   数据存储: ${useDatabase ? 'MongoDB (持久化)' : '文件系统 (临时)'}
 ║                                        ║
 ╚════════════════════════════════════════╝
         `);
@@ -526,5 +588,9 @@ start();
 process.on('SIGINT', async () => {
     console.log('\n正在保存数据并关闭服务器...');
     await saveData();
+    if (mongoClient) {
+        await mongoClient.close();
+        console.log('MongoDB 连接已关闭');
+    }
     process.exit(0);
 });
