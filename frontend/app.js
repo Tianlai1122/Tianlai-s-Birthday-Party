@@ -1571,8 +1571,11 @@ function renderCategoryMembers(category, containerId) {
             `;
         }).join('');
 
-        // 总是更新容器（即使是空的，也要清空之前的内容）
-        container.innerHTML = categoryCards;
+        // 对于 food、dessert、drinks 分类，不清空容器（保留硬编码的卡片）
+        // 只追加 supportMembers 中的卡片
+        if (categoryCards) {
+            container.insertAdjacentHTML('beforeend', categoryCards);
+        }
 
         // 如果没有自定义成员，直接返回
         if (customMembers.length === 0) {
