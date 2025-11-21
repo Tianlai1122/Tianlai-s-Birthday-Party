@@ -300,6 +300,157 @@
         .btn-success:hover {
             background: rgba(0, 255, 0, 0.5);
         }
+
+        /* ==================== 紧凑列表样式 ==================== */
+        .compact-list {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .compact-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .compact-list-item:hover {
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .compact-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .compact-list-item .drag-handle {
+            cursor: grab;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .compact-list-item:hover .drag-handle {
+            opacity: 1;
+        }
+
+        .compact-list-item.dragging {
+            opacity: 0.5;
+            background: rgba(255, 107, 157, 0.2);
+        }
+
+        .compact-list-item .item-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .compact-list-item .item-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .compact-list-item .item-role {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .compact-list-item .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .compact-list-item .btn-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .compact-list-item .btn-icon:hover {
+            background: rgba(255, 107, 157, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* 编辑模态窗口 */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-modal.active {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: var(--dark);
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .edit-modal-header h3 {
+            font-size: 1.8rem;
+            background: var(--gradient-party);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .edit-modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-modal-close:hover {
+            background: rgba(255, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .edit-modal-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -562,10 +713,22 @@
                 <!-- Support 团队成员管理 -->
                 <div class="data-section">
                     <h2>👥 Support 团队成员管理</h2>
-                    <p style="opacity: 0.8; margin-bottom: 20px;">✏️ 直接在输入框中编辑成员信息，编辑时会有金色边框提示。管理默认的 Support 团队成员（13位）</p>
-                    <div id="support-members-editor"></div>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">
+                        🖱️ 拖拽调整顺序 | ✏️ 点击编辑 | ➕ 添加新成员
+                    </p>
+                    <div id="support-members-list" class="compact-list"></div>
                     <button onclick="addSupportMember()" class="btn btn-primary" style="margin-top: 15px;">➕ 添加新成员</button>
                     <button onclick="saveSupportMembers()" class="btn btn-success" style="margin-top: 15px;">💾 保存成员信息</button>
+                </div>
+
+                <!-- 导航菜单管理 -->
+                <div class="data-section">
+                    <h2>🧭 导航菜单管理</h2>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">
+                        🖱️ 拖拽调整顺序 | ✏️ 点击编辑菜单项
+                    </p>
+                    <div id="nav-menu-list" class="compact-list"></div>
+                    <button onclick="saveNavMenu()" class="btn btn-success" style="margin-top: 15px;">💾 保存菜单顺序</button>
                 </div>
 
                 <!-- 自定义成员管理 -->
@@ -579,7 +742,63 @@
 
         </div>
     </div>
-    
+
+    <!-- Support 成员编辑模态窗口 -->
+    <div id="edit-member-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3>✏️ 编辑成员信息</h3>
+                <button class="edit-modal-close" onclick="closeEditMemberModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>ID（唯一标识符）</label>
+                <input type="text" id="edit-member-id" placeholder="例如: geyuxin">
+            </div>
+            <div class="form-group">
+                <label>名字</label>
+                <input type="text" id="edit-member-name" placeholder="例如: @葛语歆">
+            </div>
+            <div class="form-group">
+                <label>角色</label>
+                <input type="text" id="edit-member-role" placeholder="例如: 📷 CCD摄影师">
+            </div>
+            <div class="form-group">
+                <label>描述</label>
+                <textarea id="edit-member-description" placeholder="例如: 总能发现别人自拍都没注意到的双下巴。"></textarea>
+            </div>
+            <div class="edit-modal-footer">
+                <button onclick="closeEditMemberModal()" class="btn btn-secondary">取消</button>
+                <button onclick="saveEditedMember()" class="btn btn-success">💾 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航菜单编辑模态窗口 -->
+    <div id="edit-nav-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3>✏️ 编辑导航菜单项</h3>
+                <button class="edit-modal-close" onclick="closeEditNavModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>中文标签</label>
+                <input type="text" id="edit-nav-label" placeholder="例如: 🏠 首页">
+            </div>
+            <div class="form-group">
+                <label>英文标签</label>
+                <input type="text" id="edit-nav-label-en" placeholder="例如: 🏠 Home">
+            </div>
+            <div class="form-group">
+                <label>目标 Section ID</label>
+                <input type="text" id="edit-nav-target" placeholder="例如: hero">
+            </div>
+            <div class="edit-modal-footer">
+                <button onclick="closeEditNavModal()" class="btn btn-secondary">取消</button>
+                <button onclick="saveEditedNavItem()" class="btn btn-success">💾 保存</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // API 配置 - 环境自适应
         const API_URL = window.location.hostname === 'localhost'
@@ -1088,37 +1307,64 @@
         // 加载内容用于编辑
         async function loadContentForEditing() {
             try {
-                // 加载 Support 成员数据
+                // 加载数据
                 const response = await fetch(`${API_URL}/admin/full-data`);
                 const data = await response.json();
 
-                // 从 app.js 获取默认成员（这里硬编码，实际应该从服务器获取）
-                currentSupportMembers = [
-                    { id: 'geyuxin', name: '@葛语歆', role: '📷 CCD摄影师', description: '总能发现别人自拍都没注意到的双下巴。', isDefault: true },
-                    { id: 'westonfang', name: '@Professor Weston Fang', role: '🎓 Academic指导', description: '正在造火星无人机', isDefault: true },
-                    { id: 'sherryhua', name: '@Sherry Hua', role: '🍹 逃酒经验分享', description: '能从任何酒局中优雅逃酒的Real Master', isDefault: true },
-                    { id: 'frank', name: '@Frank @Henry @沈艺如', role: '🏋️‍♂️ 健身教练', description: '让你又酸又爽，想直接在旁边的GYM做三组卧推。', isDefault: true },
-                    { id: 'kimi', name: '@Kimi', role: '🥑 高级营养师', description: '一边说少吃碳水，一边偷偷啃掉三个麦芬。（真的大厨）', isDefault: true },
-                    { id: 'carrie', name: '@Carrie', role: '💅 抽皮条大王 可以代抽皮条', description: '"不怕皮厚，只怕不抽。"', isDefault: true },
-                    { id: 'zhangtianen', name: '@张天恩', role: '📸 网红经验分享', description: '经典名言"我从小就爱说脏话"', isDefault: true },
-                    { id: 'ishan', name: '@Ishan', role: '🕉️ 印度语学习', description: '🙏 啊ki苦力hoyahoban～', isDefault: true },
-                    { id: 'lianshuitian', name: '@连水天', role: '🧋 奶茶大王', description: '一杯全糖少冰，甜过你的恋爱史。', isDefault: true },
-                    { id: 'jessica', name: '@Jessica', role: '📈 炒股', description: '她的股票走势图看起来像心电图。', isDefault: true },
-                    { id: 'racing', name: '@任怡静', role: '🏍️ 飙车经验分享', description: '红灯？你别闹了😎', isDefault: true },
-                    { id: 'church', name: '@Krystal @Thomas', role: '🙏 教会经验分享', description: 'UNC 最温柔。', isDefault: true },
-                    { id: 'linguist', name: '@Zhongyu', role: '🗣️ 语言学家', description: '"农""浓"', isDefault: true }
-                ];
+                // 从后端加载 Support 成员（如果有的话）
+                if (data.supportMembers && data.supportMembers.length > 0) {
+                    currentSupportMembers = data.supportMembers;
+                } else {
+                    // 使用默认成员
+                    currentSupportMembers = [
+                        { id: 'geyuxin', name: '@葛语歆', role: '📷 CCD摄影师', description: '总能发现别人自拍都没注意到的双下巴。', isDefault: true },
+                        { id: 'westonfang', name: '@Professor Weston Fang', role: '🎓 Academic指导', description: '正在造火星无人机', isDefault: true },
+                        { id: 'sherryhua', name: '@Sherry Hua', role: '🍹 逃酒经验分享', description: '能从任何酒局中优雅逃酒的Real Master', isDefault: true },
+                        { id: 'frank', name: '@Frank @Henry @沈艺如', role: '🏋️‍♂️ 健身教练', description: '让你又酸又爽，想直接在旁边的GYM做三组卧推。', isDefault: true },
+                        { id: 'kimi', name: '@Kimi', role: '🥑 高级营养师', description: '一边说少吃碳水，一边偷偷啃掉三个麦芬。（真的大厨）', isDefault: true },
+                        { id: 'carrie', name: '@Carrie', role: '💅 抽皮条大王 可以代抽皮条', description: '"不怕皮厚，只怕不抽。"', isDefault: true },
+                        { id: 'zhangtianen', name: '@张天恩', role: '📸 网红经验分享', description: '经典名言"我从小就爱说脏话"', isDefault: true },
+                        { id: 'ishan', name: '@Ishan', role: '🕉️ 印度语学习', description: '🙏 啊ki苦力hoyahoban～', isDefault: true },
+                        { id: 'lianshuitian', name: '@连水天', role: '🧋 奶茶大王', description: '一杯全糖少冰，甜过你的恋爱史。', isDefault: true },
+                        { id: 'jessica', name: '@Jessica', role: '📈 炒股', description: '她的股票走势图看起来像心电图。', isDefault: true },
+                        { id: 'racing', name: '@任怡静', role: '🏍️ 飙车经验分享', description: '红灯？你别闹了😎', isDefault: true },
+                        { id: 'church', name: '@Krystal @Thomas', role: '🙏 教会经验分享', description: 'UNC 最温柔。', isDefault: true },
+                        { id: 'linguist', name: '@Zhongyu', role: '🗣️ 语言学家', description: '"农""浓"', isDefault: true }
+                    ];
+                }
 
-                // 时间安排数据
-                currentTimeline = [
-                    { time: '7:30 PM', event: '🍰 制作提拉米苏（对制作提拉米苏感兴趣的朋友可以提前来）' },
-                    { time: '8:30 PM', event: '🎉 派对正式开始😍' },
-                    { time: '9:00 PM', event: '🍜 夜宵时间' },
-                    { time: '10:00 PM', event: '🎮 游戏时间' },
-                    { time: '11:00 PM', event: '🎵 Party Mode' }
-                ];
+                // 从后端加载导航菜单（如果有的话）
+                if (data.navMenuItems && data.navMenuItems.length > 0) {
+                    currentNavMenuItems = data.navMenuItems;
+                } else {
+                    // 使用默认导航菜单
+                    currentNavMenuItems = [
+                        { id: 'home', label: '🏠 首页', labelEn: '🏠 Home', target: 'hero' },
+                        { id: 'info', label: '📍 派对信息', labelEn: '📍 Party Info', target: 'info' },
+                        { id: 'schedule', label: '⏰ 时间安排', labelEn: '⏰ Schedule', target: 'schedule' },
+                        { id: 'team', label: '✨ 派对团队', labelEn: '✨ Team', target: 'team' },
+                        { id: 'foodies', label: '🐱 小馋猫列表', labelEn: '🐱 Foodie List', target: 'foodies' },
+                        { id: 'drinking', label: '🍺 逃酒排行榜', labelEn: '🍺 Drinking', target: 'drinking' },
+                        { id: 'games', label: '🎮 游戏', labelEn: '🎮 Games', target: 'games' }
+                    ];
+                }
+
+                // 从后端加载时间安排（如果有的话）
+                if (data.timeline && data.timeline.length > 0) {
+                    currentTimeline = data.timeline;
+                } else {
+                    // 使用默认时间安排
+                    currentTimeline = [
+                        { time: '7:30 PM', event: '🍰 制作提拉米苏（对制作提拉米苏感兴趣的朋友可以提前来）' },
+                        { time: '8:30 PM', event: '🎉 派对正式开始😍' },
+                        { time: '9:00 PM', event: '🍜 夜宵时间' },
+                        { time: '10:00 PM', event: '🎮 游戏时间' },
+                        { time: '11:00 PM', event: '🎵 Party Mode' }
+                    ];
+                }
 
                 renderSupportMembersEditor();
+                renderNavMenuList();
                 renderTimelineEditor();
                 renderCustomMembersList(data.customMembers || []);
             } catch (error) {
@@ -1126,49 +1372,64 @@
             }
         }
 
-        // 渲染 Support 成员编辑器
+        // ==================== Support 成员管理（紧凑列表 + 拖拽排序） ====================
+        let currentEditingMemberIndex = null;
+
+        // 渲染 Support 成员列表
         function renderSupportMembersEditor() {
-            const container = document.getElementById('support-members-editor');
+            const container = document.getElementById('support-members-list');
             const html = currentSupportMembers.map((member, index) => `
-                <div class="member-card-edit" id="member-card-${index}">
-                    <div class="member-info">
-                        <div class="form-group">
-                            <label>ID <span style="opacity: 0.6; font-size: 0.85rem;">(唯一标识符)</span></label>
-                            <input type="text" value="${member.id}" oninput="updateSupportMember(${index}, 'id', this.value)">
-                        </div>
-                        <div class="form-group">
-                            <label>名字</label>
-                            <input type="text" value="${member.name}" oninput="updateSupportMember(${index}, 'name', this.value)">
-                        </div>
-                        <div class="form-group">
-                            <label>角色</label>
-                            <input type="text" value="${member.role}" oninput="updateSupportMember(${index}, 'role', this.value)">
-                        </div>
-                        <div class="form-group">
-                            <label>描述</label>
-                            <textarea oninput="updateSupportMember(${index}, 'description', this.value)">${member.description || ''}</textarea>
-                        </div>
+                <div class="compact-list-item" draggable="true" data-index="${index}">
+                    <span class="drag-handle">☰</span>
+                    <div class="item-info" onclick="openEditMemberModal(${index})">
+                        <div class="item-name">${member.name}</div>
+                        <div class="item-role">${member.role}</div>
                     </div>
-                    <div class="member-actions">
-                        <button onclick="deleteSupportMember(${index})" class="btn btn-danger btn-small">🗑️ 删除</button>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="event.stopPropagation(); openEditMemberModal(${index})" title="编辑">✏️</button>
+                        <button class="btn-icon" onclick="event.stopPropagation(); deleteSupportMember(${index})" title="删除">🗑️</button>
                     </div>
                 </div>
             `).join('');
             container.innerHTML = html;
+
+            // 添加拖拽事件监听
+            initDragAndDrop('support-members-list', currentSupportMembers, renderSupportMembersEditor);
         }
 
-        // 更新 Support 成员（实时更新）
-        function updateSupportMember(index, field, value) {
-            currentSupportMembers[index][field] = value;
+        // 打开编辑成员模态窗口
+        function openEditMemberModal(index) {
+            currentEditingMemberIndex = index;
+            const member = currentSupportMembers[index];
 
-            // 添加视觉反馈
-            const card = document.getElementById(`member-card-${index}`);
-            if (card) {
-                card.style.border = '2px solid #fbbf24';
-                setTimeout(() => {
-                    card.style.border = '1px solid rgba(255, 255, 255, 0.1)';
-                }, 500);
-            }
+            document.getElementById('edit-member-id').value = member.id || '';
+            document.getElementById('edit-member-name').value = member.name || '';
+            document.getElementById('edit-member-role').value = member.role || '';
+            document.getElementById('edit-member-description').value = member.description || '';
+
+            document.getElementById('edit-member-modal').classList.add('active');
+        }
+
+        // 关闭编辑成员模态窗口
+        function closeEditMemberModal() {
+            document.getElementById('edit-member-modal').classList.remove('active');
+            currentEditingMemberIndex = null;
+        }
+
+        // 保存编辑的成员
+        function saveEditedMember() {
+            if (currentEditingMemberIndex === null) return;
+
+            currentSupportMembers[currentEditingMemberIndex] = {
+                ...currentSupportMembers[currentEditingMemberIndex],
+                id: document.getElementById('edit-member-id').value,
+                name: document.getElementById('edit-member-name').value,
+                role: document.getElementById('edit-member-role').value,
+                description: document.getElementById('edit-member-description').value
+            };
+
+            renderSupportMembersEditor();
+            closeEditMemberModal();
         }
 
         // 删除 Support 成员
@@ -1189,6 +1450,8 @@
             };
             currentSupportMembers.push(newMember);
             renderSupportMembersEditor();
+            // 自动打开编辑窗口
+            setTimeout(() => openEditMemberModal(currentSupportMembers.length - 1), 100);
         }
 
         // 保存 Support 成员
@@ -1211,6 +1474,152 @@
             } catch (error) {
                 alert('❌ 保存失败: ' + error.message);
             }
+        }
+
+        // ==================== 导航菜单管理 ====================
+        let currentNavMenuItems = [];
+        let currentEditingNavIndex = null;
+
+        // 渲染导航菜单列表
+        function renderNavMenuList() {
+            const container = document.getElementById('nav-menu-list');
+            const html = currentNavMenuItems.map((item, index) => `
+                <div class="compact-list-item" draggable="true" data-index="${index}">
+                    <span class="drag-handle">☰</span>
+                    <div class="item-info" onclick="openEditNavModal(${index})">
+                        <div class="item-name">${item.label}</div>
+                        <div class="item-role">${item.labelEn} → #${item.target}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="event.stopPropagation(); openEditNavModal(${index})" title="编辑">✏️</button>
+                    </div>
+                </div>
+            `).join('');
+            container.innerHTML = html;
+
+            // 添加拖拽事件监听
+            initDragAndDrop('nav-menu-list', currentNavMenuItems, renderNavMenuList);
+        }
+
+        // 打开编辑导航菜单模态窗口
+        function openEditNavModal(index) {
+            currentEditingNavIndex = index;
+            const item = currentNavMenuItems[index];
+
+            document.getElementById('edit-nav-label').value = item.label || '';
+            document.getElementById('edit-nav-label-en').value = item.labelEn || '';
+            document.getElementById('edit-nav-target').value = item.target || '';
+
+            document.getElementById('edit-nav-modal').classList.add('active');
+        }
+
+        // 关闭编辑导航菜单模态窗口
+        function closeEditNavModal() {
+            document.getElementById('edit-nav-modal').classList.remove('active');
+            currentEditingNavIndex = null;
+        }
+
+        // 保存编辑的导航菜单项
+        function saveEditedNavItem() {
+            if (currentEditingNavIndex === null) return;
+
+            currentNavMenuItems[currentEditingNavIndex] = {
+                ...currentNavMenuItems[currentEditingNavIndex],
+                label: document.getElementById('edit-nav-label').value,
+                labelEn: document.getElementById('edit-nav-label-en').value,
+                target: document.getElementById('edit-nav-target').value
+            };
+
+            renderNavMenuList();
+            closeEditNavModal();
+        }
+
+        // 保存导航菜单
+        async function saveNavMenu() {
+            if (!confirm('确定要保存导航菜单吗？')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/nav-menu`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ navMenuItems: currentNavMenuItems })
+                });
+
+                if (response.ok) {
+                    alert('✅ 导航菜单已保存！');
+                    refreshData();
+                } else {
+                    alert('❌ 保存失败！');
+                }
+            } catch (error) {
+                alert('❌ 保存失败: ' + error.message);
+            }
+        }
+
+        // ==================== 拖拽排序通用函数 ====================
+        function initDragAndDrop(containerId, dataArray, renderCallback) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            let draggedElement = null;
+            let draggedIndex = null;
+
+            container.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('compact-list-item')) {
+                    draggedElement = e.target;
+                    draggedIndex = parseInt(e.target.dataset.index);
+                    e.target.classList.add('dragging');
+                }
+            });
+
+            container.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('compact-list-item')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const dragging = container.querySelector('.dragging');
+
+                if (afterElement == null) {
+                    container.appendChild(dragging);
+                } else {
+                    container.insertBefore(dragging, afterElement);
+                }
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+
+                // 获取新的顺序
+                const items = Array.from(container.querySelectorAll('.compact-list-item'));
+                const newOrder = items.map(item => parseInt(item.dataset.index));
+
+                // 重新排列数据数组
+                const newArray = newOrder.map(index => dataArray[index]);
+                dataArray.length = 0;
+                dataArray.push(...newArray);
+
+                // 重新渲染
+                renderCallback();
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.compact-list-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
         // 渲染时间安排编辑器

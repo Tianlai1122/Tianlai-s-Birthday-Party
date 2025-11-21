@@ -95,22 +95,11 @@ let data = {
     lastVisit: null
 };
 
-// 默认的 Support 团队成员
-const defaultSupportMembers = [
-    { id: 'geyuxin', name: '@葛语歆', role: '📷 CCD摄影师', description: '总能发现别人自拍都没注意到的双下巴。', isDefault: true },
-    { id: 'westonfang', name: '@Professor Weston Fang', role: '🎓 Academic指导', description: '正在造火星无人机', isDefault: true },
-    { id: 'sherryhua', name: '@Sherry Hua', role: '🍹 逃酒经验分享', description: '能从任何酒局中优雅逃酒的Real Master', isDefault: true },
-    { id: 'frank', name: '@Frank @Henry @沈艺如', role: '🏋️‍♂️ 健身教练', description: '让你又酸又爽，想直接在旁边的GYM做三组卧推。', isDefault: true },
-    { id: 'kimi', name: '@Kimi', role: '🥑 高级营养师', description: '一边说少吃碳水，一边偷偷啃掉三个麦芬。（真的大厨）', isDefault: true },
-    { id: 'carrie', name: '@Carrie', role: '💅 抽皮条大王 可以代抽皮条', description: '"不怕皮厚，只怕不抽。"', isDefault: true },
-    { id: 'zhangtianen', name: '@张天恩', role: '📸 网红经验分享', description: '经典名言"我从小就爱说脏话"', isDefault: true },
-    { id: 'ishan', name: '@Ishan', role: '🕉️ 印度语学习', description: '🙏 啊ki苦力hoyahoban～', isDefault: true },
-    { id: 'lianshuitian', name: '@连水天', role: '🧋 奶茶大王', description: '一杯全糖少冰，甜过你的恋爱史。', isDefault: true },
-    { id: 'jessica', name: '@Jessica', role: '📈 炒股', description: '她的股票走势图看起来像心电图。', isDefault: true },
-    { id: 'racing', name: '@任怡静', role: '🏍️ 飙车经验分享', description: '红灯？你别闹了😎', isDefault: true },
-    { id: 'church', name: '@Krystal @Thomas', role: '🙏 教会经验分享', description: 'UNC 最温柔。', isDefault: true },
-    { id: 'linguist', name: '@Zhongyu', role: '🗣️ 语言学家', description: '"农""浓"', isDefault: true }
-];
+// Support 团队成员（从后端加载）
+let supportMembers = [];
+
+// 导航菜单项（从后端加载）
+let navMenuItems = [];
 
 // 选中的vibe选项（临时存储）
 let selectedVibes = new Set();
@@ -123,6 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 DOMContentLoaded event fired');
     await loadData();
     console.log('✅ Data loaded');
+    renderNavMenu(); // 渲染导航菜单
     initCountdown();
     trackVisit();
     renderAll();
@@ -220,6 +210,16 @@ async function loadData() {
         if (response.ok) {
             const serverData = await response.json();
             data = { ...data, ...serverData };
+
+            // 加载 Support 成员
+            if (serverData.supportMembers && Array.isArray(serverData.supportMembers)) {
+                supportMembers = serverData.supportMembers;
+            }
+
+            // 加载导航菜单
+            if (serverData.navMenuItems && Array.isArray(serverData.navMenuItems)) {
+                navMenuItems = serverData.navMenuItems;
+            }
         }
     } catch (error) {
         console.log('使用本地数据');
@@ -227,7 +227,30 @@ async function loadData() {
         const localData = localStorage.getItem('partyData');
         if (localData) {
             data = JSON.parse(localData);
+            if (data.supportMembers && Array.isArray(data.supportMembers)) {
+                supportMembers = data.supportMembers;
+            }
+            if (data.navMenuItems && Array.isArray(data.navMenuItems)) {
+                navMenuItems = data.navMenuItems;
+            }
         }
+    }
+}
+
+// 渲染导航菜单
+function renderNavMenu() {
+    const navMenuList = document.querySelector('.nav-menu-list');
+    if (!navMenuList || navMenuItems.length === 0) return;
+
+    const html = navMenuItems.map(item => `
+        <li><a href="#${item.target}" onclick="navigateTo('${item.target}')" data-i18n="nav.${item.id}">${item.label}</a></li>
+    `).join('');
+
+    navMenuList.innerHTML = html;
+
+    // 重新应用翻译
+    if (typeof applyLanguage === 'function') {
+        applyLanguage();
     }
 }
 
@@ -1410,8 +1433,8 @@ function renderCategoryMembers(category, containerId) {
         return;
     }
 
-    // 对于 support 分类，包含默认成员
-    const allMembers = [...defaultSupportMembers, ...customMembers];
+    // 对于 support 分类，包含从后端加载的成员
+    const allMembers = [...supportMembers, ...customMembers];
     console.log(`✅ Rendering support:`, allMembers.length, 'total members');
 
     const memberCards = allMembers.map(member => {

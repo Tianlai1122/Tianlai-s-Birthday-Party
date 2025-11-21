@@ -41,7 +41,30 @@ let data = {
     memberLikes: {},
     memberComments: {},
     customMembers: [],
-    supportMembers: [],
+    supportMembers: [
+        { id: 'geyuxin', name: '@葛语歆', role: '📷 CCD摄影师', description: '总能发现别人自拍都没注意到的双下巴。', isDefault: true },
+        { id: 'westonfang', name: '@Professor Weston Fang', role: '🎓 Academic指导', description: '正在造火星无人机', isDefault: true },
+        { id: 'sherryhua', name: '@Sherry Hua', role: '🍹 逃酒经验分享', description: '能从任何酒局中优雅逃酒的Real Master', isDefault: true },
+        { id: 'frank', name: '@Frank @Henry @沈艺如', role: '🏋️‍♂️ 健身教练', description: '让你又酸又爽，想直接在旁边的GYM做三组卧推。', isDefault: true },
+        { id: 'kimi', name: '@Kimi', role: '🥑 高级营养师', description: '一边说少吃碳水，一边偷偷啃掉三个麦芬。（真的大厨）', isDefault: true },
+        { id: 'carrie', name: '@Carrie', role: '💅 抽皮条大王 可以代抽皮条', description: '"不怕皮厚，只怕不抽。"', isDefault: true },
+        { id: 'zhangtianen', name: '@张天恩', role: '📸 网红经验分享', description: '经典名言"我从小就爱说脏话"', isDefault: true },
+        { id: 'ishan', name: '@Ishan', role: '🕉️ 印度语学习', description: '🙏 啊ki苦力hoyahoban～', isDefault: true },
+        { id: 'lianshuitian', name: '@连水天', role: '🧋 奶茶大王', description: '一杯全糖少冰，甜过你的恋爱史。', isDefault: true },
+        { id: 'jessica', name: '@Jessica', role: '📈 炒股', description: '她的股票走势图看起来像心电图。', isDefault: true },
+        { id: 'racing', name: '@任怡静', role: '🏍️ 飙车经验分享', description: '红灯？你别闹了😎', isDefault: true },
+        { id: 'church', name: '@Krystal @Thomas', role: '🙏 教会经验分享', description: 'UNC 最温柔。', isDefault: true },
+        { id: 'linguist', name: '@Zhongyu', role: '🗣️ 语言学家', description: '"农""浓"', isDefault: true }
+    ],
+    navMenuItems: [
+        { id: 'home', label: '🏠 首页', labelEn: '🏠 Home', target: 'hero' },
+        { id: 'info', label: '📍 派对信息', labelEn: '📍 Party Info', target: 'info' },
+        { id: 'schedule', label: '⏰ 时间安排', labelEn: '⏰ Schedule', target: 'schedule' },
+        { id: 'team', label: '✨ 派对团队', labelEn: '✨ Team', target: 'team' },
+        { id: 'foodies', label: '🐱 小馋猫列表', labelEn: '🐱 Foodie List', target: 'foodies' },
+        { id: 'drinking', label: '🍺 逃酒排行榜', labelEn: '🍺 Drinking', target: 'drinking' },
+        { id: 'games', label: '🎮 游戏', labelEn: '🎮 Games', target: 'games' }
+    ],
     gameLobbies: [],
     partyInfo: {
         title: "Noah's 22nd Birthday Party 🎉",
@@ -281,6 +304,19 @@ function registerRoutes(app) {
         data.timeline = timeline;
         await saveData();
         res.json({ success: true, timeline: data.timeline });
+    });
+
+    // 导航菜单管理
+    app.post('/api/nav-menu', async (req, res) => {
+        const { navMenuItems } = req.body;
+
+        if (!navMenuItems || !Array.isArray(navMenuItems)) {
+            return res.status(400).json({ error: '导航菜单数据无效' });
+        }
+
+        data.navMenuItems = navMenuItems;
+        await saveData();
+        res.json({ success: true, navMenuItems: data.navMenuItems });
     });
 
     // ==================== 游戏组局 API ====================
