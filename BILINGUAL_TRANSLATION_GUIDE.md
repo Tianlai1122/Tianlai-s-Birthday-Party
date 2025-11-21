@@ -10,22 +10,29 @@
 
 ### 1. 团队成员卡片
 
-#### Support 成员（从后端加载）
+#### 所有成员（从后端加载）
 - ✅ 名字（name / nameEn）
 - ✅ 角色（role / roleEn）
 - ✅ 描述（description / descriptionEn）
 
+**包括**：
+- **Food 分类**：Noah（当晚的大厨）
+- **Dessert 分类**：Krystal（提拉米苏大师）
+- **Drinks 分类**：李哲豪（调酒师）
+- **Support 分类**：13 位 Support 成员
+
 **示例**：
 ```javascript
 {
-  id: 'geyuxin',
-  name: '@葛语歆',
-  nameEn: '@Ge Yuxin',
-  role: '📷 CCD摄影师',
-  roleEn: '📷 CCD Photographer',
-  description: '总能发现别人自拍都没注意到的双下巴。',
-  descriptionEn: 'Always spots the double chin that others miss in their selfies.',
-  isDefault: true
+  id: 'noah',
+  name: '@Noah',
+  nameEn: '@Noah',
+  role: '当晚的大厨',
+  roleEn: 'Chef of the Night',
+  description: '有少量素食选项',
+  descriptionEn: 'Some vegetarian options available',
+  isDefault: true,
+  category: 'food'
 }
 ```
 
@@ -69,16 +76,34 @@
 ### 前端（frontend/app.js）
 
 #### 1. renderCategoryMembers() 函数
+
+**关键改进**：
+- 现在动态渲染 food、dessert、drinks 分类的成员
+- 先渲染该分类的 supportMembers（如 Noah、Krystal、李哲豪）
+- 再追加用户添加的自定义成员
+
 ```javascript
-// 处理名字显示 - 支持双语
+// 对于 food、dessert、drinks 分类，先渲染该分类的 supportMembers
+const categoryMembers = supportMembers.filter(m => m.category === category);
 const currentLang = localStorage.getItem('language') || 'zh';
-let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
 
-// 处理角色显示 - 支持双语
-const displayRole = currentLang === 'en' && member.roleEn ? member.roleEn : member.role;
+const categoryCards = categoryMembers.map(member => {
+    // 处理名字显示 - 支持双语
+    let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
+    if (displayName && !displayName.startsWith('@')) {
+        displayName = '@' + displayName;
+    }
 
-// 处理描述显示 - 支持双语
-const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
+    // 处理角色显示 - 支持双语
+    const displayRole = currentLang === 'en' && member.roleEn ? member.roleEn : member.role;
+
+    // 处理描述显示 - 支持双语
+    const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
+
+    return `<div class="team-card" data-member="${member.id}">...</div>`;
+}).join('');
+
+container.innerHTML = categoryCards;
 ```
 
 #### 2. renderTimeline() 函数
