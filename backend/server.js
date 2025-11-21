@@ -7,21 +7,29 @@ const path = require('path');
 const mainApp = express();
 const adminApp = express();
 
-const MAIN_PORT = 3000;
+const MAIN_PORT = process.env.PORT || 3000;
 const ADMIN_PORT = 3001;
 const DATA_FILE = path.join(__dirname, 'party-data.json');
 
+// CORS 配置 - 允许 Vercel 前端访问
+const corsOptions = {
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://YOUR_FRONTEND_URL.vercel.app', // 👈 部署前端后，替换这里的 URL
+        /\.vercel\.app$/ // 允许所有 vercel.app 子域名
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
 // 主应用中间件
-mainApp.use(cors());
+mainApp.use(cors(corsOptions));
 mainApp.use(express.json());
-mainApp.use(express.static(__dirname, {
-    index: 'index.html'
-}));
 
 // 管理应用中间件
-adminApp.use(cors());
+adminApp.use(cors(corsOptions));
 adminApp.use(express.json());
-adminApp.use(express.static(__dirname));
 
 // 初始化数据
 let data = {
@@ -395,6 +403,7 @@ async function start() {
     });
 }
 
+// 启动服务器
 start();
 
 // 优雅关闭
