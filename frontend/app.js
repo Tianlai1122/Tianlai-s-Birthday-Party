@@ -1647,8 +1647,10 @@ function renderCategoryMembers(category, containerId) {
         return `
             <div class="team-card" data-member="${member.id}">
                 ${deleteBtn}
-                <div class="role">${displayRole}</div>
-                <div class="name">${displayName}</div>
+                <div class="role-name-container">
+                    <div class="role">${displayRole}</div>
+                    <div class="name">${displayName}</div>
+                </div>
                 ${displayDescription ? `<div class="description">${displayDescription}</div>` : ''}
                 <div class="team-actions">
                     <button class="like-btn" onclick="likeMember('${member.id}')">

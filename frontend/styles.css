@@ -696,19 +696,32 @@ body {
 #support-team-grid .team-card {
     max-width: 100%;
     padding: 25px 20px;
+    text-align: left;
+}
+
+/* 角色和名字的容器 - 使用 flexbox 横向排列 */
+#support-team-grid .team-card .role-name-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
 #support-team-grid .role {
-    font-size: 0.95rem;
-    opacity: 0.8;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 #support-team-grid .name {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary);
-    margin-bottom: 12px;
+    margin-bottom: 0;
+    flex-shrink: 1;
 }
 
 #support-team-grid .description {
