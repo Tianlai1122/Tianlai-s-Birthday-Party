@@ -1501,22 +1501,30 @@ function renderCategoryMembers(category, containerId) {
         const customCards = customMembers.map(member => {
             const deleteBtn = `<button onclick="deleteMember('${member.id}')" class="delete-member-btn" title="删除成员">🗑️</button>`;
 
-            let displayName = member.name;
+            // 处理名字显示 - 支持双语
+            const currentLang = localStorage.getItem('language') || 'zh';
+            let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
             if (displayName && !displayName.startsWith('@')) {
                 displayName = '@' + displayName;
             }
 
+            // 处理角色显示 - 支持双语
+            const displayRole = currentLang === 'en' && member.roleEn ? member.roleEn : member.role;
+
+            // 处理描述显示 - 支持双语
+            const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
+
             return `
                 <div class="team-card" data-member="${member.id}" data-custom="true">
                     ${deleteBtn}
-                    <div class="role">${member.role}</div>
+                    <div class="role">${displayRole}</div>
                     <div class="name">${displayName}</div>
-                    ${member.description ? `<div class="description">${member.description}</div>` : ''}
+                    ${displayDescription ? `<div class="description">${displayDescription}</div>` : ''}
                     <div class="team-actions">
                         <button class="like-btn" onclick="likeMember('${member.id}')">
                             😍 <span class="like-count" id="likes-${member.id}">0</span>
                         </button>
-                        <button class="comment-btn" onclick="openCommentModal('${member.id}', '${member.name}')">
+                        <button class="comment-btn" onclick="openCommentModal('${member.id}', '${displayName}')">
                             💬 <span data-i18n="team.comment">留言</span>
                             <span class="comment-badge" id="comment-badge-${member.id}">0</span>
                         </button>
