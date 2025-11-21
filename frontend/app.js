@@ -638,9 +638,12 @@ function renderComments(memberId) {
 
 // 更新所有成员的留言数量徽章
 function updateCommentBadges() {
-    const members = ['yudi', 'noah', 'krystal', 'lizhehao'];
+    // 获取所有成员 ID（包括默认成员和自定义成员）
+    const defaultMembers = ['yudi', 'noah', 'krystal', 'lizhehao'];
+    const customMemberIds = data.customMembers ? data.customMembers.map(m => m.id) : [];
+    const allMembers = [...defaultMembers, ...customMemberIds];
 
-    members.forEach(memberId => {
+    allMembers.forEach(memberId => {
         const badge = document.getElementById(`comment-badge-${memberId}`);
         if (badge) {
             const count = data.memberComments && data.memberComments[memberId]
@@ -1442,6 +1445,7 @@ function renderCategoryMembers(category, containerId) {
                         </button>
                         <button class="comment-btn" onclick="openCommentModal('${member.id}', '${member.name}')">
                             💬 <span data-i18n="team.comment">留言</span>
+                            <span class="comment-badge" id="comment-badge-${member.id}">0</span>
                         </button>
                     </div>
                 </div>
@@ -1479,6 +1483,7 @@ function renderCategoryMembers(category, containerId) {
                     </button>
                     <button class="comment-btn" onclick="openCommentModal('${member.id}', '${member.name}')">
                         💬 <span data-i18n="team.comment">留言</span>
+                        <span class="comment-badge" id="comment-badge-${member.id}">0</span>
                     </button>
                 </div>
             </div>
