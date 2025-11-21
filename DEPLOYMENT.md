@@ -292,10 +292,10 @@ git push
 - ⚠️ 15 分钟无活动会休眠
 - ⚠️ 重启后 `party-data.json` 会重置
 
-**解决方案：**
-- 升级到付费版（$7/月）
-- 或使用数据库（MongoDB Atlas 免费版）
-- 或使用 Railway.app（有免费额度）
+**✅ 推荐解决方案：使用 Supabase（免费且稳定）**
+- 查看 `SUPABASE_QUICKSTART.md` 快速配置指南
+- 或查看 `SUPABASE_SETUP.md` 详细配置指南
+- 5 分钟完成配置，数据永久保存！
 
 ### Q4: Admin 后台怎么访问？
 
@@ -361,15 +361,14 @@ node server.js
 const apiKey = process.env.API_KEY;
 ```
 
-### 3️⃣ 数据持久化
+### 3️⃣ 数据持久化（推荐）
 
-**使用 MongoDB Atlas（免费）：**
+**✅ 使用 Supabase（免费且稳定）：**
 
-1. 注册 [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
-2. 创建免费集群
-3. 获取连接字符串
-4. 在 Render 添加环境变量：`MONGODB_URI=mongodb+srv://...`
-5. 修改 `backend/server.js` 使用 MongoDB 替代 JSON 文件
+1. 查看 `SUPABASE_QUICKSTART.md` - 5 分钟快速配置
+2. 或查看 `SUPABASE_SETUP.md` - 详细配置指南
+3. 完全免费，比 MongoDB 更稳定
+4. 友好的可视化界面查看数据
 
 ---
 

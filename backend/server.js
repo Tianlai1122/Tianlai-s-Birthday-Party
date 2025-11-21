@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
-const { MongoClient } = require('mongodb');
+const { createClient } = require('@supabase/supabase-js');
 
 // 创建两个 Express 应用
 const mainApp = express();
@@ -12,10 +12,10 @@ const MAIN_PORT = process.env.PORT || 3000;
 const ADMIN_PORT = 3001;
 const DATA_FILE = path.join(__dirname, 'party-data.json');
 
-// MongoDB 配置
-const MONGODB_URI = process.env.MONGODB_URI || null;
-let mongoClient = null;
-let db = null;
+// Supabase 配置
+const SUPABASE_URL = process.env.SUPABASE_URL || null;
+const SUPABASE_KEY = process.env.SUPABASE_KEY || null;
+let supabase = null;
 let useDatabase = false;
 
 // CORS 配置 - 允许 Vercel 前端访问
@@ -92,40 +92,57 @@ let data = {
     visitHistory: []
 };
 
-// 连接 MongoDB
+// 连接 Supabase
 async function connectDatabase() {
-    if (!MONGODB_URI) {
-        console.log('⚠️  未配置 MONGODB_URI，使用文件系统存储（数据会在重新部署时丢失）');
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        console.log('⚠️  未配置 SUPABASE_URL 或 SUPABASE_KEY，使用文件系统存储（数据会在重新部署时丢失）');
         useDatabase = false;
         return;
     }
 
     try {
-        mongoClient = new MongoClient(MONGODB_URI);
-        await mongoClient.connect();
-        db = mongoClient.db('birthday-party');
+        supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 测试连接
+        const { data, error } = await supabase
+            .from('party_data')
+            .select('id')
+            .limit(1);
+
+        if (error) {
+            throw error;
+        }
+
         useDatabase = true;
-        console.log('✅ MongoDB 连接成功！数据将持久化保存');
+        console.log('✅ Supabase 连接成功！数据将持久化保存');
     } catch (error) {
-        console.error('❌ MongoDB 连接失败，降级使用文件系统:', error.message);
+        console.error('❌ Supabase 连接失败，降级使用文件系统:', error.message);
         useDatabase = false;
+        supabase = null;
     }
 }
 
 // 加载数据
 async function loadData() {
-    if (useDatabase && db) {
+    if (useDatabase && supabase) {
         try {
-            const collection = db.collection('party-data');
-            const savedData = await collection.findOne({ _id: 'main' });
-            if (savedData) {
-                delete savedData._id; // 移除 MongoDB 的 _id 字段
-                data = savedData;
-                console.log('✅ 从 MongoDB 加载数据成功');
+            const { data: savedData, error } = await supabase
+                .from('party_data')
+                .select('data')
+                .eq('id', 'main')
+                .single();
+
+            if (error) {
+                throw error;
+            }
+
+            if (savedData && savedData.data) {
+                data = savedData.data;
+                console.log('✅ 从 Supabase 加载数据成功');
                 return;
             }
         } catch (error) {
-            console.error('从 MongoDB 加载数据失败:', error);
+            console.error('从 Supabase 加载数据失败:', error.message);
         }
     }
 
@@ -142,18 +159,24 @@ async function loadData() {
 
 // 保存数据
 async function saveData() {
-    // 保存到 MongoDB
-    if (useDatabase && db) {
+    // 保存到 Supabase
+    if (useDatabase && supabase) {
         try {
-            const collection = db.collection('party-data');
-            await collection.updateOne(
-                { _id: 'main' },
-                { $set: { ...data, _id: 'main' } },
-                { upsert: true }
-            );
-            console.log('✅ 数据已保存到 MongoDB');
+            const { error } = await supabase
+                .from('party_data')
+                .upsert({
+                    id: 'main',
+                    data: data,
+                    updated_at: new Date().toISOString()
+                });
+
+            if (error) {
+                throw error;
+            }
+
+            console.log('✅ 数据已保存到 Supabase');
         } catch (error) {
-            console.error('❌ 保存到 MongoDB 失败:', error);
+            console.error('❌ 保存到 Supabase 失败:', error.message);
         }
     }
 
@@ -567,7 +590,7 @@ async function start() {
 ║                                        ║
 ║   API 服务: http://localhost:${MAIN_PORT}       ║
 ${!isRender ? `║   管理后台: http://localhost:${ADMIN_PORT}     ║` : ''}
-║   数据存储: ${useDatabase ? 'MongoDB (持久化)' : '文件系统 (临时)'}
+║   数据存储: ${useDatabase ? 'Supabase (持久化)' : '文件系统 (临时)'}
 ║                                        ║
 ╚════════════════════════════════════════╝
         `);
