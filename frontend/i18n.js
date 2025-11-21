@@ -296,6 +296,16 @@ function toggleLanguage() {
     if (typeof renderAll === 'function') {
         renderAll();
     }
+
+    // 重新渲染时间安排
+    if (typeof renderTimeline === 'function') {
+        renderTimeline();
+    }
+
+    // 重新渲染团队成员（支持双语）
+    if (typeof renderAllTeamMembers === 'function') {
+        renderAllTeamMembers();
+    }
 }
 
 // 应用语言

@@ -121,6 +121,9 @@ let supportMembers = [];
 // 导航菜单项（从后端加载）
 let navMenuItems = [];
 
+// 时间安排（从后端加载）
+let timeline = [];
+
 // 选中的vibe选项（临时存储）
 let selectedVibes = new Set();
 
@@ -133,6 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     console.log('✅ Data loaded');
     renderNavMenu(); // 渲染导航菜单
+    renderTimeline(); // 渲染时间安排
     initCountdown();
     trackVisit();
     renderAll();
@@ -241,6 +245,11 @@ async function loadData() {
             if (serverData.navMenuItems && Array.isArray(serverData.navMenuItems)) {
                 navMenuItems = serverData.navMenuItems;
             }
+
+            // 加载时间安排
+            if (serverData.timeline && Array.isArray(serverData.timeline)) {
+                timeline = serverData.timeline;
+            }
         }
     } catch (error) {
         console.log('使用本地数据');
@@ -253,6 +262,9 @@ async function loadData() {
             }
             if (data.navMenuItems && Array.isArray(data.navMenuItems)) {
                 navMenuItems = data.navMenuItems;
+            }
+            if (data.timeline && Array.isArray(data.timeline)) {
+                timeline = data.timeline;
             }
         }
     }
@@ -273,6 +285,32 @@ function renderNavMenu() {
     if (typeof applyLanguage === 'function') {
         applyLanguage();
     }
+}
+
+// 渲染时间安排
+function renderTimeline() {
+    const timelineContainer = document.querySelector('.timeline');
+    if (!timelineContainer || timeline.length === 0) return;
+
+    const currentLang = localStorage.getItem('language') || 'zh';
+
+    const html = timeline.map((item, index) => {
+        // 根据当前语言选择显示内容
+        const displayEvent = currentLang === 'en' && item.eventEn ? item.eventEn : item.event;
+
+        // 第二个项目（派对开始）和最后一个项目（After Party）高亮显示
+        const isHighlight = index === 1 || index === timeline.length - 1;
+        const highlightClass = isHighlight ? 'highlight' : '';
+
+        return `
+            <div class="timeline-item ${highlightClass}">
+                <div class="time">${item.time}</div>
+                <div class="event">${displayEvent}</div>
+            </div>
+        `;
+    }).join('');
+
+    timelineContainer.innerHTML = html;
 }
 
 // 保存数据
@@ -1500,23 +1538,30 @@ function renderCategoryMembers(category, containerId) {
         const deleteBtn = member.isDefault ? '' :
             `<button onclick="deleteMember('${member.id}')" class="delete-member-btn" title="删除成员">🗑️</button>`;
 
-        // 处理名字显示
-        let displayName = member.name;
+        // 处理名字显示 - 支持双语
+        const currentLang = localStorage.getItem('language') || 'zh';
+        let displayName = currentLang === 'en' && member.nameEn ? member.nameEn : member.name;
         if (displayName && !displayName.startsWith('@')) {
             displayName = '@' + displayName;
         }
 
+        // 处理角色显示 - 支持双语
+        const displayRole = currentLang === 'en' && member.roleEn ? member.roleEn : member.role;
+
+        // 处理描述显示 - 支持双语
+        const displayDescription = currentLang === 'en' && member.descriptionEn ? member.descriptionEn : member.description;
+
         return `
             <div class="team-card" data-member="${member.id}">
                 ${deleteBtn}
-                <div class="role">${member.role}</div>
+                <div class="role">${displayRole}</div>
                 <div class="name">${displayName}</div>
-                ${member.description ? `<div class="description">${member.description}</div>` : ''}
+                ${displayDescription ? `<div class="description">${displayDescription}</div>` : ''}
                 <div class="team-actions">
                     <button class="like-btn" onclick="likeMember('${member.id}')">
                         😍 <span class="like-count" id="likes-${member.id}">0</span>
                     </button>
-                    <button class="comment-btn" onclick="openCommentModal('${member.id}', '${member.name}')">
+                    <button class="comment-btn" onclick="openCommentModal('${member.id}', '${displayName}')">
                         💬 <span data-i18n="team.comment">留言</span>
                         <span class="comment-badge" id="comment-badge-${member.id}">0</span>
                     </button>
