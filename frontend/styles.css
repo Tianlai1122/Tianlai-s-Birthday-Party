@@ -417,6 +417,93 @@ body {
     font-size: 1.4rem;
 }
 
+/* 派对须知卡片优化 */
+.party-notice-card {
+    text-align: left;
+}
+
+.party-notice-card h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.notice-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notice-item-inline {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border-left: 3px solid rgba(255, 107, 157, 0.3);
+    transition: all 0.3s ease;
+}
+
+.notice-item-inline:hover {
+    background: rgba(255, 107, 157, 0.08);
+    border-left-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.notice-item-inline .notice-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notice-item-inline p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 联系方式高亮 */
+.contact-highlight {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(168, 85, 247, 0.15));
+    border-left-color: var(--accent);
+    border: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+.contact-highlight:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.25), rgba(168, 85, 247, 0.25));
+    border-color: var(--accent);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-info p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.phone-number {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+}
+
+.phone-number:hover {
+    color: #fcd34d;
+    transform: scale(1.05);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
 /* 时间卡片特殊样式 */
 .time-card {
     background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(168, 85, 247, 0.2)) !important;
