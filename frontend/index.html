@@ -203,21 +203,60 @@
             <div class="team-category">
                 <h3>🍜 夜宵</h3>
                 <div class="team-grid" id="food-team-grid">
-                    <!-- 动态渲染 Noah 卡片 -->
+                    <div class="team-card" data-member="noah">
+                        <div class="role">当晚的大厨</div>
+                        <div class="name">@Noah</div>
+                        <div class="note">有少量素食选项</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('noah')">
+                                😍 <span class="like-count" id="likes-noah">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('noah', 'Noah')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-noah">0</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="team-category">
                 <h3>🍰 饭后点心</h3>
                 <div class="team-grid" id="dessert-team-grid">
-                    <!-- 动态渲染 Krystal 卡片 -->
+                    <div class="team-card" data-member="krystal">
+                        <div class="role">提拉米苏大师</div>
+                        <div class="name">@Krystal</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('krystal')">
+                                😍 <span class="like-count" id="likes-krystal">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('krystal', 'Krystal')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-krystal">0</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="team-category">
                 <h3>🍷 酒水</h3>
                 <div class="team-grid" id="drinks-team-grid">
-                    <!-- 动态渲染李哲豪卡片 -->
+                    <div class="team-card" data-member="lizhehao">
+                        <div class="role">调酒师</div>
+                        <div class="name">@李哲豪</div>
+                        <div class="note">酒水管够！要喝酒的就别开车来了！</div>
+                        <div class="note">提供水和软饮料</div>
+                        <div class="team-actions">
+                            <button class="like-btn" onclick="likeMember('lizhehao')">
+                                😍 <span class="like-count" id="likes-lizhehao">0</span>
+                            </button>
+                            <button class="comment-btn" onclick="openCommentModal('lizhehao', '李哲豪')">
+                                💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-lizhehao">0</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
