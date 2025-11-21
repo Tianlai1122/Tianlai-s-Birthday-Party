@@ -579,7 +579,11 @@
     </div>
     
     <script>
-        const API_URL = 'http://localhost:3001/api';
+        // API 配置 - 环境自适应
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api'
+            : 'https://tianlai-s-birthday-party.onrender.com/api';
+
         let autoRefreshInterval;
         let currentSupportMembers = [];
         let currentTimeline = [];
@@ -613,9 +617,9 @@
             }
         }
         
-        // 自动刷新
+        // 自动刷新 - 接近实时（每2秒刷新一次）
         function startAutoRefresh() {
-            autoRefreshInterval = setInterval(refreshData, 5000); // 每5秒刷新
+            autoRefreshInterval = setInterval(refreshData, 2000); // 每2秒刷新一次，接近实时
         }
         
         // 刷新数据
