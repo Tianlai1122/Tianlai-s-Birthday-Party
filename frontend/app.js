@@ -5,6 +5,27 @@ const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:3000/api'
     : 'https://tianlai-s-birthday-party.onrender.com/api';
 
+// 检测是否在微信环境中
+function isWeChatBrowser() {
+    return /micromessenger/i.test(navigator.userAgent);
+}
+
+// 处理外部链接点击（优化微信内打开体验）
+function handleExternalLink(event, url) {
+    if (isWeChatBrowser()) {
+        event.preventDefault();
+
+        // 在微信中显示提示
+        const message = '🔗 请点击右上角"..."，选择"在浏览器中打开"来访问歌单';
+        alert(message);
+
+        // 同时尝试用 window.open 打开（某些情况下可能有效）
+        setTimeout(() => {
+            window.open(url, '_blank');
+        }, 500);
+    }
+}
+
 // 数据存储
 let data = {
     foodies: [],
@@ -53,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('✅ renderAll() completed');
     console.log('✅ About to call renderAllTeamMembers()');
     renderAllTeamMembers();
+    updateCommentBadges();
 
     // 渲染游戏组局大厅
     renderGameLobbies();
@@ -511,6 +533,31 @@ function renderComments(memberId) {
     }).reverse().join('');
 
     container.innerHTML = html;
+
+    // 更新徽章
+    updateCommentBadges();
+}
+
+// 更新所有成员的留言数量徽章
+function updateCommentBadges() {
+    const members = ['yudi', 'noah', 'krystal', 'lizhehao'];
+
+    members.forEach(memberId => {
+        const badge = document.getElementById(`comment-badge-${memberId}`);
+        if (badge) {
+            const count = data.memberComments && data.memberComments[memberId]
+                ? data.memberComments[memberId].length
+                : 0;
+            badge.textContent = count;
+
+            // 如果有留言，显示徽章；否则隐藏
+            if (count > 0) {
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    });
 }
 
 // Krystal 点赞（保留兼容性）

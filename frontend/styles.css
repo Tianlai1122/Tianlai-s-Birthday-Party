@@ -438,6 +438,52 @@ body {
     color: rgba(255, 255, 255, 0.9);
 }
 
+/* 留言计数器 */
+.comments-counter {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(168, 85, 247, 0.1));
+    border-radius: 15px;
+    border: 1px solid rgba(255, 107, 157, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.counter-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.counter-label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.counter-number {
+    background: linear-gradient(135deg, #ff6b9d, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.5rem;
+    font-weight: 900;
+    min-width: 40px;
+    text-align: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
 /* Interactive Sections */
 .interactive-box {
     max-width: 600px;
@@ -891,6 +937,35 @@ body {
 
 .like-count {
     font-weight: 700;
+}
+
+/* 留言数量徽章 */
+.comment-badge {
+    display: inline-block;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: 4px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #1f2937;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    line-height: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
 }
 
 /* Delete Member Button */

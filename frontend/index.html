@@ -129,21 +129,36 @@
                             </button>
                             <button class="comment-btn" onclick="openCommentModal('yudi', 'Yudi')">
                                 💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-yudi">0</span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="music-links">
-                    <a href="https://163cn.tv/Vkvp4VS" target="_blank" class="music-link">
+                    <a href="https://163cn.tv/Vkvp4VS"
+                       target="_blank"
+                       class="music-link"
+                       onclick="handleExternalLink(event, 'https://163cn.tv/Vkvp4VS')">
                         🎵 11.22 DINNER 歌单
                     </a>
-                    <a href="https://163cn.tv/VkuMnAl" target="_blank" class="music-link">
+                    <a href="https://163cn.tv/VkuMnAl"
+                       target="_blank"
+                       class="music-link"
+                       onclick="handleExternalLink(event, 'https://163cn.tv/VkuMnAl')">
                         🎵 11.22 AFTER 11 歌单
                     </a>
                     <p class="music-note">
                         歌单分为两个，一个是11点之前，就餐的时候听的歌单偏向流行音乐，JAZZ，古典等等，一个是11点之后，party的时候。<br>
                         点击共享歌单可以添加歌曲
                     </p>
+                </div>
+
+                <!-- 留言计数器 -->
+                <div class="comments-counter">
+                    <div class="counter-item">
+                        <span class="counter-label">💬 派对留言</span>
+                        <span class="counter-number" id="total-comments-count">0</span>
+                    </div>
                 </div>
             </div>
 
@@ -160,6 +175,7 @@
                             </button>
                             <button class="comment-btn" onclick="openCommentModal('noah', 'Noah')">
                                 💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-noah">0</span>
                             </button>
                         </div>
                     </div>
@@ -178,6 +194,7 @@
                             </button>
                             <button class="comment-btn" onclick="openCommentModal('krystal', 'Krystal')">
                                 💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-krystal">0</span>
                             </button>
                         </div>
                     </div>
@@ -198,6 +215,7 @@
                             </button>
                             <button class="comment-btn" onclick="openCommentModal('lizhehao', '李哲豪')">
                                 💬 <span data-i18n="team.comment">留言</span>
+                                <span class="comment-badge" id="comment-badge-lizhehao">0</span>
                             </button>
                         </div>
                     </div>
