@@ -133,7 +133,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">国籍在卡片上选，点保存后国旗显示在这个人名字的右边（客人自己也能在报名表里选）。点卡片上的「置顶」，这个人的卡片会排到网页最前面；置顶多个人就按你点的先后排。别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
+    <p class="soft">国旗在卡片上选，点保存后显示在这个人名字的右边；报名表里不问国籍，只有你能加。点卡片上的「置顶」，这个人的卡片会排到网页最前面；置顶多个人就按你点的先后排。别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
@@ -258,7 +258,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   var TOP = ["CN", "US", "FR", "GB", "KR", "JP", "CA"];
   var SORTED = TOP.concat(REGIONS.filter(function (c) { return TOP.indexOf(c) < 0; }).sort(function (x, y) { return regionName(x).localeCompare(regionName(y), "zh-Hans-u-co-pinyin"); }));
   function flagSelect(n, i, cur) {
-    return '<select class="g-flag" aria-label="' + esc(n) + (i ? " 的第二个国籍" : " 的国籍") + '"><option value="">' + (i ? "第二个国籍（没有就不选）" : "国籍（选填）") + "</option>" +
+    return '<select class="g-flag" aria-label="' + esc(n) + (i ? " 的第二面国旗" : " 的国旗") + '"><option value="">' + (i ? "第二面国旗（没有就不选）" : "国旗（选填）") + "</option>" +
       SORTED.map(function (c) { return '<option value="' + c + '"' + (c === cur ? " selected" : "") + ">" + flagOf(c) + " " + esc(regionName(c)) + "</option>"; }).join("") + "</select>";
   }
   function cardNames() {
