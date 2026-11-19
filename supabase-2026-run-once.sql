@@ -302,3 +302,28 @@ end $$;
 
 revoke all on function bday_rsvp_auto(text, text, text, text, text, text, text) from public;
 grant execute on function bday_rsvp_auto(text, text, text, text, text, text, text) to anon, authenticated;
+
+-- ---------- deleting photos from the page ----------
+-- An album photo can be removed by whoever added it or by the person whose card it is on.
+create or replace function bday_pic_delete(p_id bigint, p_who text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(p_who, '') = '' then raise exception 'not yours'; end if;
+  delete from bday_pic where id = p_id and (who = p_who or guest = p_who);
+  if not found then raise exception 'not yours'; end if;
+end $$;
+
+-- Your own cover photo: '' takes it off again.
+create or replace function bday_card_photo(p_name text, p_photo text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not bday_known(p_name) then raise exception 'unknown guest'; end if;
+  if p_photo is null or (p_photo <> '' and (char_length(p_photo) > 400000 or p_photo !~ '^data:image/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$')) then
+    raise exception 'bad photo';
+  end if;
+  insert into bday_guest (name, photo) values (p_name, p_photo)
+  on conflict (name) do update set photo = excluded.photo;
+end $$;
+
+revoke all on function bday_pic_delete(bigint, text) from public;
+grant execute on function bday_pic_delete(bigint, text), bday_card_photo(text, text) to anon, authenticated;
