@@ -82,27 +82,36 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .dress .say{margin-top:4px}
 .dress .stk{width:116px;transform:rotate(6deg)}
 
-/* ---------- rsvp ---------- */
-.form{display:flex;flex-direction:column;margin-top:8px}
-.form fieldset{border:0;margin:20px 0 0;padding:0;min-width:0}
-.form legend.fl{margin:0 0 8px}
-.fl{display:block;margin:20px 0 8px;padding:0;font-weight:800;font-size:16px}
-.form input[type=text]{width:100%;font:inherit;font-weight:700;padding:10px 4px;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink)}
-.form input[type=text]::placeholder{color:#9A9A95;font-weight:500}
+/* ---------- rsvp: a sign-up sheet taped to the page ---------- */
+.paper{position:relative;margin-top:30px;background:#fff;padding:26px 20px 22px;box-shadow:0 2px 3px rgba(0,0,0,.14),0 10px 20px rgba(0,0,0,.09);transform:rotate(-.7deg)}
+.paper .tape{width:96px;height:28px;left:50%;top:-14px;margin-left:-48px;transform:rotate(2deg)}
+.paper .stk{position:absolute;right:-12px;top:-56px;width:96px;transform:rotate(9deg)}
+.form{display:flex;flex-direction:column}
+.form fieldset{border:0;margin:22px 0 0;padding:0;min-width:0}
+.fl{display:block;margin:22px 0 8px;padding:0;font-weight:800;font-size:15.5px}
+.form .fl:first-child{margin-top:0}
+.form legend.fl{margin:0 0 10px}
+.fl small{font-weight:500;font-size:13px;color:var(--soft);margin-left:6px}
+.form input[type=text]{width:100%;font:inherit;font-family:var(--hand);font-weight:600;font-size:24px;line-height:1.2;padding:4px 2px 6px;border:0;border-bottom:1.5px solid #CFCEC8;border-radius:0;background:transparent;color:var(--ink)}
+.form input[type=text]:focus{outline:0;border-bottom-color:var(--ink)}
+.form input[type=text]::placeholder{font-family:var(--body);font-size:15px;font-weight:500;color:#A3A29C}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips label{position:relative;cursor:pointer}
 .chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.chips span{display:block;padding:9px 14px;border:2px solid var(--ink);border-radius:999px;font-weight:700;font-size:15px;background:transparent}
-.chips input:checked + span{background:var(--ink);color:#fff}
+.chips span{display:block;padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px;background:#F1F0EB;color:var(--ink);transition:background .12s ease,transform .12s ease}
+.chips small{font-weight:500;font-size:13px;opacity:.75;margin-left:4px}
+.chips input:checked + span{background:var(--pop);transform:rotate(-1.5deg)}
 .chips input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
 .form .bigbtn{margin-top:26px;width:100%}
 .form .bigbtn:disabled{opacity:.5}
-.form-msg{min-height:1.6em;margin-top:10px;font-weight:700}
-.who{list-style:none;margin:6px 0 0;padding:0}
-.who li{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16)}
-.who b{font-weight:800}
-.who span{margin-left:auto;font-size:14px;color:var(--soft);text-align:right}
-.who .none{display:block;color:var(--soft);border:0}
+.form-msg{min-height:1.4em;margin-top:10px;font-family:var(--hand);font-weight:700;font-size:22px;line-height:1.1;color:var(--pop);text-align:center}
+.who-sheet{margin-top:44px}
+.who-sheet .sub{margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px}
+.who{list-style:none;margin:0;padding:0}
+.who li{display:flex;align-items:center;gap:10px;height:40px}
+.who b{font-family:var(--hand);font-weight:600;font-size:25px;line-height:1;white-space:nowrap}
+.who span{margin-left:auto;font-size:13.5px;color:var(--soft);text-align:right;line-height:1.2}
+.who .none{color:var(--soft);font-size:15px}
 
 /* ---------- buttons: little stickers ---------- */
 .bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
@@ -222,41 +231,47 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <section class="page" id="rsvp" hidden>
     <h2 class="hd sec">来之前填一下</h2>
     <p class="say">我好准备吃的喝的。</p>
-    <form id="rsvp-form" class="form">
-      <label class="fl" for="r-name">名字</label>
-      <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
-      <fieldset><legend class="fl">大概几点到</legend>
-        <div class="chips">
-          <label><input type="radio" name="arrive" value="14" required><span>下午 2 点，一起买菜</span></label>
-          <label><input type="radio" name="arrive" value="16"><span>下午 4 点，做饭</span></label>
-          <label><input type="radio" name="arrive" value="1930"><span>晚上 7 点半</span></label>
-          <label><input type="radio" name="arrive" value="21"><span>晚上 9 点以后</span></label>
-        </div>
-      </fieldset>
-      <fieldset><legend class="fl">当晚状态</legend>
-        <div class="chips">
-          <label><input type="radio" name="mode" value="dodge" required><span>逃酒</span></label>
-          <label><input type="radio" name="mode" value="sip"><span>小酌</span></label>
-          <label><input type="radio" name="mode" value="all"><span>不醉不归</span></label>
-          <label><input type="radio" name="mode" value="sleep"><span>直接睡在 Tianlai 家</span></label>
-        </div>
-      </fieldset>
-      <label class="fl" for="r-diet">忌口或者饮食习惯</label>
-      <input id="r-diet" type="text" maxlength="200" placeholder="没有就不填，只有我看得到">
-      <button class="bigbtn" type="submit" id="r-send">提交</button>
-      <p class="form-msg" id="r-msg" role="status"></p>
-    </form>
-    <p class="sub">谁来 <span id="who-n"></span></p>
-    <ul class="who" id="who"></ul>
+    <div class="paper">
+      <i class="tape" aria-hidden="true"></i>
+      <form id="rsvp-form" class="form">
+        <label class="fl" for="r-name">名字</label>
+        <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
+        <fieldset><legend class="fl">大概几点到</legend>
+          <div class="chips">
+            <label><input type="radio" name="arrive" value="16" required><span>下午 4 点，做饭</span></label>
+            <label><input type="radio" name="arrive" value="1930"><span>晚上 7 点半</span></label>
+            <label><input type="radio" name="arrive" value="21"><span>晚上 9 点以后</span></label>
+            <label><input type="radio" name="arrive" value="14"><span>下午 2 点买菜<small>两三个人就够</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset><legend class="fl">当晚状态</legend>
+          <div class="chips">
+            <label><input type="radio" name="mode" value="dodge" required><span>逃酒</span></label>
+            <label><input type="radio" name="mode" value="sip"><span>小酌</span></label>
+            <label><input type="radio" name="mode" value="all"><span>不醉不归</span></label>
+            <label><input type="radio" name="mode" value="sleep"><span>直接睡在 Tianlai 家</span></label>
+          </div>
+        </fieldset>
+        <label class="fl" for="r-diet">忌口或者饮食习惯<small>只有我看得到</small></label>
+        <input id="r-diet" type="text" maxlength="200" placeholder="没有就不填">
+        <button class="bigbtn" type="submit" id="r-send">提交</button>
+        <p class="form-msg" id="r-msg" role="status"></p>
+      </form>
+    </div>
+    <div class="sheet who-sheet">
+      <i class="tape" aria-hidden="true"></i>
+      <p class="sub">谁来 <span id="who-n" style="margin-left:6px;color:var(--soft);font-weight:500"></span></p>
+      <ul class="who" id="who"></ul>
+    </div>
   </section>
 
   <section class="page" id="plan">
     <h2 class="hd sec">当天安排</h2>
     <div class="two">
       <div>
-        <p class="when">下午 2 点</p>
+        <p class="when">下午 4 点</p>
         <p class="place">地点：<a href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">99 Claremont Ave</a></p>
-        <p class="say">想一起做饭的下午来。2 点多去买菜，4 点多开做，边做边喝点。吃完 7 点一起去 1440。来之前跟我说一声。</p>
+        <p class="say">想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，两三个人就够，想去的跟我说。</p>
       </div>
       <img class="stk" src="stk/chef.webp" width="275" height="257" loading="lazy" alt="戴厨师帽的小白狗在揉面团">
     </div>
@@ -285,7 +300,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     </div>
     <p class="num">984-369-3627 <button type="button" class="mini" data-copy="9843693627">复制号码</button></p>
     <div class="spot">
-      <p class="spot-head"><b>99 Claremont Ave</b><span>下午 2 点</span></p>
+      <p class="spot-head"><b>99 Claremont Ave</b><span>下午 4 点</span></p>
       <a class="bigbtn" href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">导航去 99 Claremont</a>
       <button type="button" class="mini" data-copy="99 Claremont Ave, New York, NY 10027">复制地址</button>
     </div>
@@ -357,7 +372,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "周六我过生日，耍起！", "note": "see you<br>there!", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "p1_when": "下午 2 点", "p1_say": "想一起做饭的下午来。2 点多去买菜，4 点多开做，边做边喝点。吃完 7 点一起去 1440。来之前跟我说一声。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "f_arrive": "大概几点到", "a14": "下午 2 点，一起买菜", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "直接睡在 Tianlai 家", "f_diet": "忌口或者饮食习惯", "diet_ph": "没有就不填，只有我看得到", "send": "提交", "sent": "收到了！想改就再交一次。", "send_fail": "没交上，再试一次。", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "arrive_s": {"14": "下午 2 点", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 2 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
+var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "周六我过生日，耍起！", "note": "see you<br>there!", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "p1_when": "下午 4 点", "p1_say": "想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，两三个人就够，想去的跟我说。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "f_arrive": "大概几点到", "a14": "下午 2 点买菜<small>两三个人就够<\/small>", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "直接睡在 Tianlai 家", "f_diet": "忌口或者饮食习惯", "diet_note": "只有我看得到", "diet_ph": "没有就不填", "send": "提交", "sent": "收到了！想改就再交一次。", "send_fail": "没交上，再试一次。", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "arrive_s": {"14": "下午 2 点买菜", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 4 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

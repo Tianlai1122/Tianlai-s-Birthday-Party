@@ -82,27 +82,36 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .dress .say{margin-top:4px}
 .dress .stk{width:116px;transform:rotate(6deg)}
 
-/* ---------- rsvp ---------- */
-.form{display:flex;flex-direction:column;margin-top:8px}
-.form fieldset{border:0;margin:20px 0 0;padding:0;min-width:0}
-.form legend.fl{margin:0 0 8px}
-.fl{display:block;margin:20px 0 8px;padding:0;font-weight:800;font-size:16px}
-.form input[type=text]{width:100%;font:inherit;font-weight:700;padding:10px 4px;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink)}
-.form input[type=text]::placeholder{color:#9A9A95;font-weight:500}
+/* ---------- rsvp: a sign-up sheet taped to the page ---------- */
+.paper{position:relative;margin-top:30px;background:#fff;padding:26px 20px 22px;box-shadow:0 2px 3px rgba(0,0,0,.14),0 10px 20px rgba(0,0,0,.09);transform:rotate(-.7deg)}
+.paper .tape{width:96px;height:28px;left:50%;top:-14px;margin-left:-48px;transform:rotate(2deg)}
+.paper .stk{position:absolute;right:-12px;top:-56px;width:96px;transform:rotate(9deg)}
+.form{display:flex;flex-direction:column}
+.form fieldset{border:0;margin:22px 0 0;padding:0;min-width:0}
+.fl{display:block;margin:22px 0 8px;padding:0;font-weight:800;font-size:15.5px}
+.form .fl:first-child{margin-top:0}
+.form legend.fl{margin:0 0 10px}
+.fl small{font-weight:500;font-size:13px;color:var(--soft);margin-left:6px}
+.form input[type=text]{width:100%;font:inherit;font-family:var(--hand);font-weight:600;font-size:24px;line-height:1.2;padding:4px 2px 6px;border:0;border-bottom:1.5px solid #CFCEC8;border-radius:0;background:transparent;color:var(--ink)}
+.form input[type=text]:focus{outline:0;border-bottom-color:var(--ink)}
+.form input[type=text]::placeholder{font-family:var(--body);font-size:15px;font-weight:500;color:#A3A29C}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips label{position:relative;cursor:pointer}
 .chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.chips span{display:block;padding:9px 14px;border:2px solid var(--ink);border-radius:999px;font-weight:700;font-size:15px;background:transparent}
-.chips input:checked + span{background:var(--ink);color:#fff}
+.chips span{display:block;padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px;background:#F1F0EB;color:var(--ink);transition:background .12s ease,transform .12s ease}
+.chips small{font-weight:500;font-size:13px;opacity:.75;margin-left:4px}
+.chips input:checked + span{background:var(--pop);transform:rotate(-1.5deg)}
 .chips input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
 .form .bigbtn{margin-top:26px;width:100%}
 .form .bigbtn:disabled{opacity:.5}
-.form-msg{min-height:1.6em;margin-top:10px;font-weight:700}
-.who{list-style:none;margin:6px 0 0;padding:0}
-.who li{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16)}
-.who b{font-weight:800}
-.who span{margin-left:auto;font-size:14px;color:var(--soft);text-align:right}
-.who .none{display:block;color:var(--soft);border:0}
+.form-msg{min-height:1.4em;margin-top:10px;font-family:var(--hand);font-weight:700;font-size:22px;line-height:1.1;color:var(--pop);text-align:center}
+.who-sheet{margin-top:44px}
+.who-sheet .sub{margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px}
+.who{list-style:none;margin:0;padding:0}
+.who li{display:flex;align-items:center;gap:10px;height:40px}
+.who b{font-family:var(--hand);font-weight:600;font-size:25px;line-height:1;white-space:nowrap}
+.who span{margin-left:auto;font-size:13.5px;color:var(--soft);text-align:right;line-height:1.2}
+.who .none{color:var(--soft);font-size:15px}
 
 /* ---------- buttons: little stickers ---------- */
 .bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
@@ -222,41 +231,47 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <section class="page" id="rsvp" hidden>
     <h2 class="hd sec">Before you come</h2>
     <p class="say">So I know how much food and drink to get.</p>
-    <form id="rsvp-form" class="form">
-      <label class="fl" for="r-name">Name</label>
-      <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
-      <fieldset><legend class="fl">Around what time?</legend>
-        <div class="chips">
-          <label><input type="radio" name="arrive" value="14" required><span>2 PM, grocery run</span></label>
-          <label><input type="radio" name="arrive" value="16"><span>4 PM, cooking</span></label>
-          <label><input type="radio" name="arrive" value="1930"><span>7:30 PM</span></label>
-          <label><input type="radio" name="arrive" value="21"><span>After 9 PM</span></label>
-        </div>
-      </fieldset>
-      <fieldset><legend class="fl">Tonight I'm</legend>
-        <div class="chips">
-          <label><input type="radio" name="mode" value="dodge" required><span>Dodging drinks</span></label>
-          <label><input type="radio" name="mode" value="sip"><span>A drink or two</span></label>
-          <label><input type="radio" name="mode" value="all"><span>Going all in</span></label>
-          <label><input type="radio" name="mode" value="sleep"><span>Sleeping at Tianlai's</span></label>
-        </div>
-      </fieldset>
-      <label class="fl" for="r-diet">Anything you can't eat?</label>
-      <input id="r-diet" type="text" maxlength="200" placeholder="Skip if none. Only I can see this.">
-      <button class="bigbtn" type="submit" id="r-send">Send</button>
-      <p class="form-msg" id="r-msg" role="status"></p>
-    </form>
-    <p class="sub">Who's coming <span id="who-n"></span></p>
-    <ul class="who" id="who"></ul>
+    <div class="paper">
+      <i class="tape" aria-hidden="true"></i>
+      <form id="rsvp-form" class="form">
+        <label class="fl" for="r-name">Name</label>
+        <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
+        <fieldset><legend class="fl">Around what time?</legend>
+          <div class="chips">
+            <label><input type="radio" name="arrive" value="16" required><span>4 PM, cooking</span></label>
+            <label><input type="radio" name="arrive" value="1930"><span>7:30 PM</span></label>
+            <label><input type="radio" name="arrive" value="21"><span>After 9 PM</span></label>
+            <label><input type="radio" name="arrive" value="14"><span>2 PM grocery run<small>2–3 people</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset><legend class="fl">Tonight I'm</legend>
+          <div class="chips">
+            <label><input type="radio" name="mode" value="dodge" required><span>Dodging drinks</span></label>
+            <label><input type="radio" name="mode" value="sip"><span>A drink or two</span></label>
+            <label><input type="radio" name="mode" value="all"><span>Going all in</span></label>
+            <label><input type="radio" name="mode" value="sleep"><span>Sleeping at Tianlai's</span></label>
+          </div>
+        </fieldset>
+        <label class="fl" for="r-diet">Anything you can't eat?<small>only I see this</small></label>
+        <input id="r-diet" type="text" maxlength="200" placeholder="Skip if none">
+        <button class="bigbtn" type="submit" id="r-send">Send</button>
+        <p class="form-msg" id="r-msg" role="status"></p>
+      </form>
+    </div>
+    <div class="sheet who-sheet">
+      <i class="tape" aria-hidden="true"></i>
+      <p class="sub">Who's coming <span id="who-n" style="margin-left:6px;color:var(--soft);font-weight:500"></span></p>
+      <ul class="who" id="who"></ul>
+    </div>
   </section>
 
   <section class="page" id="plan">
     <h2 class="hd sec">The plan</h2>
     <div class="two">
       <div>
-        <p class="when">2 PM</p>
+        <p class="when">4 PM</p>
         <p class="place">Where: <a href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">99 Claremont Ave</a></p>
-        <p class="say">Want to cook with us? Come in the afternoon. We shop around 2, start cooking after 4, and drink a little while we're at it. At 7 we head to 1440 together. Text me first if you're coming.</p>
+        <p class="say">Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs two or three people, so text me if you want in.</p>
       </div>
       <img class="stk" src="stk/chef.webp" width="275" height="257" loading="lazy" alt="A fluffy white dog in a chef hat kneading dough">
     </div>
@@ -285,7 +300,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     </div>
     <p class="num">984-369-3627 <button type="button" class="mini" data-copy="9843693627">Copy number</button></p>
     <div class="spot">
-      <p class="spot-head"><b>99 Claremont Ave</b><span>2 PM</span></p>
+      <p class="spot-head"><b>99 Claremont Ave</b><span>4 PM</span></p>
       <a class="bigbtn" href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">Directions to 99 Claremont</a>
       <button type="button" class="mini" data-copy="99 Claremont Ave, New York, NY 10027">Copy address</button>
     </div>
@@ -357,7 +372,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "It's my birthday this Saturday. Come hang out!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "2 PM", "p1_say": "Want to cook with us? Come in the afternoon. We shop around 2, start cooking after 4, and drink a little while we're at it. At 7 we head to 1440 together. Text me first if you're coming.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Before you come", "rsvp_say": "So I know how much food and drink to get.", "f_name": "Name", "f_arrive": "Around what time?", "a14": "2 PM, grocery run", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "A drink or two", "m_all": "Going all in", "m_sleep": "Sleeping at Tianlai's", "f_diet": "Anything you can't eat?", "diet_ph": "Skip if none. Only I can see this.", "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "arrive_s": {"14": "2 PM", "16": "4 PM", "1930": "7:30 PM", "21": "after 9"}, "mode_s": {"dodge": "dodging drinks", "sip": "a drink or two", "all": "all in", "sleep": "sleeping over"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "2 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "It's my birthday this Saturday. Come hang out!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs two or three people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Before you come", "rsvp_say": "So I know how much food and drink to get.", "f_name": "Name", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>2–3 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "A drink or two", "m_all": "Going all in", "m_sleep": "Sleeping at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "only I see this", "diet_ph": "Skip if none", "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9"}, "mode_s": {"dodge": "dodging drinks", "sip": "a drink or two", "all": "all in", "sleep": "sleeping over"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
