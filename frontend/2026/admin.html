@@ -130,7 +130,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
+    <p class="soft">点卡片上的「置顶」，这个人的卡片会排到网页最前面；置顶多个人就按你点的先后排。别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
@@ -183,7 +183,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       .then(function (r) { return r.text().then(function (t) { if (!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
   }
 
-  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [], albums = {}, hearts = [];
+  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [], albums = {}, hearts = [], pins = [];
   try { pass = sessionStorage.getItem("bday-admin") || ""; } catch (e) {}
 
   function count(list, key, labels) {
@@ -223,8 +223,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       return '<div class="note-row"><span><b>' + esc(h[0]) + "</b> ❤ <b>" + esc(h[1]) + '</b></span><button type="button" class="ghost small" data-heart="' + i + '">拆开</button></div>';
     }).join("") : '<p class="soft">还没有。</p>';
   }
+  function saveLayout(nextHearts, nextPins) { return rpc("bday_admin_set_hearts", { p_pass: pass, p_hearts: { hearts: nextHearts, pins: nextPins } }); }
   function saveHearts(next, okText) {
-    return rpc("bday_admin_set_hearts", { p_pass: pass, p_hearts: next }).then(function () { hearts = next; renderHearts(); $("h-state").textContent = okText; })
+    return saveLayout(next, pins).then(function () { hearts = next; renderHearts(); $("h-state").textContent = okText; })
       .catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); $("h-state").textContent = "没存上。数据库的新脚本跑了吗？"; });
   }
   $("h-add").addEventListener("click", function () {
@@ -255,13 +256,14 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var c = cards[n] || {}, v = versions[n];
     var photo = n in pending ? pending[n] : (c.photo || "");
     return '<div class="card gcard" data-name="' + esc(n) + '"><label class="g-prev">' + (PHOTO_OK.test(photo) ? '<img src="' + photo + '" alt="">' : "<span>点这里<br>选照片</span>") +
-      '<input type="file" accept="image/*" aria-label="' + esc(n) + ' 的照片"></label><div><input type="text" class="g-name" maxlength="24" aria-label="名字，可以改" title="点一下可以改名字" value="' + esc(n) + '">' + (cards[n] ? '<span class="soft">已上网页</span>' : "") +
+      '<input type="file" accept="image/*" aria-label="' + esc(n) + ' 的照片"></label><div><input type="text" class="g-name" maxlength="24" aria-label="名字，可以改" title="点一下可以改名字" value="' + esc(n) + '">' + (pins.indexOf(n) >= 0 ? '<span class="soft">📌 置顶第 ' + (pins.indexOf(n) + 1) + " 位　</span>" : "") + (cards[n] ? '<span class="soft">已上网页</span>' : "") +
       '<input type="text" class="g-title" maxlength="40" placeholder="当晚身份（选填），比如：气氛组组长" aria-label="' + esc(n) + ' 的当晚身份" value="' + esc(c.title || "") + '">' +
       '<input type="text" class="g-line" maxlength="120" placeholder="一句话介绍（选填），比如：Tianlai 在 Paris 的朋友" aria-label="一句话介绍 ' + esc(n) + '" value="' + esc(c.line || "") + '">' +
       '<div class="bar"><button type="button" class="small g-save">保存</button>' +
       (originals[n] && photo ? '<button type="button" class="ghost small g-recut">重抠</button>' : "") +
       (v && v.cut && photo ? '<button type="button" class="ghost small g-swap">' + (photo === v.cut ? "不抠，用原图" : "用抠好的") + "</button>" : "") +
       (photo ? '<button type="button" class="ghost small g-nophoto">去掉照片</button>' : "") +
+      '<button type="button" class="ghost small g-pin">' + (pins.indexOf(n) >= 0 ? "取消置顶" : "置顶") + "</button>" +
       (cards[n] ? '<button type="button" class="ghost small g-del">从网页撤下</button>' : "") + '<span class="soft g-state" role="status"></span></div></div>' + albumHTML(n) + "</div>";
   }
   /* photos other people added to this person's card: pick one as the cover, or delete */
@@ -461,6 +463,12 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   $("cards").addEventListener("click", function (e) {
     var el = e.target.closest(".gcard"); if (!el) return;
     var n = el.dataset.name, st = el.querySelector(".g-state");
+    if (e.target.closest(".g-pin")) {
+      var np = pins.indexOf(n) >= 0 ? pins.filter(function (x) { return x !== n; }) : pins.concat([n]);
+      saveLayout(hearts, np).then(function () { pins = np; cardNames().forEach(function (x) { if (x !== n && cardEl(x)) redraw(x); }); redraw(n, np.indexOf(n) >= 0 ? "置顶了" : "取消置顶了"); })
+        .catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = "没存上。数据库的新脚本跑了吗？"; });
+      return;
+    }
     if (e.target.closest(".g-recut")) { cutFrom(n); return; }
     var sc = e.target.closest(".g-setcover"), dp = e.target.closest(".g-delpic");
     if (sc || dp) {
@@ -499,8 +507,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
           extra = extra.map(function (x) { return x === n ? to : x; });
           if (hearts.some(function (h) { return h.indexOf(n) >= 0; })) {
             var moved = hearts.map(function (h) { return h.map(function (x) { return x === n ? to : x; }); });
-            rpc("bday_admin_set_hearts", { p_pass: pass, p_hearts: moved }).then(function () { hearts = moved; }).catch(function () {});
+            saveLayout(moved, pins).then(function () { hearts = moved; }).catch(function () {});
           }
+          if (pins.indexOf(n) >= 0) { var movedPins = pins.map(function (x) { return x === n ? to : x; }); saveLayout(hearts, movedPins).then(function () { pins = movedPins; }).catch(function () {}); }
           el.dataset.name = to; n = to;
         });
       }
@@ -554,7 +563,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     }).then(function () {
       return rpc("bday_hearts_get").catch(function () { return []; });
     }).then(function (hs) {
-      hearts = Array.isArray(hs) ? hs.filter(function (h) { return Array.isArray(h) && h.length === 2; }) : [];
+      var hl = Array.isArray(hs) ? hs : hs && Array.isArray(hs.hearts) ? hs.hearts : [];
+      hearts = hl.filter(function (h) { return Array.isArray(h) && h.length === 2; });
+      pins = hs && !Array.isArray(hs) && Array.isArray(hs.pins) ? hs.pins.filter(function (x) { return typeof x === "string"; }) : [];
       return rpc("bday_teams_get");
     }).then(function (t) {
       published = t || [];
