@@ -690,7 +690,14 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   var KEY = "bday-2026-name", name = "";
   try { name = localStorage.getItem(KEY) || ""; } catch (e) {}
   if (MEM) name = "";
-  function setName(v) { name = v; if (MEM) return; try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function setName(v) { name = v; if (MEM) return; try { localStorage.setItem(KEY, v); } catch (e) {} claimTaps(); }
+  /* drinks and cakes this browser gave before it had a name were stored without one. As soon as there is a name they
+     are moved onto it, so they count on the boards. Runs when a name is first set and once on each visit. */
+  var onToyState = null;
+  function claimTaps() {
+    if (MEM || !name || !TOKEN) return;
+    rpc("bday_poke_claim", { p_token: TOKEN, p_name: name }).then(function (r) { if (onToyState && r) onToyState(r); }).catch(function () {});
+  }
   var TOKEN = "";
   try { TOKEN = localStorage.getItem("bday-2026-token") || ""; } catch (e) {}
   if (TOKEN.length < 16) {
@@ -844,7 +851,8 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     var claimed = false;
     function claim() {
       if (claimed || MEM) return; claimed = true;
-      if (!name || person(name)) return;
+      if (!name) return;
+      if (person(name)) { claimTaps(); return; }
       var old = name;
       function take(p) {
         if (!p || p.arrive === undefined) return false;
@@ -855,7 +863,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       }
       rpc("bday_whoami", { p_token: TOKEN }).then(function (n) { if (!take(n ? person(n) : null)) throw 0; }).catch(function () {
         var like = people.filter(function (p) { return p.arrive !== undefined && fold(p.name) === fold(old); });
-        if (like.length === 1) take(like[0]);
+        if (like.length !== 1 || !take(like[0])) claimTaps();     // a name given only to the toy, never signed up: still theirs
       });
     }
     knownPerson = function (v) { return people.filter(function (x) { return same(x.name, v); })[0] || null; };
@@ -1635,6 +1643,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       shared = true; st = res;
     }
     function sync() { return rpc("bday_poke_state").then(function (r) { take(r); text(); news(); }).catch(function () {}); }
+    onToyState = function (r) { take(r); lastSeen = st.cakes + "/" + st.drinks; text(); };
     function localRecent() { var cut = Date.now() - WINDOW; localDrinks = localDrinks.filter(function (t) { return t > cut; }); return localDrinks.length; }
     function play(kind) {
       // a different animation each time, never the same one twice in a row
@@ -1647,7 +1656,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (kind === "cake") {
         // cake is never refused, so it plays straight away
         st.cakes++; st.last = { kind: "cake", who: name };
-        var cakeAs = name || "";
+        var cakeAs = name || ANON;      // no name yet: kept under this browser's anonymous id, and moved onto the name later
         if (lv === 3) shout("sofa_cake"); else play("cake");
         text(); frame();
         rpc("bday_poke_add", { p_kind: "cake", p_who: cakeAs }).then(function (r) { take(r); text(); lastSeen = st.cakes + "/" + st.drinks; }).catch(function () { if (shared) sync(); });
