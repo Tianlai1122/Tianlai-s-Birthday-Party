@@ -113,9 +113,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     <div class="bar">
       <button type="button" class="ghost" id="refresh">刷新</button>
       <button type="button" class="ghost" id="copy">复制全部名单</button>
+      <button type="button" class="ghost" id="export">导出全部存档</button>
       <span class="soft" id="stamp"></span>
     </div>
 
+    <p class="soft" id="export-state" role="status"></p>
     <div class="tiles" id="tiles"></div>
 
     <h2>分布</h2>
@@ -619,6 +621,87 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var b = $("copy");
     function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "复制全部名单"; }, 1500); }
     try { navigator.clipboard.writeText(text).then(function () { done("已复制"); }, function () { done("复制不了"); }); } catch (e) { done("复制不了"); }
+  });
+
+  /* one-click keepsake: everything in the database, plus a copy of the page that opens without any database, in one zip */
+  var CRC = null;
+  function crc32(u) {
+    if (!CRC) { CRC = []; for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 3988292384 ^ (c >>> 1) : c >>> 1; CRC[n] = c >>> 0; } }
+    var x = 4294967295; for (var i = 0; i < u.length; i++) x = CRC[(x ^ u[i]) & 255] ^ (x >>> 8);
+    return (x ^ 4294967295) >>> 0;
+  }
+  function zipBlob(files) {            // files: [{ name, text }], stored without compression, names in UTF-8
+    var enc = new TextEncoder(), parts = [], central = [], offset = 0, now = new Date();
+    var time = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1), date = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+      var h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true); h.setUint16(10, time, true); h.setUint16(12, date, true);
+      h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true); h.setUint16(28, 0, true);
+      var c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true); c.setUint16(12, time, true); c.setUint16(14, date, true);
+      c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, name.length, true); c.setUint32(42, offset, true);
+      parts.push(h.buffer, name, data); central.push(c.buffer, name);
+      offset += 30 + name.length + data.length;
+    });
+    var size = 0; central.forEach(function (x) { size += x.byteLength; });
+    var e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, offset, true);
+    return new Blob(parts.concat(central, [e.buffer]), { type: "application/zip" });
+  }
+  function dataURL(blob) { return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok(r.result); }; r.onerror = no; r.readAsDataURL(blob); }); }
+  /* the public page with its pictures folded in and the data put inside, so the one file opens anywhere, offline */
+  function keepsakePage(url, data, at, other) {
+    return fetch(url, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error("page"); return r.text(); }).then(function (html) {
+      var seen = {}, list = [];
+      (html.match(/(?:stk|img)\/[A-Za-z0-9_.-]+\.(?:webp|jpe?g|png|gif|svg)/g) || []).forEach(function (p) { if (!seen[p]) { seen[p] = 1; list.push(p); } });
+      return list.reduce(function (chain, p) {
+        return chain.then(function () { return fetch(p).then(function (r) { if (!r.ok) throw new Error("asset"); return r.blob(); }).then(dataURL).then(function (u) { html = html.split(p).join(u); }); });
+      }, Promise.resolve()).then(function () {
+        var blob = JSON.stringify({ at: at, other: other, data: data }).replace(/</g, "\\u003c").replace(new RegExp("[" + String.fromCharCode(8232, 8233) + "]", "g"), function (ch) { return "\\u" + ch.charCodeAt(0).toString(16); });
+        var i = html.indexOf("<script>"); if (i < 0) throw new Error("page");
+        return html.slice(0, i) + "<script>window.BDAY_MEMORY = " + blob + ";<\/script>\n" + html.slice(i);
+      });
+    });
+  }
+  var PUBLIC_FNS = ["bday_rsvp_list3", "bday_guests_get", "bday_react_list", "bday_notes_list", "bday_pics_count", "bday_hearts_get", "bday_flags_get", "bday_teams_get", "bday_poke_state"];
+  $("export").addEventListener("click", function () {
+    var btn = $("export"), say = $("export-state"), at = new Date().toISOString(), data = {}, missing = [], full = [];
+    btn.disabled = true; say.textContent = "正在导出：读数据…";
+    rpc("bday_admin_list", { p_pass: pass }).then(function (r) {
+      full = r || [];
+      return PUBLIC_FNS.reduce(function (chain, fn) {
+        return chain.then(function () { return rpc(fn).then(function (v) { data[fn] = v; }, function () { data[fn] = null; missing.push(fn); }); });
+      }, Promise.resolve());
+    }).then(function () {
+      data.pics = {};
+      return (data.bday_pics_count || []).filter(function (c) { return Number(c.n) > 0; }).reduce(function (chain, c) {
+        return chain.then(function () { return rpc("bday_pics_list", { p_guest: c.guest }); }).then(function (list) { data.pics[c.guest] = list || []; });
+      }, Promise.resolve());
+    }).then(function () {
+      say.textContent = "正在导出：做离线网页…";
+      return keepsakePage("./", data, at, "memory-en.html").then(function (zh) { return keepsakePage("en.html", data, at, encodeURIComponent("回忆版.html")).then(function (en) { return [zh, en]; }); });
+    }).then(function (pages) {
+      var day = at.slice(0, 10), photos = 0;
+      (data.bday_guests_get || []).forEach(function (c) { if (c.photo) photos++; });
+      Object.keys(data.pics).forEach(function (g) { photos += data.pics[g].length; });
+      var readme = ["Tianlai 生日派对 2026 · 存档", "导出时间：" + at, "",
+        "回忆版.html　　　双击就能打开的离线网页（中文）。卡片、照片、留言、表情、榜单都在里面，不需要数据库。",
+        "memory-en.html　同一份网页的英文版。",
+        "数据备份.json　　数据库里的全部内容，包括只有你看得到的忌口。以后想把数据放回数据库，用这份。", "",
+        "这次导出：报名 " + full.length + " 人，卡片 " + (data.bday_guests_get || []).length + " 张，照片 " + photos + " 张，留言 " + (data.bday_notes_list || []).length + " 条。",
+        missing.length ? "没读到的部分（数据库里还没有这些功能）：" + missing.join("、") : "",
+        "音乐和 3D 看房是外部链接，联网时才有。回忆版里的表情动画也要联网，断网时显示普通表情。",
+        "数据备份.json 里有大家的忌口，别随手转发。"].join("\r\n");
+      var backup = JSON.stringify({ exported_at: at, site: location.href.replace(/admin\.html.*$/, ""), rsvp_full: full, data: data }, null, 1);
+      var blob = zipBlob([{ name: "说明.txt", text: String.fromCharCode(65279) + readme }, { name: "回忆版.html", text: pages[0] }, { name: "memory-en.html", text: pages[1] }, { name: "数据备份.json", text: backup }]);
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Tianlai生日2026-存档-" + day + ".zip";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 60000);
+      say.textContent = "导出好了：" + a.download + "（" + (blob.size / 1048576).toFixed(1) + " MB），在浏览器的下载里。" + (missing.length ? " 有 " + missing.length + " 项没读到，说明.txt 里写了。" : "");
+    }).catch(function (err) {
+      if (/bad passcode/.test(String(err && err.message))) return fail(err);
+      say.textContent = "没导出来，再点一次试试。";
+    }).then(function () { btn.disabled = false; });
   });
 
   /* delete needs a second click on the same button */
