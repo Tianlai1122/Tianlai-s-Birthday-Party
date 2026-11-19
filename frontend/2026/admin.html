@@ -127,7 +127,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     <div class="card" id="notes"><p class="soft">还没有留言。</p></div>
 
     <h2>大家加的照片</h2>
-    <p class="soft">别人给卡片加的照片（不是封面）。有不合适的就删。</p>
+    <p class="soft">别人给卡片加的照片（不是封面）。有不合适的就删；想让哪张当封面，点「设为封面」，框一下、抠好，再到那个人的卡片上点「保存」。</p>
     <div class="bar"><button type="button" class="ghost" id="pics-load">看照片</button><span class="soft" id="pics-state"></span></div>
     <div class="pics" id="pics"></div>
 
@@ -179,7 +179,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   }
   function render() {
     var cooks = rows.filter(function (r) { return r.arrive === "14" || r.arrive === "16"; });
-    $("tiles").innerHTML = [[rows.length, "人报名"], [cooks.length, "人下午来做饭"], [rows.filter(function (r) { return r.arrive === "1930" || r.arrive === "21"; }).length, "人只来晚上"], [rows.filter(function (r) { return r.arrive === "remote"; }).length, "人远程"],
+    $("tiles").innerHTML = [[rows.length, "人报名"], [cooks.length, "人下午来做饭"], [rows.filter(function (r) { return r.arrive === "1930" || r.arrive === "21"; }).length, "人只来晚上"], [rows.filter(function (r) { return r.arrive === "remote"; }).length, "人远程"], [rows.filter(function (r) { return !r.arrive || !r.mode; }).length, "人没填完"],
       [rows.filter(function (r) { return r.role === "chef"; }).length, "位大厨"], [rows.filter(function (r) { return r.mode === "sleep"; }).length, "人要睡你家"]]
       .map(function (t) { return '<div class="card tile"><b>' + t[0] + "</b><span>" + t[1] + "</span></div>"; }).join("");
     kv($("by-arrive"), count(rows, "arrive", ARRIVE), "还没人");
@@ -377,7 +377,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   }
   /* the picked photo is kept (in this tab only) so the box, the brightness and the cut-out can be redone */
   var originals = {};
-  function cutFrom(n) {
+  function cutFrom(n, doneNote) {
     var orig = originals[n]; if (!orig) return;
     pickCrop(orig).then(function (src) {
       if (!src) return;
@@ -390,7 +390,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         var box = cutout(src, seg), cut = box && pack(src, box[0], box[1], box[2], box[3]);
         if (!cut) throw new Error("nobody found");
         if (pending[n] !== plain) return;
-        versions[n] = { cut: cut, plain: plain }; pending[n] = cut; redraw(n, "抠好了，还没保存");
+        versions[n] = { cut: cut, plain: plain }; pending[n] = cut; redraw(n, doneNote || "抠好了，还没保存");
       }).catch(function () { if (pending[n] === plain) redraw(n, "没抠出来，先用了原图。还没保存"); });
     }).catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "这张图处理不了，换一张（JPG 或 PNG）。"; });
   }
@@ -503,7 +503,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   });
 
   /* album photos are fetched only when asked for, one card at a time */
-  var picArmed = null;
+  var picArmed = null, picData = {};
   $("pics-load").addEventListener("click", function () {
     $("pics-state").textContent = "…"; $("pics").innerHTML = "";
     rpc("bday_pics_count").then(function (counts) {
@@ -516,7 +516,8 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
             if (!PHOTO_OK.test(x.photo || "")) return;
             total++;
             var d = document.createElement("div"); d.className = "pic";
-            d.innerHTML = '<img src="' + x.photo + '" alt="">给 <b>' + esc(c.guest) + '</b><br><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><br><button type="button" class="ghost small" data-pic="' + esc(x.id) + '">删除</button>';
+            picData[x.id] = { guest: c.guest, photo: x.photo };
+            d.innerHTML = '<img src="' + x.photo + '" alt="">给 <b>' + esc(c.guest) + '</b><br><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><br><button type="button" class="small" data-cover="' + esc(x.id) + '">设为封面</button> <button type="button" class="ghost small" data-pic="' + esc(x.id) + '">删除</button>';
             $("pics").appendChild(d);
           });
         });
@@ -524,6 +525,22 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     }).catch(function () { $("pics-state").textContent = "没读到。数据库的新脚本跑了吗？"; });
   });
   $("pics").addEventListener("click", function (e) {
+    /* make an album photo the cover: it goes through the same box-and-cut-out step, then waits for Save on that person's card */
+    var cv = e.target.closest("[data-cover]");
+    if (cv) {
+      var item = picData[cv.dataset.cover]; if (!item) return;
+      var card = cardEl(item.guest);
+      if (!card) { extra.push(item.guest); renderCards(); card = cardEl(item.guest); }
+      var img = new Image();
+      img.onload = function () {
+        var c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext("2d").drawImage(img, 0, 0);
+        originals[item.guest] = c;
+        if (card) card.scrollIntoView({ block: "center" });
+        cutFrom(item.guest, "封面换好了，点「保存」才会上网页");
+      };
+      img.src = item.photo;
+      return;
+    }
     var b = e.target.closest("[data-pic]"); if (!b) return;
     if (picArmed !== b) { if (picArmed) picArmed.textContent = "删除"; picArmed = b; b.textContent = "再点一次确认"; return; }
     b.disabled = true; picArmed = null;

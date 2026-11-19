@@ -136,10 +136,10 @@ returns jsonb language sql security definer set search_path = public as $$
     'drinks', (select count(*) from p where kind = 'drink'),
     'recent', (select count(*) from p where kind = 'drink' and at > now() - interval '30 minutes'),
     'top', (select coalesce(jsonb_agg(jsonb_build_object('who', t.who, 'n', t.n)), '[]'::jsonb)
-            from (select who, count(*) as n, min(at) as first from p where kind = 'drink' and who <> ''
+            from (select who, count(*) as n, min(at) as first from p where kind = 'drink' and who <> '' and who not like '~%'
                   group by who order by count(*) desc, min(at) limit 3) t),
     'ctop', (select coalesce(jsonb_agg(jsonb_build_object('who', t.who, 'n', t.n)), '[]'::jsonb)
-             from (select who, count(*) as n, min(at) as first from p where kind = 'cake' and who <> ''
+             from (select who, count(*) as n, min(at) as first from p where kind = 'cake' and who <> '' and who not like '~%'
                    group by who order by count(*) desc, min(at) limit 3) t),
     'last', (select jsonb_build_object('kind', kind, 'who', who) from p order by id desc limit 1),
     'sofa_at', 12, 'per_person', 5);
@@ -251,3 +251,64 @@ end $$;
 
 revoke all on function bday_pic_add(text, text, text), bday_pics_list(text), bday_pics_count(), bday_admin_pic_delete(text, bigint) from public;
 grant execute on function bday_pic_add(text, text, text), bday_pics_list(text), bday_pics_count(), bday_admin_pic_delete(text, bigint) to anon, authenticated;
+
+-- ---------- sign-ups save themselves as people fill them in ----------
+-- Each browser keeps a private token, so an entry can be saved before it is finished, corrected later,
+-- and even renamed, without leaving half-typed copies behind. Someone who comes back in another browser
+-- and types the same name picks their entry up again; a null diet or dish means "leave what is there".
+alter table bday_rsvp add column if not exists token text;
+create unique index if not exists bday_rsvp_token on bday_rsvp (token) where token is not null;
+
+-- unfinished entries have no arrival time or drinking plan yet
+do $$
+declare c text;
+begin
+  for c in select conname from pg_constraint
+           where conrelid = 'public.bday_rsvp'::regclass and contype = 'c'
+             and (pg_get_constraintdef(oid) ilike '%arrive%' or pg_get_constraintdef(oid) ilike '%mode%')
+  loop
+    execute format('alter table public.bday_rsvp drop constraint %I', c);
+  end loop;
+end $$;
+alter table bday_rsvp add constraint bday_rsvp_arrive_check check (arrive in ('', '14', '16', '1930', '21', 'remote'));
+alter table bday_rsvp add constraint bday_rsvp_mode_check check (mode in ('', 'dodge', 'sip', 'all', 'sleep'));
+
+create or replace function bday_rsvp_auto(p_token text, p_name text, p_arrive text, p_mode text, p_diet text, p_role text, p_dish text)
+returns text language plpgsql security definer set search_path = public as $$
+declare
+  n text := left(trim(coalesce(p_name, '')), 24);
+  tk text := left(coalesce(p_token, ''), 64);
+  old text;
+  full_entry boolean := coalesce(p_arrive, '') <> '' and coalesce(p_mode, '') <> '';
+begin
+  if n = '' then return ''; end if;
+  if char_length(tk) < 16 then tk := null; end if;
+  if tk is not null then
+    select name into old from bday_rsvp where token = tk;
+    if old is not null and old <> n then
+      if bday_known(n) then
+        delete from bday_rsvp where token = tk;          -- that name is already signed up: this entry joins it
+      else
+        update bday_rsvp set name = n where token = tk;  -- same person fixing their name: everything follows
+        update bday_guest set name = n where name = old;
+        update bday_react set guest = n where guest = old;
+        update bday_note set guest = n where guest = old;
+        update bday_pic set guest = n where guest = old;
+      end if;
+    end if;
+  end if;
+  insert into bday_rsvp as r (name, arrive, mode, diet, role, dish, token, updated_at)
+  values (n, coalesce(p_arrive, ''), coalesce(p_mode, ''), left(coalesce(p_diet, ''), 200),
+          case when p_role in ('chef', 'helper') then p_role else '' end, left(coalesce(p_dish, ''), 40), tk, now())
+  on conflict (name) do update
+    set arrive = case when excluded.arrive <> '' then excluded.arrive else r.arrive end,
+        mode = case when excluded.mode <> '' then excluded.mode else r.mode end,
+        diet = case when p_diet is null then r.diet when full_entry or excluded.diet <> '' then excluded.diet else r.diet end,
+        role = case when full_entry or excluded.role <> '' then excluded.role else r.role end,
+        dish = case when p_dish is null then r.dish when full_entry or excluded.dish <> '' then excluded.dish else r.dish end,
+        token = coalesce(excluded.token, r.token), updated_at = now();
+  return n;
+end $$;
+
+revoke all on function bday_rsvp_auto(text, text, text, text, text, text, text) from public;
+grant execute on function bday_rsvp_auto(text, text, text, text, text, text, text) to anon, authenticated;
