@@ -128,7 +128,10 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .g-open{appearance:none;display:block;width:100%;border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:center;cursor:pointer}
 .g-open:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .g-one{display:block;margin-top:7px;font-size:14px;line-height:1.45;color:var(--soft);overflow-wrap:anywhere}
-.g-say{appearance:none;display:block;margin:8px auto 0;border:0;background:transparent;padding:2px 4px;font:inherit;font-size:13px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.g-sum{display:block;margin-top:7px;font-size:12.5px;line-height:1.4;color:var(--soft);font-variant-numeric:tabular-nums;white-space:pre-wrap}
+.card-dlg .rx{margin-top:16px}
+.c-credit{margin-top:18px;font-size:11px;color:var(--soft)}
+.c-credit a{color:inherit}
 /* one person's card, opened */
 .card-dlg{width:min(420px,calc(100vw - 28px));max-height:calc(100dvh - 40px);margin:auto;border:0;padding:26px 20px 22px;background:#fff;color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35);overflow-y:auto;text-align:center}
 .card-dlg::backdrop{background:rgba(20,20,22,.6)}
@@ -384,9 +387,9 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   </section>
 
   <section class="page" id="guests" hidden>
-    <h2 class="hd sec">Who's who<span id="guest-n"></span></h2>
+    <h2 class="hd sec">Who's coming<span id="guest-n"></span></h2>
+    <p class="say" id="guests-say" hidden>Tap a card to leave a line or react.</p>
     <ul class="gs" id="guest-list"></ul>
-    <p class="credit" id="emoji-credit" hidden>Animated emoji: Google Noto Emoji · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit">CC BY 4.0</a></p>
   </section>
 
   <section class="page" id="teams" hidden>
@@ -471,7 +474,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <p class="thx">Special thanks to <b>@Lucy</b> <b>@Yerin</b> for the space</p>
 </footer>
 
-<dialog class="card-dlg" id="card" aria-label="Who's who">
+<dialog class="card-dlg" id="card" aria-label="Who's coming">
   <button type="button" class="lb-close" id="card-close" aria-label="Close">×</button>
   <div id="card-body"></div>
 </dialog>
@@ -482,7 +485,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's who", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on then", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's coming", "guests_say": "Tap a card to leave a line or react.", "c_count": "{n} notes", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on then", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -629,12 +632,14 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       var ns = notesOf(p.name);
       return p.line || (p.talk ? T.talk_pre + p.talk : "") || (ns.length ? "「" + ns[ns.length - 1].body + "」" : "");
     }
+    /* the tile stays quiet: one small line saying what the card has collected; the buttons are inside the opened card */
     function tileHTML(p) {
-      var one = oneLine(p), n = notesOf(p.name).length;
+      var one = oneLine(p), n = notesOf(p.name).length, bits = [];
+      EMO.forEach(function (em) { var k = whoOf(p.name, em[0]).length; if (k) bits.push(em[2] + " " + k); });
+      if (n) bits.push(T.c_count.replace("{n}", n));
       return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + "</b>" +
-        (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (one ? '<span class="g-one">' + esc(one) + "</span>" : "") + "</button>" +
-        '<div class="rx-box">' + rxHTML(p.name) + "</div>" +
-        (notes ? '<button type="button" class="g-say">' + esc(T.c_open) + (n ? " · " + n : "") + "</button>" : "");
+        (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (one ? '<span class="g-one">' + esc(one) + "</span>" : "") +
+        (bits.length ? '<span class="g-sum">' + bits.join("  ") + "</span>" : "") + "</button>";
     }
     function dialogHTML(p) {
       var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode], p.role === "chef" ? T.chef_tag : ""].filter(Boolean).join(" · ");
@@ -649,7 +654,8 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
           return "<li>" + esc(x.body) + "<span>— " + esc(x.who || T.anon) + "</span></li>";
         }).join("") : '<li class="none">' + esc(T.c_none) + "</li>") + "</ul>" +
         '<form class="c-add"><input type="text" maxlength="60" placeholder="' + esc(T.c_ph) + '" aria-label="' + esc(T.c_ph) + '"><button type="submit">' + esc(T.c_send) + "</button>" +
-          (name ? '<label><input type="checkbox"> ' + esc(T.c_anon) + "</label>" : "") + '<p class="c-msg" role="status"></p></form>' : "");
+          (name ? '<label><input type="checkbox"> ' + esc(T.c_anon) + "</label>" : "") + '<p class="c-msg" role="status"></p></form>' : "") +
+        (reacts ? '<p class="c-credit">' + esc(T.emoji_credit) + ' · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></p>' : "");
     }
     function tile(g) { return Array.prototype.filter.call(gl.children, function (x) { return x.dataset.g === g; })[0]; }
     function redraw(g) {
@@ -677,7 +683,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       var list = ((reacts[g] = reacts[g] || {})[e] = reacts[g][e] || []), at = list.indexOf(name), adding = at < 0;
       if (adding) list.push(name); else list.splice(at, 1);
       redraw(g);
-      var host = root === cbody ? cbody : tile(g), b = host && host.querySelector('.rx [data-e="' + e + '"]');
+      var b = cbody.querySelector('.rx [data-e="' + e + '"]');
       if (b && adding) {
         b.classList.add("pop");
         var src = b.querySelector("img, .emo"), fly = src.cloneNode(true); fly.className = (src.tagName === "IMG" ? "" : "emo ") + "fly"; fly.removeAttribute("loading"); b.appendChild(fly);
@@ -689,18 +695,15 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     function onClick(ev, root, g) {
       var b = ev.target.closest(".rx button");
       if (b && reacts) {
-        if (!name) { asking = g; want = b.dataset.e; redraw(g); var f = (root === cbody ? cbody : tile(g)).querySelector(".rx-ask input"); if (f) f.focus(); return true; }
+        if (!name) { asking = g; want = b.dataset.e; redraw(g); var f = cbody.querySelector(".rx-ask input"); if (f) f.focus(); return true; }
         react(g, b.dataset.e, root); return true;
       }
       if (ev.target.closest(".rx-n")) { openNames[g] = !openNames[g]; redraw(g); return true; }
       return false;
     }
     gl.addEventListener("click", function (ev) {
-      var li = ev.target.closest("li.g"); if (!li) return;
-      var g = li.dataset.g;
-      if (onClick(ev, gl, g)) return;
-      if (ev.target.closest(".g-say")) { openCard(g, true); return; }
-      if (ev.target.closest(".g-open")) openCard(g, false);
+      var li = ev.target.closest("li.g");
+      if (li && ev.target.closest(".g-open")) openCard(li.dataset.g, false);
     });
     cbody.addEventListener("click", function (ev) { if (current) onClick(ev, cbody, current); });
     function onAsk(ev, g) {
@@ -712,7 +715,6 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       react(g, want || "like", ev.currentTarget);
       return true;
     }
-    gl.addEventListener("submit", function (ev) { var li = ev.target.closest("li.g"); if (li) onAsk(ev, li.dataset.g); });
     cbody.addEventListener("submit", function (ev) {
       if (!current || onAsk(ev, current)) return;
       ev.preventDefault();
@@ -733,7 +735,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (im.classList.contains("fly")) { im.remove(); return; }
       var s = document.createElement("i"); s.className = "emo"; s.textContent = im.alt; im.replaceWith(s);
     }
-    gl.addEventListener("error", emoFallback, true); cbody.addEventListener("error", emoFallback, true);
+    cbody.addEventListener("error", emoFallback, true);
 
     /* your own photo: cut out and shrunk here in the browser, only the small result is saved */
     var cardPhotoOK = false, MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14", segP = null;
@@ -847,7 +849,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         });
         if (res[2]) { reacts = {}; res[2].forEach(function (r) { ((reacts[r.guest] = reacts[r.guest] || {})[r.emoji] = reacts[r.guest][r.emoji] || []).push(r.who); }); } else reacts = null;
         if (res[3]) { notes = {}; res[3].forEach(function (n) { (notes[n.guest] = notes[n.guest] || []).push({ body: n.body, who: n.who || "" }); }); } else notes = null;
-        $("guests").hidden = !people.length; $("guest-n").textContent = people.length ? "· " + people.length : ""; $("emoji-credit").hidden = !reacts;
+        $("guests").hidden = !people.length; $("guest-n").textContent = people.length ? "· " + people.length : ""; $("guests-say").hidden = !(reacts || notes);
         gl.innerHTML = "";
         people.forEach(function (p) { var li = document.createElement("li"); li.className = "g"; li.dataset.g = p.name; li.innerHTML = tileHTML(p); gl.appendChild(li); });
         if (current && dlg.open) redraw(current);
