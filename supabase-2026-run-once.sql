@@ -138,6 +138,9 @@ returns jsonb language sql security definer set search_path = public as $$
     'top', (select coalesce(jsonb_agg(jsonb_build_object('who', t.who, 'n', t.n)), '[]'::jsonb)
             from (select who, count(*) as n, min(at) as first from p where kind = 'drink' and who <> ''
                   group by who order by count(*) desc, min(at) limit 3) t),
+    'ctop', (select coalesce(jsonb_agg(jsonb_build_object('who', t.who, 'n', t.n)), '[]'::jsonb)
+             from (select who, count(*) as n, min(at) as first from p where kind = 'cake' and who <> ''
+                   group by who order by count(*) desc, min(at) limit 3) t),
     'last', (select jsonb_build_object('kind', kind, 'who', who) from p order by id desc limit 1));
 $$;
 
