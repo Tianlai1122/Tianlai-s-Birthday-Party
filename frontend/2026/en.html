@@ -432,7 +432,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
 
   /* shared data lives in Supabase. The key below is the public "anon" key, which is meant to sit in a web page;
      the tables are closed and only the bday_* functions can be called. Empty values: sign-up hidden, scores stay on this phone. */
-  var SB_URL = "", SB_KEY = "";
+  var SB_URL = "https://ckzfcplwgpniaosxbrkg.supabase.co", SB_KEY = "sb_publishable_5YQNSlzqL1OonmQBKrl0AQ_NAX582Yx";
   var SB = !!(SB_URL && SB_KEY);
   function rpc(fn, args) {
     return fetch(SB_URL.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, { method: "POST", cache: "no-store",
