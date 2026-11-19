@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tianlai's Birthday</title>
+<script>if(/\/2026$/.test(location.pathname))location.replace(location.pathname+"/"+location.search+location.hash)</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Urbanist:wght@400;500;700;800&family=Oswald:wght@500;600&family=Caveat:wght@600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* A scrapbook page: textured white paper, die-cut stickers with white borders, a few pen doodles,
+     and one paper ticket taped on. Black ink only; the stickers bring the colour, and their orange is
+     borrowed for a few small marks. */
+  --paper:#F6F5F1;
+  --ink:#1D1D1F;
+  --soft:#72726E;
+  --blue:#1D1D1F;
+  --pop:#EE7A1B;
+  --wide:"Unbounded","Noto Sans SC","PingFang SC",sans-serif;
+  --body:"Urbanist","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --cond:"Oswald","Noto Sans SC",sans-serif;
+  --hand:"Caveat","Ma Shan Zheng","Kaiti SC",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden}
+body{background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+img{max-width:100%}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.page{position:relative;max-width:540px;margin-left:auto;margin-right:auto;padding:0 24px}
+main > section{margin-top:78px}
+p{margin:0}
+
+.stk{display:block;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18)) drop-shadow(0 8px 14px rgba(0,0,0,.10))}
+.dd{position:absolute;pointer-events:none;color:var(--ink);overflow:visible}
+.dd path{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.tape{position:absolute;z-index:2;background:repeating-linear-gradient(135deg,rgba(190,198,216,.92) 0 7px,rgba(214,220,233,.92) 7px 14px);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+
+/* headings: bold blue, with an outlined grey line only on the cover */
+.hd{margin:0;font-family:var(--wide);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--blue);font-size:clamp(30px,9.2vw,40px)}
+:lang(zh-CN) .hd.sec{font-family:"Noto Sans SC",sans-serif;letter-spacing:.01em}
+.say{margin-top:10px}
+
+/* ---------- cover ---------- */
+.hero{padding-top:18px}
+.lang{display:block;width:fit-content;margin-left:auto;font-size:13.5px;font-weight:700;text-decoration:none;border-bottom:1.5px solid currentColor;line-height:1.5}
+.hd-row{display:flex;justify-content:space-between;align-items:stretch;gap:12px;margin-top:22px}
+.hd-row i{flex:none;width:9px;background:var(--blue);margin:4px 2px 8px 0}
+h1.hd{font-size:clamp(36px,11vw,50px);text-transform:uppercase;line-height:1.02}
+h1.hd span{display:block}
+h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
+.meta{margin:12px 0 2px;font-size:14px;color:var(--soft)}
+.intro{font-size:18px;font-weight:700}
+.collage{position:relative;height:380px;margin-top:4px}
+.collage .main{position:absolute;left:50%;top:14px;width:258px;margin-left:-112px;transform:rotate(3deg)}
+.collage .side{position:absolute;left:-10px;bottom:-4px;width:136px;transform:rotate(-9deg)}
+.note{position:absolute;left:6px;top:46px;font-family:var(--hand);font-weight:700;font-size:23px;line-height:1.05;color:var(--pop);transform:rotate(-6deg)}
+.count{display:flex;align-items:baseline;gap:14px;margin-top:20px;font-family:var(--cond);font-weight:600;font-size:22px;letter-spacing:.03em}
+.count span{font-family:var(--body);font-weight:500;font-size:12.5px;color:var(--soft);margin-left:3px;letter-spacing:0}
+.count em{font-style:normal;font-family:var(--body);font-weight:500;font-size:14px;color:var(--soft);letter-spacing:0}
+
+/* ---------- plan ---------- */
+.two{display:grid;grid-template-columns:1fr 120px;gap:12px;align-items:center;margin-top:24px}
+.two.flip{grid-template-columns:120px 1fr}
+.two .stk{width:120px;transform:rotate(5deg)}
+.two.flip .stk{transform:rotate(-5deg)}
+.when{font-weight:800;font-size:22px;line-height:1.2}
+.place{margin-top:2px;font-weight:700}
+.place a{text-underline-offset:3px;white-space:nowrap}
+.two p.say{margin-top:6px}
+.sub{margin-top:34px;font-weight:800;font-size:17px}
+.list{list-style:none;margin:6px 0 0;padding:0;columns:2;column-gap:28px}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16);break-inside:avoid;font-weight:500}
+.list svg{flex:none;color:var(--pop)}
+
+/* ---------- buttons: little stickers ---------- */
+.bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
+.bigbtn:active,.btn:active{transform:scale(.97)}
+.bigbtn.text{background:#fff;color:var(--ink)}
+.btn{min-height:50px;font-size:15.5px;border-radius:14px}
+.mini{appearance:none;display:inline-flex;align-items:center;min-height:32px;padding:0;border:0;border-bottom:1.5px solid currentColor;background:none;color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;text-decoration:none;cursor:pointer}
+
+/* ---------- where ---------- */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.contact .bigbtn:first-child{transform:rotate(-1.5deg)}
+.contact .bigbtn:last-child{transform:rotate(1.2deg)}
+.num{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;margin-top:18px;font-family:var(--wide);font-weight:900;font-size:clamp(22px,6.8vw,28px);letter-spacing:-.01em}
+.spot{display:flex;flex-direction:column;gap:10px;margin-top:26px}
+.spot .mini{align-self:flex-start}
+.spot-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.spot-head b{font-weight:800;font-size:18px}
+.spot-head span{font-family:var(--cond);font-weight:600;font-size:13.5px;letter-spacing:.1em;color:var(--soft)}
+.bring{margin-top:26px}
+
+/* ---------- venue polaroids ---------- */
+.polas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.pola{position:relative;margin:0;background:#fff;padding:8px 8px 10px;box-shadow:0 2px 3px rgba(0,0,0,.16),0 10px 18px rgba(0,0,0,.1)}
+.pola:first-child{transform:rotate(-3deg)}
+.pola:last-child{transform:rotate(2.4deg);margin-top:18px}
+.pola .tape{width:64px;height:22px;top:-11px;left:50%;margin-left:-32px;transform:rotate(-4deg)}
+.ph{appearance:none;display:block;width:100%;padding:0;border:0;background:#ddd;cursor:zoom-in;aspect-ratio:1}
+.ph img{display:block;width:100%;height:100%;object-fit:cover}
+.pola figcaption{margin-top:8px;font-family:var(--hand);font-weight:600;font-size:21px;line-height:1.1;text-align:center}
+.credit{margin-top:16px;font-size:13px;color:var(--soft)}
+.venue-link{display:block;margin-top:22px;text-decoration:none}
+.venue-link b{font-weight:800;font-size:18px}
+.venue-link span{display:block}
+.venue-link .go{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.lightbox{position:fixed;inset:0;z-index:40;background:rgba(20,20,22,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:100%;max-height:100%;border:8px solid #fff}
+.lb-close{position:absolute;top:12px;right:12px;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:var(--ink);font-size:24px;cursor:pointer;line-height:1}
+
+.corner{position:absolute;right:8px;top:-26px;width:112px;transform:rotate(7deg)}
+.pad{padding-right:118px}
+.namebox{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.namebox[hidden]{display:none}
+.namebox input{flex:1;min-width:150px;font:inherit;font-weight:700;padding:12px 4px;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink)}
+.namebox input::placeholder{color:#9A9A95;font-weight:500}
+
+/* ---------- board ---------- */
+.board-who{margin-top:16px;font-size:15px}
+.board-who b{font-weight:800}
+.counters{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.counters .bigbtn{justify-content:space-between;width:100%;background:#fff;color:var(--ink)}
+.counters .bigbtn:nth-child(1){transform:rotate(-.8deg)}
+.counters .bigbtn:nth-child(2){transform:rotate(.7deg)}
+.counters .bigbtn:nth-child(3){transform:rotate(-.5deg)}
+.counters .bigbtn:disabled{opacity:.5;cursor:default}
+.mine{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--soft);white-space:nowrap}
+.mine:empty{display:none}
+.undo{margin-top:14px}
+.sheet{position:relative;margin-top:56px;background:#fff repeating-linear-gradient(#fff 0 39px,rgba(29,29,31,.14) 39px 40px);padding:16px 18px 14px;transform:rotate(.8deg);box-shadow:0 2px 3px rgba(0,0,0,.16),0 10px 18px rgba(0,0,0,.1)}
+.sheet .tape{width:84px;height:26px;left:24px;top:-13px;transform:rotate(-5deg)}
+.sheet .stk{position:absolute;right:-10px;top:-50px;width:86px;transform:rotate(8deg)}
+.tabs{display:flex;gap:16px;height:40px;align-items:flex-end;padding-bottom:6px}
+.tabs button{appearance:none;font:inherit;font-size:15px;font-weight:700;padding:0;border:0;background:transparent;color:#9A9A95;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--ink);box-shadow:0 3px 0 var(--pop)}
+.rank{list-style:none;margin:0;padding:0;min-height:120px}
+.rank li{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:6px;height:40px;font-family:var(--hand);font-weight:600;font-size:25px;line-height:1}
+.rank .pos{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--soft)}
+.rank .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .ct{color:var(--blue)}
+.rank li.me .nm{text-decoration:underline;text-decoration-color:var(--pop);text-decoration-thickness:3px;text-underline-offset:4px}
+.rank .empty-row{display:flex;font-size:22px;color:var(--soft)}
+.sync{margin-top:16px;font-size:13px;color:var(--soft)}
+
+/* ---------- footer ---------- */
+footer.page{margin-top:90px;padding-bottom:70px;text-align:center}
+footer .stk{width:150px;margin:0 auto;transform:rotate(-4deg)}
+footer .bye{margin-top:14px;font-family:var(--hand);font-weight:700;font-size:46px;line-height:1;color:var(--blue)}
+footer .thx{margin-top:12px;font-size:14px}
+footer .thx b{font-weight:800}
+
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media (max-width:350px){.collage .main{width:230px;margin-left:-100px}.two{grid-template-columns:1fr 100px}.two.flip{grid-template-columns:100px 1fr}.two .stk{width:100px}.pad{padding-right:104px}.corner{width:98px}}
+</style>
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="s-star" viewBox="0 0 24 24"><path d="M12 2.5l2.8 6.3 6.8.7-5.1 4.6 1.5 6.7-6-3.5-6 3.5 1.5-6.7L2.4 9.5l6.8-.7z" fill="currentColor"/></symbol>
+</svg>
+
+<header class="page hero">
+  <a class="lang" href="en.html">English</a>
+  <div class="hd-row">
+    <h1 class="hd"><span>Saturday</span><span class="out">Tianlai's</span><span class="out">birthday</span></h1>
+    <i aria-hidden="true"></i>
+  </div>
+  <p class="meta">11 月 21 日</p>
+  <p class="intro">周六我过生日，耍起！</p>
+
+  <div class="collage">
+    <svg class="dd" style="right:34px;top:0;width:64px;height:60px" viewBox="0 0 64 60"><path d="M8 50l7-13"/><path d="M22 54l3-18"/><path d="M37 52l-1-20"/><path d="M50 44l-8-15"/><path d="M60 30l-13-7"/></svg>
+    <svg class="dd" style="right:22px;bottom:34px;width:66px;height:92px" viewBox="0 0 66 92"><path d="M10 88c22-4 38-20 30-34-5-9-20-6-18 5 2 12 26 6 32-22 2-10 2-20-1-30"/><path d="M40 16l13-10 8 15"/></svg>
+    <img class="stk main" src="stk/toast.webp" width="371" height="389" alt="戴着生日帽和墨镜的小白狗，一手举气球一手举酒杯">
+    <img class="stk side" src="stk/cake.webp" width="341" height="395" alt="戴厨师帽的小白狗趴在生日蛋糕后面">
+    <p class="note" aria-hidden="true">see you<br>there!</p>
+  </div>
+
+  <div class="count" role="timer">
+    <div><b id="cd-d">0</b><span>天</span></div>
+    <div><b id="cd-h">00</b><span>时</span></div>
+    <div><b id="cd-m">00</b><span>分</span></div>
+    <div><b id="cd-s">00</b><span>秒</span></div>
+    <em id="count-msg"></em>
+  </div>
+</header>
+
+<main>
+  <section class="page" id="plan">
+    <h2 class="hd sec">当天安排</h2>
+    <div class="two">
+      <div>
+        <p class="when">下午 2 点</p>
+        <p class="place">地点：<a href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">99 Claremont Ave</a></p>
+        <p class="say">想一起做饭的下午来。2 点多去买菜，4 点多开做，边做边喝点。吃完 7 点一起去 1440。来之前跟我说一声。</p>
+      </div>
+      <img class="stk" src="stk/chef.webp" width="275" height="257" loading="lazy" alt="戴厨师帽的小白狗在揉面团">
+    </div>
+    <div class="two flip">
+      <img class="stk" src="stk/game.webp" width="405" height="326" loading="lazy" alt="戴橙色帽子的小白狗一脸认真地打街机">
+      <div>
+        <p class="when">晚上 7 点半</p>
+        <p class="place">地点：<a href="https://www.google.com/maps/search/?api=1&amp;query=1440+Amsterdam+Ave+New+York+NY+10027" target="_blank" rel="noopener">1440 Amsterdam Ave</a></p>
+        <p class="say">下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。</p>
+      </div>
+    </div>
+    <p class="sub">现场能玩的</p>
+    <ul class="list"><li><span>Switch</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>桌游</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>台球</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>乒乓球</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>迷你 golf</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>酒水零食</span><svg width="18" height="18"><use href="#s-star"/></svg></li></ul>
+    <p class="sub">Dress code</p>
+    <p class="say" style="margin-top:4px">打扮得帅气美丽就行。</p>
+  </section>
+
+  <section class="page" id="where">
+    <h2 class="hd sec">怎么来</h2>
+    <p class="say">到楼下给我打电话或者发消息，我下来接。</p>
+    <div class="contact">
+      <a class="bigbtn call" href="tel:+19843693627">打电话</a>
+      <a class="bigbtn text" href="sms:+19843693627">发短信</a>
+    </div>
+    <p class="num">984-369-3627 <button type="button" class="mini" data-copy="9843693627">复制号码</button></p>
+    <div class="spot">
+      <p class="spot-head"><b>99 Claremont Ave</b><span>下午 2 点</span></p>
+      <a class="bigbtn" href="https://www.google.com/maps/search/?api=1&amp;query=99+Claremont+Ave+New+York+NY+10027" target="_blank" rel="noopener">导航去 99 Claremont</a>
+      <button type="button" class="mini" data-copy="99 Claremont Ave, New York, NY 10027">复制地址</button>
+    </div>
+    <div class="spot">
+      <p class="spot-head"><b>1440 Amsterdam Ave</b><span>晚上 7 点半</span></p>
+      <a class="bigbtn" href="https://www.google.com/maps/search/?api=1&amp;query=1440+Amsterdam+Ave+New+York+NY+10027" target="_blank" rel="noopener">导航去 1440 Amsterdam</a>
+      <button type="button" class="mini" data-copy="1440 Amsterdam Ave, New York, NY 10027">复制地址</button>
+    </div>
+    <p class="bring">不用带礼物。有忌口提前跟我说。</p>
+  </section>
+
+  <section class="page" id="venue">
+    <img class="stk corner" src="stk/mirror.webp" width="260" height="203" loading="lazy" alt="戴橙色帽子的小白狗在照镜子">
+    <h2 class="hd sec pad">场地</h2>
+    <div class="polas">
+      <figure class="pola"><i class="tape" aria-hidden="true"></i>
+        <button type="button" class="ph" data-full="img/entrance.jpg" aria-label="放大看门口照片"><img src="img/entrance.jpg" alt="99 Claremont 门口：石头拱门下两扇深色木门，门楣上刻着 99 McGiffert Hall" loading="lazy"></button>
+        <figcaption>99 Claremont Ave 的入口</figcaption>
+      </figure>
+      <figure class="pola"><i class="tape" aria-hidden="true"></i>
+        <button type="button" class="ph" data-full="img/kitchen.jpg" aria-label="放大看厨房照片"><img src="img/kitchen.jpg" alt="99 Claremont 一楼公共厨房：中间一张长岛台，两台烤箱灶台，大冰箱" loading="lazy"></button>
+        <figcaption>做饭在这儿</figcaption>
+      </figure>
+    </div>
+    <p class="credit">照片来自 Columbia，点一下放大。</p>
+    <a class="venue-link" href="https://www.apartments.com/1440-amsterdam-ave-new-york-ny/vybcefg/" target="_blank" rel="noopener">
+      <b>1440 Amsterdam</b>
+      <span>有屋顶 lounge 和音乐室。</span>
+      <span class="go">看照片 ↗</span>
+    </a>
+  </section>
+
+  <section class="page" id="board">
+    <img class="stk corner" src="stk/drunk.webp" width="246" height="232" loading="lazy" alt="戴粉色帽子和墨镜的小白狗抱着酒杯躺着">
+    <h2 class="hd sec pad">排行榜</h2>
+    <p class="say pad">喝一杯、逃一次酒、吃一份，各点一下。</p>
+    <form class="namebox" id="board-name-form" hidden>
+      <label for="board-name" class="sr">你的名字</label>
+      <input id="board-name" type="text" placeholder="先输个名字" autocomplete="given-name">
+      <button class="btn" type="submit">确定</button>
+    </form>
+    <p class="board-who" id="board-who"></p>
+    <div class="counters">
+      <button type="button" class="bigbtn" data-add="drinks">喝了一杯 +1<span class="mine" id="mine-drinks"></span></button>
+      <button type="button" class="bigbtn" data-add="dodges">逃了一次酒 +1<span class="mine" id="mine-dodges"></span></button>
+      <button type="button" class="bigbtn" data-add="snacks">吃了一份 +1<span class="mine" id="mine-snacks"></span></button>
+    </div>
+    <button type="button" class="mini undo" id="board-undo">撤回上一下</button>
+    <div class="sheet">
+      <i class="tape" aria-hidden="true"></i>
+      <img class="stk" src="stk/judge.webp" width="285" height="284" loading="lazy" alt="留着大胡子的法官小白狗在敲法槌">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-tab="drinks">酒量榜</button>
+        <button type="button" role="tab" data-tab="dodges">逃酒榜</button>
+        <button type="button" role="tab" data-tab="snacks">小馋猫榜</button>
+      </div>
+      <ol class="rank" id="rank" aria-live="polite"></ol>
+    </div>
+    <p class="sync" id="sync"></p>
+  </section>
+</main>
+
+<footer class="page">
+  <img class="stk" src="stk/cake.webp" width="341" height="395" loading="lazy" alt="戴厨师帽的小白狗趴在生日蛋糕后面">
+  <p class="bye">see you Saturday!</p>
+  <p class="thx">谢谢 <b>@Lucy</b> <b>@Yerin</b> 借场地</p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lb-close" id="lb-close" aria-label="关闭">×</button>
+  <img id="lb-img" alt="">
+</div>
+
+<script>
+var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "周六我过生日，耍起！", "note": "see you<br>there!", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "p1_when": "下午 2 点", "p1_say": "想一起做饭的下午来。2 点多去买菜，4 点多开做，边做边喝点。吃完 7 点一起去 1440。来之前跟我说一声。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": ["Switch", "桌游", "台球", "乒乓球", "迷你 golf", "酒水零食"], "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 2 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "v2_say": "有屋顶 lounge 和音乐室。", "v2_go": "看照片 ↗", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "谢谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+  function norm(s) { return String(s || "").trim().toLowerCase().replace(/\s+/g, " "); }
+  function hash(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  /* confetti: one small burst on open */
+  var COLORS = ["#EE7A1B", "#1D1D1F", "#FFFFFF", "#FFD25A", "#EE7A1B"];
+  var cv = $("confetti"), ctx = cv.getContext && cv.getContext("2d"), parts = [], running = false;
+  function resize() { var r = window.devicePixelRatio || 1; cv.width = innerWidth * r; cv.height = innerHeight * r; }
+  addEventListener("resize", resize); resize();
+  function burst(n, y) {
+    if (reduce || !ctx) return;
+    var r = window.devicePixelRatio || 1;
+    for (var k = 0; k < n; k++) parts.push({
+      x: cv.width / 2 + (Math.random() - .5) * cv.width * .3, y: (y == null ? innerHeight * .35 : y) * r,
+      vx: (Math.random() - .5) * 13 * r, vy: (-Math.random() * 11 - 4) * r, w: (5 + Math.random() * 6) * r, h: (3 + Math.random() * 3) * r,
+      a: Math.random() * 3, va: (Math.random() - .5) * .3, c: COLORS[k % COLORS.length], life: 0 });
+    if (!running) { running = true; requestAnimationFrame(step); }
+  }
+  function step() {
+    var r = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(function (p) { return p.y < cv.height + 40 && p.life < 240; });
+    parts.forEach(function (p) {
+      p.vy += .35 * r; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va; p.life++;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+    });
+    if (parts.length) requestAnimationFrame(step); else { running = false; ctx.clearRect(0, 0, cv.width, cv.height); }
+  }
+  setTimeout(function () { burst(60); }, 500);
+
+  /* countdown to Sat Nov 21, 2026, 7:30 PM New York time (EST, UTC-5) */
+  var START = Date.UTC(2026, 10, 22, 0, 30, 0), BIRTHDAY = Date.UTC(2026, 10, 22, 5, 0, 0), OVER = Date.UTC(2026, 10, 23, 5, 0, 0);
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+  function tick() {
+    var now = Date.now(), left = Math.max(0, START - now);
+    var d = Math.floor(left / 864e5);
+    $("cd-d").textContent = d;
+    $("cd-h").textContent = pad(Math.floor(left / 36e5) % 24);
+    $("cd-m").textContent = pad(Math.floor(left / 6e4) % 60);
+    $("cd-s").textContent = pad(Math.floor(left / 1e3) % 60);
+    $("count-msg").textContent = now >= OVER ? T.cd_over : now >= BIRTHDAY ? T.cd_bday : now >= START ? T.cd_on : d === 0 ? T.cd_today : T.cd_before;
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* the scoreboard name is shared by both language versions */
+  var KEY = "bday-2026-name", name = "";
+  try { name = localStorage.getItem(KEY) || ""; } catch (e) {}
+  function setName(v) { name = v; try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+  /* scoreboard: shared through /api/board when storage is connected, otherwise kept on this phone */
+  var API = "../api/board", BOARDS = ["drinks", "dodges", "snacks"], LKEY = "bday-2026-board";
+  var local = { drinks: 0, dodges: 0, snacks: 0 };
+  try { var lr = JSON.parse(localStorage.getItem(LKEY) || "null"); if (lr) BOARDS.forEach(function (k) { local[k] = +lr[k] || 0; }); } catch (e) {}
+  var online = false, data = { drinks: {}, dodges: {}, snacks: {} }, tab = "drinks", hist = [], syncMsg = "";
+  function mine(k) { var n = name.trim(); return online ? (data[k][n] || 0) : local[k]; }
+  function renderBoard() {
+    var n = name.trim();
+    $("board-name-form").hidden = !!n;
+    $("board-who").innerHTML = n ? esc(T.you_are) + "<b>" + esc(n) + "</b>" : "";
+    BOARDS.forEach(function (k) { $("mine-" + k).textContent = n ? T.mine.replace("{c}", mine(k)) : ""; });
+    document.querySelectorAll("[data-add]").forEach(function (b) { b.disabled = !n; });
+    $("board-undo").disabled = !hist.length;
+    document.querySelectorAll("[data-tab]").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.tab === tab)); });
+    var rows = online ? Object.keys(data[tab]).map(function (k) { return [k, data[tab][k]]; }) : (n && local[tab] ? [[n, local[tab]]] : []);
+    rows = rows.filter(function (r) { return r[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 10);
+    $("rank").innerHTML = rows.length ? rows.map(function (r, i) {
+      return '<li class="' + (r[0] === n ? "me" : "") + '"><span class="pos">' + (i + 1) + '</span><span class="nm">' + esc(r[0]) + '</span><span class="ct">' + r[1] + "</span></li>";
+    }).join("") : '<li class="empty-row">' + esc(T.nobody) + "</li>";
+    $("sync").textContent = syncMsg || (online ? T.sync_on : T.sync_off);
+  }
+  function take(d) { data = { drinks: d.drinks || {}, dodges: d.dodges || {}, snacks: d.snacks || {} }; }
+  function pull() {
+    return fetch(API, { cache: "no-store" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+      if (!d || !d.drinks) throw 0;
+      take(d); online = true; syncMsg = ""; renderBoard();
+    });
+  }
+  function send(k, delta) {
+    var n = name.trim();
+    if (!n) return;
+    if (!online) { local[k] = Math.max(0, local[k] + delta); try { localStorage.setItem(LKEY, JSON.stringify(local)); } catch (e) {} renderBoard(); return; }
+    data[k][n] = Math.max(0, (data[k][n] || 0) + delta); renderBoard();
+    fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ board: k, name: n, delta: delta }) })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { take(d); syncMsg = ""; renderBoard(); })
+      .catch(function () { data[k][n] = Math.max(0, (data[k][n] || 0) - delta); if (delta > 0) hist.pop(); syncMsg = T.sync_fail; renderBoard(); });
+  }
+  document.querySelectorAll("[data-add]").forEach(function (b) { b.addEventListener("click", function () { hist.push(b.dataset.add); send(b.dataset.add, 1); }); });
+  $("board-undo").addEventListener("click", function () { var k = hist.pop(); if (k) send(k, -1); });
+  document.querySelectorAll("[data-tab]").forEach(function (b) { b.addEventListener("click", function () { tab = b.dataset.tab; renderBoard(); }); });
+  $("board-name-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = $("board-name").value.trim();
+    if (!v) return;
+    setName(v); renderBoard();
+  });
+  renderBoard();
+  pull().then(function () { setInterval(function () { if (document.visibilityState === "visible") pull().catch(function () {}); }, 6000); }).catch(function () { online = false; renderBoard(); });
+
+  /* photo lightbox */
+  var lb = $("lightbox"), lbImg = $("lb-img"), from = null;
+  function closeLb() { lb.hidden = true; lbImg.removeAttribute("src"); if (from) { try { from.focus(); } catch (e) {} } }
+  document.querySelectorAll(".ph").forEach(function (b) {
+    b.addEventListener("click", function () { from = b; lbImg.src = b.dataset.full; lbImg.alt = b.querySelector("img").alt; lb.hidden = false; $("lb-close").focus(); });
+  });
+  lb.addEventListener("click", function (e) { if (e.target !== lbImg) closeLb(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !lb.hidden) closeLb(); });
+
+  /* copy buttons */
+  document.querySelectorAll("[data-copy]").forEach(function (b) {
+    var label = b.textContent;
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = label; }, 1600); }
+      try { navigator.clipboard.writeText(b.dataset.copy).then(function () { done(T.copied); }, function () { done(T.copy_fail); }); } catch (e) { done(T.copy_fail); }
+    });
+  });
+})();
+
+</script>
+</body>
+</html>
