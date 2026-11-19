@@ -201,6 +201,10 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .tl-sheet .lb-close{top:10px;right:10px}
 .tl-sheet .hd{padding-right:54px}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+.tlf-btn{position:relative}
+.tlf-arrow{position:absolute;right:52%;bottom:calc(100% - 14px);color:var(--pop);animation:tlblink 1s steps(1,end) infinite;pointer-events:none}
+.tlf.met .tlf-arrow,.tlf.drag .tlf-arrow{display:none}
+@keyframes tlblink{0%,55%{opacity:1}56%,100%{opacity:.12}}
 .tlf-btn.hop{animation:tlhop .95s ease-out}
 .tlf-btn.hop4{animation:tlhop4 2.1s ease-out}
 .tlf-btn.wig{animation:tlwig .9s ease-in-out}
@@ -208,7 +212,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 @keyframes tlwig{0%,100%{transform:rotate(0)}20%{transform:rotate(-9deg)}45%{transform:rotate(8deg)}70%{transform:rotate(-5deg)}85%{transform:translateY(-6px)}}
 @keyframes tlhop{0%,100%{transform:translateY(0)}14%{transform:translateY(-18px)}30%{transform:translateY(0)}46%{transform:translateY(-11px)}62%{transform:translateY(0)}}
 @media (min-width:700px){#tlf-cv{width:120px;height:144px}.tlf{right:8px;bottom:14px}.tlf-tick{margin-bottom:84px;font-size:23px}}
-@media (prefers-reduced-motion:reduce){.tl-sheet[open]{animation:none}.tlf{transition:none}.tlf-btn.hop,.tlf-btn.hop4,.tlf-btn.wig{animation:none}}
+@media (prefers-reduced-motion:reduce){.tl-sheet[open]{animation:none}.tlf{transition:none}.tlf-btn.hop,.tlf-btn.hop4,.tlf-btn.wig,.tlf-arrow{animation:none}}
 .tl-stage{position:relative;margin-top:14px;display:flex;flex-direction:column;align-items:center}
 .tl-name{font-family:var(--hand);font-weight:700;font-size:34px;line-height:1;transform:rotate(-3deg);margin-bottom:2px}
 .tl-say{position:absolute;left:calc(50% + 48px);top:66px;width:calc(50% - 50px);font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.1;text-align:left;transform:rotate(-4deg);transform-origin:left top}
@@ -515,7 +519,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 
 <div class="tlf" id="tlf">
   <p class="tlf-tick" id="tlf-tick" hidden></p>
-  <button type="button" class="tlf-btn" id="tlf-btn" aria-label="整一下 Tianlai" aria-haspopup="dialog"><canvas id="tlf-cv" width="40" height="48" aria-hidden="true"></canvas></button>
+  <button type="button" class="tlf-btn" id="tlf-btn" aria-label="整一下 Tianlai" aria-haspopup="dialog"><svg class="tlf-arrow" viewBox="0 0 48 56" width="48" height="56" aria-hidden="true"><path d="M7 5c2 20 10 33 26 40" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><path d="M20 46l14 0l-4-14" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg><canvas id="tlf-cv" width="40" height="48" aria-hidden="true"></canvas></button>
 </div>
 <dialog class="tl-sheet" id="tl-sheet" aria-label="整一下寿星">
   <button type="button" class="lb-close" id="tl-close" aria-label="关闭">×</button>
@@ -1351,6 +1355,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     /* until someone has opened him once, he hops twice every few seconds to get noticed */
     var HK = "bday-2026-tl-met", met = false, fbtn = $("tlf-btn");
     try { met = localStorage.getItem(HK) === "1"; } catch (e) {}
+    fab.classList.toggle("met", met);     // the blinking arrow is only for people who haven't opened him yet
     function move(cls) { fbtn.classList.remove("hop", "hop4", "wig"); void fbtn.offsetWidth; fbtn.classList.add(cls); }
     function still() { return reduce || document.hidden || sheet.open || fab.classList.contains("away") || fab.classList.contains("drag") || level() === 3 || busy(); }
     /* every visit opens with a row of hops. After that he keeps stirring: hops with an invitation until someone has
@@ -1394,7 +1399,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     tick.addEventListener("click", function () { fbtn.click(); });
     $("tlf-btn").addEventListener("click", function () {
       if (moved) { moved = false; return; }
-      met = true; fbtn.classList.remove("hop", "hop4", "wig"); try { localStorage.setItem(HK, "1"); } catch (e) {}
+      met = true; fab.classList.add("met"); fbtn.classList.remove("hop", "hop4", "wig"); try { localStorage.setItem(HK, "1"); } catch (e) {}
       tick.hidden = true;
       if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
       text(); frame();
