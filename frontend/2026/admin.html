@@ -66,6 +66,10 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .bright{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;font-weight:700}
 .bright input{flex:1;max-width:260px;accent-color:var(--ink)}
 .bright span{font-weight:500;color:var(--soft);min-width:4em}
+.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pic{background:#fff;padding:8px;box-shadow:0 2px 3px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.07);font-size:13px}
+.pic img{display:block;width:100%;height:140px;object-fit:cover;margin-bottom:6px}
+.pic button{margin-top:6px}
 .note-row{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
 .note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
@@ -121,6 +125,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     <h2>卡片上的留言</h2>
     <p class="soft">大家在别人卡片上写的话，可以匿名。有不合适的就删。</p>
     <div class="card" id="notes"><p class="soft">还没有留言。</p></div>
+
+    <h2>大家加的照片</h2>
+    <p class="soft">别人给卡片加的照片（不是封面）。有不合适的就删。</p>
+    <div class="bar"><button type="button" class="ghost" id="pics-load">看照片</button><span class="soft" id="pics-state"></span></div>
+    <div class="pics" id="pics"></div>
 
     <h2>厨房分组</h2>
     <p class="soft">只算下午 2 点和 4 点来的人。一位大厨配一个帮手，多出来的人加进现有的组。点「发布」后，大家在网页上就能看到。</p>
@@ -491,6 +500,34 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     b.disabled = true;
     rpc("bday_admin_delete", { p_pass: pass, p_name: b.dataset.del }).then(load).catch(fail);
     armed = null;
+  });
+
+  /* album photos are fetched only when asked for, one card at a time */
+  var picArmed = null;
+  $("pics-load").addEventListener("click", function () {
+    $("pics-state").textContent = "…"; $("pics").innerHTML = "";
+    rpc("bday_pics_count").then(function (counts) {
+      counts = (counts || []).filter(function (c) { return Number(c.n) > 0; });
+      if (!counts.length) { $("pics-state").textContent = "还没有人加照片。"; return; }
+      var total = 0;
+      return counts.reduce(function (chain, c) {
+        return chain.then(function () { return rpc("bday_pics_list", { p_guest: c.guest }); }).then(function (rows) {
+          (rows || []).forEach(function (x) {
+            if (!PHOTO_OK.test(x.photo || "")) return;
+            total++;
+            var d = document.createElement("div"); d.className = "pic";
+            d.innerHTML = '<img src="' + x.photo + '" alt="">给 <b>' + esc(c.guest) + '</b><br><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><br><button type="button" class="ghost small" data-pic="' + esc(x.id) + '">删除</button>';
+            $("pics").appendChild(d);
+          });
+        });
+      }, Promise.resolve()).then(function () { $("pics-state").textContent = "共 " + total + " 张"; });
+    }).catch(function () { $("pics-state").textContent = "没读到。数据库的新脚本跑了吗？"; });
+  });
+  $("pics").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-pic]"); if (!b) return;
+    if (picArmed !== b) { if (picArmed) picArmed.textContent = "删除"; picArmed = b; b.textContent = "再点一次确认"; return; }
+    b.disabled = true; picArmed = null;
+    rpc("bday_admin_pic_delete", { p_pass: pass, p_id: Number(b.dataset.pic) }).then(function () { b.closest(".pic").remove(); }).catch(fail);
   });
 
   var noteArmed = null;

@@ -134,10 +134,23 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .g-meta{display:block;margin-top:4px;font-size:12.5px;line-height:1.35;color:var(--soft)}
 .g-sum{display:block;margin-top:7px;font-size:12.5px;line-height:1.4;color:var(--soft);font-variant-numeric:tabular-nums;white-space:pre-wrap}
 .card-dlg .rx{margin-top:16px}
+.c-album{margin-top:16px}
+.c-pics{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:6px 20px 12px;scrollbar-width:none}
+.c-pics::-webkit-scrollbar{display:none}
+.c-pics figure{flex:none;margin:0;scroll-snap-align:center;background:#fff;padding:7px 7px 5px;box-shadow:0 2px 3px rgba(0,0,0,.16),0 8px 16px rgba(0,0,0,.1)}
+.c-pics figure:nth-child(odd){transform:rotate(-1.2deg)}
+.c-pics figure:nth-child(even){transform:rotate(1deg)}
+.c-pics img{display:block;height:210px;width:auto;max-width:min(300px,72vw);object-fit:cover}
+.c-pics figcaption{min-height:16px;margin-top:4px;font-size:11.5px;line-height:1.3;color:var(--soft);text-align:right}
+.c-addpic{flex:none;scroll-snap-align:center;position:relative;width:118px;height:232px;border:2px dashed var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.c-addpic b{font-family:var(--body);font-weight:500;font-size:38px;line-height:1}
+.c-addpic span{font-size:13.5px;font-weight:700}
+.c-addpic input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.c-addpic:focus-within{outline:2px solid var(--ink);outline-offset:3px}
 .c-credit{margin-top:18px;font-size:11px;color:var(--soft)}
 .c-credit a{color:inherit}
 /* one person's card, opened */
-.card-dlg{width:min(420px,calc(100vw - 28px));max-height:calc(100dvh - 40px);margin:auto;border:0;padding:26px 20px 22px;background:#fff;color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35);overflow-y:auto;text-align:center}
+.card-dlg{width:min(420px,calc(100vw - 28px));max-height:calc(var(--vvh,100dvh) - 40px);bottom:var(--kb,0px);margin:auto;border:0;padding:26px 20px 22px;background:#fff;color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35);overflow-y:auto;text-align:center}
 .card-dlg::backdrop{background:rgba(20,20,22,.6)}
 .card-dlg .lb-close{top:8px;right:8px;background:var(--chipbg,#F1F0EB)}
 .c-ph{width:150px;height:150px;margin:0 auto;display:flex;align-items:center;justify-content:center;transform:rotate(-3deg)}
@@ -176,7 +189,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .tlf.left .tlf-tick{margin:0 0 54px -8px}
 .tlf-tick{max-width:min(210px,calc(100vw - 110px));margin:0 -8px 54px 0;padding:7px 11px;background:#fff;box-shadow:0 2px 3px rgba(0,0,0,.16),0 8px 16px rgba(0,0,0,.1);font-family:var(--hand);font-weight:700;font-size:21px;line-height:1.15;transform:rotate(-3deg);cursor:pointer}
 .tlf-tick[hidden]{display:none}
-.tl-sheet{position:fixed;top:auto;right:0;bottom:0;left:0;margin:0 auto;width:min(520px,100%);max-width:100%;max-height:88dvh;border:0;padding:24px 22px calc(26px + env(safe-area-inset-bottom));background:var(--paper);color:var(--ink);overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
+.tl-sheet{position:fixed;top:auto;right:0;bottom:var(--kb,0px);left:0;margin:0 auto;width:min(520px,100%);max-width:100%;max-height:calc(var(--vvh,100dvh) * .9);border:0;padding:24px 22px calc(26px + env(safe-area-inset-bottom));background:var(--paper);color:var(--ink);overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
 .tl-sheet::backdrop{background:rgba(20,20,22,.45)}
 .tl-sheet[open]{animation:sheetup .28s ease-out}
 .tl-sheet .lb-close{top:10px;right:10px}
@@ -521,7 +534,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's coming", "guests_say": "Tap a card to leave a line or react.", "c_count": "{n} notes", "add_tile": "Add someone", "add_h": "Add someone", "add_me_pre": "Is it you? ", "add_me": "Fill in the sign-up", "add_me_post": " and your card appears.", "add_friend": "Adding a friend? Their name:", "add_ph": "A friend's name", "add_ok": "Add", "add_fail": "Didn't work. Try again.", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_open": "Mess with Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_dv": ["Cheers!", "Buuurp", "Whew, strong!", "Bottoms up!", "…Spilled it"], "tl_cv": ["Who did that?!", "Hey!!", "My hair!", "…Kinda sweet", "Again?!"], "tl_invite": ["Come on", "Tap me", "Dare to cake me?"], "tl_ctop": "Most cakes", "tl_times": "{n}", "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's coming", "guests_say": "Tap a card to leave a line or react.", "c_count": "{n} notes", "pic_add": "Add a photo", "pic_busy": "Uploading…", "pic_fail": "Didn't upload. Try another one.", "pic_by": "from {who}", "add_tile": "Add someone", "add_h": "Add someone", "add_me_pre": "Is it you? ", "add_me": "Fill in the sign-up", "add_me_post": " and your card appears.", "add_friend": "Adding a friend? Their name:", "add_ph": "A friend's name", "add_ok": "Add", "add_fail": "Didn't work. Try again.", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_open": "Mess with Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Take a break and come back"}, "tl_wait": "That's {n} with him already. Back in {m} min", "tl_dv": ["Cheers!", "Buuurp", "Whew, strong!", "Bottoms up!", "…Spilled it"], "tl_cv": ["Who did that?!", "Hey!!", "My hair!", "…Kinda sweet", "Again?!"], "tl_invite": ["Come on", "Tap me", "Dare to cake me?"], "tl_ctop": "Most cakes", "tl_times": "{n}", "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -639,6 +652,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     var EMO = [["like", "1f44d", "👍"], ["lol", "1f923", "🤣"], ["love", "2764_fe0f", "❤️"]];
     var PHOTO_OK = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/;
     var people = [], reacts = null, notes = null, openNames = {}, asking = null, want = "", current = "";
+    var picCount = null, pics = {};      // picCount: how many album photos each card has (null: albums not set up); pics: loaded when a card is opened
     var dlg = $("card"), cbody = $("card-body"), gl = $("guest-list");
     function person(g) { for (var i = 0; i < people.length; i++) if (people[i].name === g) return people[i]; return null; }
     function emoSrc(code) { return "https://fonts.gstatic.com/s/e/notoemoji/latest/" + code + "/512.webp"; }
@@ -670,6 +684,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     function tileHTML(p) {
       var one = oneLine(p), n = notesOf(p.name).length, bits = [];
       EMO.forEach(function (em) { var k = whoOf(p.name, em[0]).length; if (k) bits.push(em[2] + " " + k); });
+      if (picCount && picCount[p.name]) bits.push("📷 " + picCount[p.name]);
       if (n) bits.push(T.c_count.replace("{n}", n));
       var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode]].filter(Boolean).join(" · ");
       return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + "</b>" +
@@ -685,6 +700,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         (p.line ? '<p class="c-line">' + esc(p.line) + "</p>" : "") +
         (p.talk ? '<p class="c-line c-talk"><b>' + esc(T.talk_pre) + "</b>" + esc(p.talk) + "</p>" : "") +
         (mine && cardPhotoOK ? '<div class="c-mine"><label class="c-pick">' + esc(T.c_photo) + '<input type="file" accept="image/*"></label><span class="c-state" role="status"></span></div>' : "") +
+        albumHTML(p.name) +
         '<div class="rx-box">' + rxHTML(p.name) + "</div>" +
         (notes ? '<h4 class="c-h">' + esc(T.c_notes) + '</h4><ul class="c-notes">' + (ns.length ? ns.map(function (x) {
           return "<li>" + esc(x.body) + "<span>— " + esc(x.who || T.anon) + "</span></li>";
@@ -693,14 +709,49 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
           (name ? '<label><input type="checkbox"> ' + esc(T.c_anon) + "</label>" : "") + '<p class="c-msg" role="status"></p></form>' : "") +
         (reacts ? '<p class="c-credit">' + esc(T.emoji_credit) + ' · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></p>' : "");
     }
+    /* the album: photos anyone added to this card, swiped sideways; the last slot adds one */
+    function albumHTML(g) {
+      if (!picCount) return "";
+      var list = (pics[g] || []).filter(function (x) { return PHOTO_OK.test(x.photo || ""); });
+      return '<div class="c-album"><div class="c-pics">' + list.map(function (x) {
+        return '<figure><img src="' + x.photo + '" alt="" loading="lazy"><figcaption>' + (x.who ? esc(T.pic_by.replace("{who}", x.who)) : "") + "</figcaption></figure>";
+      }).join("") + '<label class="c-addpic"><b aria-hidden="true">+</b><span>' + esc(T.pic_add) + '</span><input type="file" accept="image/*" aria-label="' + esc(T.pic_add) + '"></label></div>' +
+        '<p class="c-state c-picstate" role="status"></p></div>';
+    }
+    function drawAlbum(g, toEnd, msg) {
+      if (current !== g) return;
+      var old = cbody.querySelector(".c-album"); if (!old) return;
+      var box = document.createElement("div"); box.innerHTML = albumHTML(g);
+      var fresh = box.firstChild; old.parentNode.replaceChild(fresh, old);
+      if (msg) fresh.querySelector(".c-picstate").textContent = msg;
+      if (toEnd) { var strip = fresh.querySelector(".c-pics"), figs = strip.querySelectorAll("figure"); if (figs.length) strip.scrollLeft = Math.max(0, figs[figs.length - 1].offsetLeft - 20); }
+    }
+    function loadAlbum(g) {
+      if (!picCount || pics[g]) return;
+      rpc("bday_pics_list", { p_guest: g }).then(function (rows) { pics[g] = rows || []; drawAlbum(g); }).catch(function () {});
+    }
+    /* album photos keep their shape: just made smaller, no cut-out */
+    function packBig(c) {
+      var sizes = [900, 720, 560, 420];
+      for (var i = 0; i < sizes.length; i++) {
+        var k = Math.min(1, sizes[i] / Math.max(c.width, c.height)), o = document.createElement("canvas");
+        o.width = Math.max(1, Math.round(c.width * k)); o.height = Math.max(1, Math.round(c.height * k));
+        var x = o.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, o.width, o.height); x.imageSmoothingQuality = "high"; x.drawImage(c, 0, 0, o.width, o.height);
+        var d = o.toDataURL("image/jpeg", 0.8);
+        if (d.length <= 420000 && PHOTO_OK.test(d)) return d;
+      }
+      return null;
+    }
     function tile(g) { return Array.prototype.filter.call(gl.children, function (x) { return x.dataset.g === g; })[0]; }
     function redraw(g) {
       var p = person(g); if (!p) return;
       var li = tile(g); if (li) li.innerHTML = tileHTML(p);
       if (current === g && dlg.open) {
         var typed = cbody.querySelector(".c-add input[type=text]"), keep = typed ? typed.value : "", top = dlg.scrollTop;
+        var strip = cbody.querySelector(".c-pics"), sx = strip ? strip.scrollLeft : 0;
         cbody.innerHTML = dialogHTML(p);
         typed = cbody.querySelector(".c-add input[type=text]"); if (typed) typed.value = keep;
+        strip = cbody.querySelector(".c-pics"); if (strip) strip.scrollLeft = sx;
         dlg.scrollTop = top;
       }
     }
@@ -710,6 +761,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
       dlg.scrollTop = 0;
       var inp = cbody.querySelector(".c-add input[type=text]"); if (focusNote && inp) inp.focus();
+      loadAlbum(g);
     }
     $("card-close").addEventListener("click", function () { dlg.close(); });
     dlg.addEventListener("click", function (ev) { if (ev.target === dlg) dlg.close(); });
@@ -862,11 +914,11 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       sx.putImageData(p, 0, 0);
       return [x0, y0, x1 - x0 + 1, y1 - y0 + 1];
     }
-    function readImage(file) {
+    function readImage(file, max) {
       return new Promise(function (ok, no) {
         var img = new Image(), url = URL.createObjectURL(file);
         img.onload = function () {
-          var k = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+          var k = Math.min(1, (max || 720) / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
           c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
           var cx = c.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.drawImage(img, 0, 0, c.width, c.height);
           URL.revokeObjectURL(url); ok(c);
@@ -878,6 +930,17 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     cbody.addEventListener("change", function (ev) {
       var f = ev.target.files && ev.target.files[0], g = current, p = person(g);
       if (!f || !p || ev.target.type !== "file") return;
+      if (ev.target.closest(".c-addpic")) {
+        var ps = cbody.querySelector(".c-picstate"); if (ps) ps.textContent = T.pic_busy;
+        readImage(f, 1200).then(function (src) {
+          var photo = packBig(src); if (!photo) throw new Error("too big");
+          return rpc("bday_pic_add", { p_guest: g, p_photo: photo, p_who: name || "" }).then(function (id) {
+            (pics[g] = pics[g] || []).push({ id: id, photo: photo, who: name || "" }); picCount[g] = (picCount[g] || 0) + 1;
+            drawAlbum(g, true); var li = tile(g); if (li) li.innerHTML = tileHTML(p);
+          });
+        }).catch(function () { drawAlbum(g, false, T.pic_fail); });
+        return;
+      }
       function say(t) { var st = cbody.querySelector(".c-state"); if (st) st.textContent = t; }
       say(T.c_busy);
       readImage(f).then(function (src) {
@@ -895,8 +958,10 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         rpc("bday_rsvp_list3").then(function (r) { cardPhotoOK = true; return r; }).catch(function () { return rpc("bday_rsvp_list2"); }).catch(function () { return rpc("bday_rsvp_list"); }).catch(function () { return []; }),
         rpc("bday_guests_get").catch(function () { return []; }),
         rpc("bday_react_list").catch(function () { return null; }),
-        rpc("bday_notes_list").catch(function () { return null; })
+        rpc("bday_notes_list").catch(function () { return null; }),
+        rpc("bday_pics_count").catch(function () { return null; })
       ]).then(function (res) {
+        if (res[4]) { picCount = {}; res[4].forEach(function (r) { picCount[r.guest] = Number(r.n) || 0; }); } else picCount = null;
         var by = {}; people = [];
         (res[0] || []).forEach(function (r) { if (r && r.name && !by[r.name]) people.push(by[r.name] = { name: r.name, arrive: r.arrive, mode: r.mode, role: r.role, talk: r.talk || "" }); });
         (res[1] || []).forEach(function (c) {
@@ -906,7 +971,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         });
         if (res[2]) { reacts = {}; res[2].forEach(function (r) { ((reacts[r.guest] = reacts[r.guest] || {})[r.emoji] = reacts[r.guest][r.emoji] || []).push(r.who); }); } else reacts = null;
         if (res[3]) { notes = {}; res[3].forEach(function (n) { (notes[n.guest] = notes[n.guest] || []).push({ body: n.body, who: n.who || "" }); }); } else notes = null;
-        $("guests").hidden = false; $("guest-n").textContent = people.length ? "· " + people.length : ""; $("guests-say").hidden = !(reacts || notes);
+        $("guests").hidden = false; $("guest-n").textContent = people.length ? "· " + people.length : ""; $("guests-say").hidden = !(reacts || notes || picCount);
         gl.innerHTML = "";
         people.forEach(function (p) { var li = document.createElement("li"); li.className = "g"; li.dataset.g = p.name; li.innerHTML = tileHTML(p); gl.appendChild(li); });
         var plus = document.createElement("li"); plus.className = "g";
@@ -925,13 +990,29 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     }).catch(function () {});
   })();
 
+  /* phones: when the keyboard comes up, tell the layout how much room is really left, so an open card or sheet
+     moves up with its text field instead of hiding behind the keys */
+  if (window.visualViewport) (function () {
+    var vv = window.visualViewport, root = document.documentElement;
+    function fit() {
+      root.style.setProperty("--kb", Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) + "px");
+      root.style.setProperty("--vvh", Math.round(vv.height) + "px");
+    }
+    vv.addEventListener("resize", fit); vv.addEventListener("scroll", fit); fit();
+  })();
+
   /* the Tianlai toy: cake in his face, or have a drink with him. Counts are shared through Supabase; if the
      database part isn't there yet it still plays, just for this visitor. */
   (function () {
     var cv = $("tl-cv"); if (!cv) return;
     var ctx = cv.getContext("2d"), say = $("tl-say"), bCake = $("tl-cake"), bDrink = $("tl-drink"), ask = $("tl-ask");
     var fab = $("tlf"), mini = $("tlf-cv").getContext("2d"), tick = $("tlf-tick"), sheet = $("tl-sheet"), tickTimer = 0, lastSeen = null;
-    var SOFA = 8, WINDOW = 30 * 60 * 1000;
+    var WINDOW = 30 * 60 * 1000, MK = "bday-2026-tl-mine", mine = [], pending = false;
+    try { mine = JSON.parse(localStorage.getItem(MK) || "[]") || []; } catch (e) {}
+    /* the limits come from the database, so the page and the database always agree */
+    function sofaAt() { return st.sofa_at || 8; }
+    function perPerson() { return st.per_person || 2; }
+    function mineRecent() { var cut = Date.now() - WINDOW; mine = mine.filter(function (t) { return t > cut; }); return mine.length; }
     var st = { cakes: 0, drinks: 0, recent: 0, top: [], last: null }, shared = false, localDrinks = [];
     var pose = "idle", poseAt = 0, poseV = 0, lastV = { drink: -1, cake: -1 }, bubble = "", bubbleUntil = 0, wantKind = "";
   /* Pixel Tianlai on a 40x48 grid: tall and slim, messy bed-head pushed back, black tee under a navy overshirt.
@@ -1114,8 +1195,8 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     }
     ox = 0; oy = 0;
   }
-    function level() { return st.recent >= SOFA ? 3 : st.recent >= 5 ? 2 : st.recent >= 2 ? 1 : 0; }
-    function busy() { return pose !== "idle" && pose !== "sofa"; }
+    function level() { var s = sofaAt(); return st.recent >= s ? 3 : st.recent >= Math.ceil(s * .6) ? 2 : st.recent >= Math.ceil(s * .25) ? 1 : 0; }
+    function busy() { return pending || (pose !== "idle" && pose !== "sofa"); }
     function settle() { pose = level() === 3 ? "sofa" : "idle"; }
     function text() {
       var lv = level(), now = Date.now();
@@ -1213,25 +1294,48 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     }
     function sync() { return rpc("bday_poke_state").then(function (r) { take(r); text(); news(); }).catch(function () {}); }
     function localRecent() { var cut = Date.now() - WINDOW; localDrinks = localDrinks.filter(function (t) { return t > cut; }); return localDrinks.length; }
+    function play(kind) {
+      // a different animation each time, never the same one twice in a row
+      var n = kind === "cake" ? CAKE_MS.length : DRINK_MS.length, pick = Math.floor(Math.random() * (n - 1)); if (pick >= lastV[kind] && lastV[kind] >= 0) pick++;
+      poseV = lastV[kind] = pick; pose = kind; poseAt = Date.now(); shout((kind === "cake" ? T.tl_cv : T.tl_dv)[pick], poseMs() + 400);
+    }
     function act(kind) {
       if (busy()) return;
       var lv = level();
       if (kind === "drink" && lv === 3) { shout("sofa"); text(); return; }
-      if (!name) { wantKind = kind; ask.hidden = false; ask.querySelector("input").focus(); return; }   // both boards go by name
-      if (kind === "cake" && lv === 3) { st.cakes++; st.last = { kind: "cake", who: name }; shout("sofa_cake"); }
-      else {
-        // a different animation each time, never the same one twice in a row
-        var n = kind === "cake" ? CAKE_MS.length : DRINK_MS.length, pick = Math.floor(Math.random() * (n - 1)); if (pick >= lastV[kind] && lastV[kind] >= 0) pick++;
-        poseV = lastV[kind] = pick; pose = kind; poseAt = Date.now(); shout((kind === "cake" ? T.tl_cv : T.tl_dv)[pick], poseMs() + 400);
-        if (kind === "cake") st.cakes++; else { st.drinks++; st.recent++; localDrinks.push(Date.now()); }
-        st.last = { kind: kind, who: name }; }
-      text(); frame();
-      rpc("bday_poke_add", { p_kind: kind, p_who: name }).then(function (r) {
-        take(r);
-        if (r && r.refused === "slow") shout("slow", 3000);
-        if (r && r.refused === "sofa") shout("sofa", 3000);
-        text(); lastSeen = st.cakes + "/" + st.drinks;
-      }).catch(function () { if (!shared) { st.recent = localRecent(); text(); } else sync(); });
+      if (!name) {   // both boards go by name
+        wantKind = kind; ask.hidden = false; ask.querySelector("input").focus({ preventScroll: true });
+        setTimeout(function () { ask.scrollIntoView({ block: "center", behavior: "smooth" }); }, 350);
+        return;
+      }
+      if (kind === "cake") {
+        // cake is never refused, so it plays straight away
+        st.cakes++; st.last = { kind: "cake", who: name };
+        if (lv === 3) shout("sofa_cake"); else play("cake");
+        text(); frame();
+        rpc("bday_poke_add", { p_kind: "cake", p_who: name }).then(function (r) { take(r); text(); lastSeen = st.cakes + "/" + st.drinks; }).catch(function () { if (shared) sync(); });
+        return;
+      }
+      // a drink can be refused (he is out, or this person has had their share), so ask first and only then raise the glass
+      if (mineRecent() >= perPerson()) {
+        var mins = Math.max(1, Math.ceil((mine[0] + WINDOW - Date.now()) / 60000));
+        shout(T.tl_wait.replace("{n}", mine.length).replace("{m}", mins), 4500); text(); return;
+      }
+      function poured() {
+        mine.push(Date.now()); try { localStorage.setItem(MK, JSON.stringify(mine)); } catch (e) {}
+        play("drink"); text(); frame();
+      }
+      pending = true; text();
+      rpc("bday_poke_add", { p_kind: "drink", p_who: name }).then(function (r) {
+        pending = false; take(r);
+        if (r && r.refused === "slow") { shout("slow", 4000); text(); return; }
+        if (r && r.refused === "sofa") { shout("sofa", 4000); text(); return; }
+        lastSeen = st.cakes + "/" + st.drinks; poured();
+      }).catch(function () {
+        pending = false;
+        if (shared) { sync(); return; }
+        st.drinks++; localDrinks.push(Date.now()); st.recent = localRecent(); st.last = { kind: "drink", who: name }; poured();   // no database yet: play for this visitor only
+      });
     }
     bCake.addEventListener("click", function () { act("cake"); });
     bDrink.addEventListener("click", function () { act("drink"); });
