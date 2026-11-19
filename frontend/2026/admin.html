@@ -90,8 +90,16 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
 .gcard .bar{margin:10px 0 0;gap:8px}
-.g-flagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.g-flagrow select{flex:1 1 130px;width:0;min-width:0;max-width:100%;padding:8px 10px;border-width:1px;border-color:var(--line);text-overflow:ellipsis}
+.g-flagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.g-flagchip{padding:5px 10px;font-size:14px;font-weight:700;border-radius:999px;background:#F1F0EB;color:var(--ink);border-color:transparent;white-space:nowrap}
+.g-flagchip:hover{border-color:var(--ink)}
+.g-flagfind{position:relative;flex:1 1 150px;min-width:0}
+.gcard .g-flagfind input{margin-top:0}
+.g-flaghits{position:absolute;left:0;right:0;top:100%;z-index:6;margin-top:4px;display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.g-flaghits[hidden]{display:none}
+.g-flaghits button{display:flex;gap:8px;align-items:baseline;width:100%;padding:9px 12px;border:0;border-radius:0;background:#fff;color:var(--ink);font-weight:700;text-align:left}
+.g-flaghits button span{font-weight:500;font-size:12.5px;color:var(--soft)}
+.g-flaghits button.on,.g-flaghits button:hover{background:#F1F0EB}
 .g-flags{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;letter-spacing:.06em}
 select{font:inherit;padding:10px 12px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);max-width:200px}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
@@ -136,7 +144,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">国旗在卡片上选，点保存后，别人点开这个人的卡片，名字右边会显示国旗（外面的小卡片上不显示）；报名表里不问国籍，只有你能加。点卡片上的「置顶」，这个人的卡片会排到网页最前面；置顶多个人就按你点的先后排。别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
+    <p class="soft">国旗：在卡片的「加国旗」里打字搜（中文、英文、两个字母的代码都行），点一下或按回车就存好了，最多两面，点国旗可以去掉。别人点开这个人的卡片时，国旗显示在名字右边；报名表里不问国籍，只有你能加。点卡片上的「置顶」，这个人的卡片会排到网页最前面；置顶多个人就按你点的先后排。别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
@@ -258,11 +266,30 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   function regionName(c) { try { return (RN && RN.of(c)) || c; } catch (e) { return c; } }
   function flagOf(c) { return String.fromCodePoint(127462 + c.charCodeAt(0) - 65, 127462 + c.charCodeAt(1) - 65); }
   function flagCodes(s) { return String(s || "").split(",").filter(function (c) { return /^[A-Z]{2}$/.test(c); }).slice(0, 2); }
-  var TOP = ["CN", "US", "FR", "GB", "KR", "JP", "CA"];
-  var SORTED = TOP.concat(REGIONS.filter(function (c) { return TOP.indexOf(c) < 0; }).sort(function (x, y) { return regionName(x).localeCompare(regionName(y), "zh-Hans-u-co-pinyin"); }));
-  function flagSelect(n, i, cur) {
-    return '<select class="g-flag" aria-label="' + esc(n) + (i ? " 的第二面国旗" : " 的国旗") + '"><option value="">' + (i ? "第二面国旗（没有就不选）" : "国旗（选填）") + "</option>" +
-      SORTED.map(function (c) { return '<option value="' + c + '"' + (c === cur ? " selected" : "") + ">" + flagOf(c) + " " + esc(regionName(c)) + "</option>"; }).join("") + "</select>";
+  var RN_EN = null; try { RN_EN = new Intl.DisplayNames(["en"], { type: "region" }); } catch (e) {}
+  function regionEn(c) { try { return (RN_EN && RN_EN.of(c)) || c; } catch (e) { return c; } }
+  /* typing finds a country by its Chinese name, English name or two-letter code */
+  var ALIAS = { uk: "GB", usa: "US", america: "US", england: "GB", "大陆": "CN", "内地": "CN", "香港": "HK", "澳门": "MO" };
+  var OFTEN = ["CN", "US", "FR", "GB", "KR", "JP", "CA", "HK", "TW", "SG", "DE", "IT", "ES", "AU", "IN"];   // equally good matches: these come first
+  function often(c) { var i = OFTEN.indexOf(c); return i < 0 ? 99 : i; }
+  function flagHits(text, skip) {
+    var v = String(text || "").trim().toLowerCase(); if (!v) return [];
+    function score(c) {
+      if (c.toLowerCase() === v || ALIAS[v] === c) return 0;
+      var z = regionName(c).toLowerCase().indexOf(v), e = regionEn(c).toLowerCase().indexOf(v);
+      return z === 0 || e === 0 ? 1 : z > 0 || e > 0 ? 2 : 9;
+    }
+    return REGIONS.filter(function (c) { return skip.indexOf(c) < 0; }).map(function (c) { return [score(c), c]; }).filter(function (x) { return x[0] < 9; })
+      .sort(function (x, y) { return x[0] - y[0] || often(x[1]) - often(y[1]) || regionName(x[1]).length - regionName(y[1]).length; }).slice(0, 6).map(function (x) { return x[1]; });
+  }
+  var flagDraft = {};      // flags picked for a card that is not in the database yet: sent along when the card is saved
+  function flagsNow(n) { return flagCodes(n in flagDraft ? flagDraft[n] : flags[n]); }
+  function flagRowHTML(n) {
+    var cur = flagsNow(n);
+    return '<div class="g-flagrow">' + cur.map(function (c) {
+      return '<button type="button" class="g-flagchip" data-c="' + c + '" title="点一下去掉" aria-label="去掉 ' + esc(regionName(c)) + '">' + flagOf(c) + " " + esc(regionName(c)) + " ×</button>";
+    }).join("") + (cur.length < 2 ? '<span class="g-flagfind"><input type="text" class="g-flagq" maxlength="30" autocomplete="off" placeholder="' + (cur.length ? "再加一面（选填）" : "加国旗：打字搜，比如 中国、france、kr") +
+      '" aria-label="搜国家，给 ' + esc(n) + ' 加国旗"><span class="g-flaghits" hidden></span></span>' : "") + "</div>";
   }
   function cardNames() {
     var seen = {}, out = [];
@@ -271,13 +298,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   }
   function cardEl(n) { return Array.prototype.filter.call($("cards").querySelectorAll(".gcard"), function (c) { return c.dataset.name === n; })[0]; }
   function cardHTML(n) {
-    var c = cards[n] || {}, v = versions[n], fc = flagCodes(flags[n]);
+    var c = cards[n] || {}, v = versions[n], fc = flagsNow(n);
     var photo = n in pending ? pending[n] : (c.photo || "");
     return '<div class="card gcard" data-name="' + esc(n) + '"><label class="g-prev">' + (PHOTO_OK.test(photo) ? '<img src="' + photo + '" alt="">' : "<span>点这里<br>选照片</span>") +
       '<input type="file" accept="image/*" aria-label="' + esc(n) + ' 的照片"></label><div><input type="text" class="g-name" maxlength="24" aria-label="名字，可以改" title="点一下可以改名字" value="' + esc(n) + '">' + (fc.length ? '<span class="g-flags">' + fc.map(flagOf).join("") + "　</span>" : "") + (pins.indexOf(n) >= 0 ? '<span class="soft">📌 置顶第 ' + (pins.indexOf(n) + 1) + " 位　</span>" : "") + (cards[n] ? '<span class="soft">已上网页</span>' : "") +
       '<input type="text" class="g-title" maxlength="40" placeholder="当晚身份（选填），比如：气氛组组长" aria-label="' + esc(n) + ' 的当晚身份" value="' + esc(c.title || "") + '">' +
       '<input type="text" class="g-line" maxlength="120" placeholder="一句话介绍（选填），比如：Tianlai 在 Paris 的朋友" aria-label="一句话介绍 ' + esc(n) + '" value="' + esc(c.line || "") + '">' +
-      (flagsOK ? '<div class="g-flagrow">' + flagSelect(n, 0, fc[0] || "") + flagSelect(n, 1, fc[1] || "") + "</div>" : "") +
+      (flagsOK ? flagRowHTML(n) : "") +
       '<div class="bar"><button type="button" class="small g-save">保存</button>' +
       (originals[n] && photo ? '<button type="button" class="ghost small g-recut">重抠</button>' : "") +
       (v && v.cut && photo ? '<button type="button" class="ghost small g-swap">' + (photo === v.cut ? "不抠，用原图" : "用抠好的") + "</button>" : "") +
@@ -290,7 +317,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var list = (albums[n] || []).filter(function (x) { return PHOTO_OK.test(x.photo || ""); });
     if (!list.length) return "";
     return '<div class="g-album"><p class="soft">别人给 ' + esc(n) + " 加的照片，共 " + list.length + ' 张</p><div class="g-strip">' + list.map(function (x) {
-      return '<div class="g-pic"><img src="' + x.photo + '" alt=""><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><div class="bar"><button type="button" class="small g-setcover" data-id="' + esc(x.id) + '">当封面</button><button type="button" class="ghost small g-delpic" data-id="' + esc(x.id) + '">删除</button></div></div>';
+      return '<div class="g-pic"><img src="' + x.photo + '" alt=""><span class="soft">' + esc(x.who && x.who.charAt(0) !== "~" ? x.who + " 传的" : "没署名") + '</span><div class="bar"><button type="button" class="small g-setcover" data-id="' + esc(x.id) + '">当封面</button><button type="button" class="ghost small g-delpic" data-id="' + esc(x.id) + '">删除</button></div></div>';
     }).join("") + "</div></div>";
   }
   function loadAlbums() {
@@ -305,13 +332,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var names = cardNames();
     $("cards").innerHTML = names.length ? names.map(cardHTML).join("") : '<p class="soft">还没人报名。上面可以先写名字加卡片。</p>';
   }
-  function redraw(n, note, keepFlags) {
+  function redraw(n, note) {
     var el = cardEl(n); if (!el) return;
     var t = el.querySelector(".g-title").value, l = el.querySelector(".g-line").value;
     var box = document.createElement("div"); box.innerHTML = cardHTML(n);
     var fresh = box.firstChild; fresh.querySelector(".g-title").value = t; fresh.querySelector(".g-line").value = l;
-    var was = el.querySelectorAll(".g-flag"), now = fresh.querySelectorAll(".g-flag");
-    if (keepFlags !== false) Array.prototype.forEach.call(now, function (s, i) { if (was[i]) s.value = was[i].value; });
     if (note) fresh.querySelector(".g-state").textContent = note;
     el.parentNode.replaceChild(fresh, el);
   }
@@ -473,6 +498,43 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       }).catch(function () { if (pending[n] === plain) redraw(n, "没抠出来，先用了原图。还没保存"); });
     }).catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "这张图处理不了，换一张（JPG 或 PNG）。"; });
   }
+  /* flags: type to search, pick with a click or Enter; it is saved straight away */
+  function setFlags(n, list) {
+    var v = list.slice(0, 2).join(","), el = cardEl(n);
+    function after(note) { redraw(n, note); var q = cardEl(n) && cardEl(n).querySelector(".g-flagq"); if (q) q.focus(); }
+    if (!rows.some(function (r) { return r.name === n; }) && !cards[n]) { flagDraft[n] = v; after("国旗选好了，点「保存」后生效"); return; }
+    if (el) el.querySelector(".g-state").textContent = "…";
+    rpc("bday_flag_set", { p_name: n, p_flag: v }).then(function () {
+      if (v) flags[n] = v; else delete flags[n];
+      delete flagDraft[n]; after(v ? "国旗存好了" : "国旗去掉了");
+    }).catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "国旗没存上。数据库的新脚本跑了吗？"; });
+  }
+  function showHits(q) {
+    var card = q.closest(".gcard"), box = q.parentNode.querySelector(".g-flaghits"), hits = flagHits(q.value, flagsNow(card.dataset.name));
+    box.innerHTML = hits.map(function (c, i) { return '<button type="button" tabindex="-1" data-c="' + c + '"' + (i ? "" : ' class="on"') + ">" + flagOf(c) + " " + esc(regionName(c)) + "<span>" + esc(regionEn(c)) + "</span></button>"; }).join("");
+    box.hidden = !hits.length;
+  }
+  $("cards").addEventListener("input", function (e) { if (e.target.classList.contains("g-flagq")) showHits(e.target); });
+  $("cards").addEventListener("keydown", function (e) {
+    var q = e.target; if (!q.classList || !q.classList.contains("g-flagq")) return;
+    var box = q.parentNode.querySelector(".g-flaghits"), list = Array.prototype.slice.call(box.querySelectorAll("button")), at = -1;
+    list.forEach(function (b, i) { if (b.classList.contains("on")) at = i; });
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (!list.length) return;
+      e.preventDefault(); var to = (at + (e.key === "ArrowDown" ? 1 : list.length - 1)) % list.length;
+      list.forEach(function (b, i) { b.classList.toggle("on", i === to); });
+    } else if (e.key === "Enter") {
+      e.preventDefault(); if (at >= 0 && !box.hidden) { var n = q.closest(".gcard").dataset.name; setFlags(n, flagsNow(n).concat([list[at].dataset.c])); }
+    } else if (e.key === "Escape") { q.value = ""; box.hidden = true; }
+  });
+  // a click on a result must not take the focus away first, or the list would close before the click lands
+  $("cards").addEventListener("mousedown", function (e) { if (e.target.closest(".g-flaghits")) e.preventDefault(); });
+  $("cards").addEventListener("focusout", function (e) {
+    if (!e.target.classList || !e.target.classList.contains("g-flagq")) return;
+    var box = e.target.parentNode.querySelector(".g-flaghits"); setTimeout(function () { if (document.activeElement !== e.target) box.hidden = true; }, 180);
+  });
+  $("cards").addEventListener("focusin", function (e) { if (e.target.classList && e.target.classList.contains("g-flagq") && e.target.value) showHits(e.target); });
+
   $("cards").addEventListener("change", function (e) {
     var f = e.target.files && e.target.files[0], el = e.target.closest(".gcard");
     if (!f || !el || e.target.type !== "file") return;
@@ -484,6 +546,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   $("cards").addEventListener("click", function (e) {
     var el = e.target.closest(".gcard"); if (!el) return;
     var n = el.dataset.name, st = el.querySelector(".g-state");
+    var hit = e.target.closest(".g-flaghits button");
+    if (hit) { setFlags(n, flagsNow(n).concat([hit.dataset.c])); return; }
+    var chip = e.target.closest(".g-flagchip");
+    if (chip) { setFlags(n, flagsNow(n).filter(function (c) { return c !== chip.dataset.c; })); return; }
     if (e.target.closest(".g-pin")) {
       var np = pins.indexOf(n) >= 0 ? pins.filter(function (x) { return x !== n; }) : pins.concat([n]);
       saveLayout(hearts, np).then(function () { pins = np; cardNames().forEach(function (x) { if (x !== n && cardEl(x)) redraw(x); }); redraw(n, np.indexOf(n) >= 0 ? "置顶了" : "取消置顶了"); })
@@ -517,9 +583,6 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     if (e.target.closest(".g-save")) {
       var title = el.querySelector(".g-title").value.trim(), line = el.querySelector(".g-line").value.trim();
       var to = el.querySelector(".g-name").value.trim().slice(0, 24) || n, renamed = to !== n, step = Promise.resolve();
-      var picked = [], flagWas;
-      Array.prototype.forEach.call(el.querySelectorAll(".g-flag"), function (s) { if (s.value && picked.indexOf(s.value) < 0) picked.push(s.value); });
-      picked = picked.join(",");
       if (renamed && cardNames().indexOf(to) >= 0) { st.textContent = "已经有人叫「" + to + "」了，换一个。"; return; }
       st.textContent = "…";
       if (renamed) {
@@ -527,7 +590,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         var inDb = rows.some(function (r) { return r.name === n; }) || !!cards[n];
         step = (inDb ? rpc("bday_admin_rename", { p_pass: pass, p_old: n, p_new: to }) : Promise.resolve()).then(function () {
           rows.forEach(function (r) { if (r.name === n) r.name = to; });
-          [cards, pending, versions, originals, albums, flags].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
+          [cards, pending, versions, originals, albums, flags, flagDraft].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
           extra = extra.map(function (x) { return x === n ? to : x; });
           if (hearts.some(function (h) { return h.indexOf(n) >= 0; })) {
             var moved = hearts.map(function (h) { return h.map(function (x) { return x === n ? to : x; }); });
@@ -542,12 +605,12 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         return rpc("bday_admin_guest_save", { p_pass: pass, p_name: n, p_title: title, p_line: line, p_photo: photo }).then(function () {
           cards[n] = { title: title, line: line, photo: photo === null ? ((cards[n] || {}).photo || "") : photo };
           delete pending[n]; delete versions[n];
-          flagWas = flagCodes(flags[n]).join(",");
-          if (!flagsOK || picked === flagWas) return;
-          return rpc("bday_flag_set", { p_name: n, p_flag: picked }).then(function () { if (picked) flags[n] = picked; else delete flags[n]; });
+          if (!flagsOK || !(n in flagDraft)) return;
+          var picked = flagDraft[n];
+          return rpc("bday_flag_set", { p_name: n, p_flag: picked }).then(function () { if (picked) flags[n] = picked; else delete flags[n]; delete flagDraft[n]; });
         }).then(function () {
           if (renamed) return load().then(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "名字改好了，已保存"; });
-          redraw(n, "已保存，网页上看得到了", false);
+          redraw(n, "已保存，网页上看得到了");
         });
       }).catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = /name taken/.test(String(err && err.message)) ? "已经有人叫这个名字了，换一个。" : "没存上。数据库的新脚本跑了吗？"; });
       return;
@@ -557,7 +620,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "再点一次确认"; return; }
       rpc("bday_admin_guest_delete", { p_pass: pass, p_name: n }).then(function () {
         delete cards[n]; delete pending[n]; delete versions[n];
-        if (!rows.some(function (r) { return r.name === n; })) delete flags[n];
+        if (!rows.some(function (r) { return r.name === n; })) { delete flags[n]; delete flagDraft[n]; }
         el.querySelector(".g-title").value = ""; el.querySelector(".g-line").value = ""; redraw(n, "已从网页撤下");
       }).catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = "没撤成，再试一次。"; });
     }
