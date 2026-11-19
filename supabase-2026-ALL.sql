@@ -498,5 +498,5 @@ revoke all on function bday_merge(text, text) from public;
 revoke all on function bday_merge(text, text) from anon, authenticated;
 
 -- ==================== 合并两个 Sophia ====================
--- 把「Sophia」并进「Sooooophia」。名字要和后台里显示的一模一样；对不上的话，结果里会列出相近的名字。
-select bday_merge('Sophia', 'Sooooophia') as "结果";
+-- 把「Sophia」并进「Sooophia」（三个 o）。名字要和后台里显示的一模一样；对不上的话，结果里会列出相近的名字。
+select bday_merge('Sophia', 'Sooophia') as "结果";
