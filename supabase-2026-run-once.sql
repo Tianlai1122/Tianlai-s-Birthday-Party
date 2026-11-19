@@ -171,3 +171,16 @@ grant execute on function bday_rsvp_save3(text, text, text, text, text, text, te
   bday_card_photo(text, text), bday_react_toggle(text, text, text), bday_react_list(),
   bday_note_add(text, text, text), bday_notes_list(), bday_admin_note_delete(text, bigint), bday_admin_rename(text, text, text),
   bday_poke_state(), bday_poke_add(text, text) to anon, authenticated;
+
+-- ---------- anyone can add a card for a friend who is coming (name only; the host can remove it) ----------
+create or replace function bday_card_add(p_name text)
+returns void language plpgsql security definer set search_path = public as $$
+declare n text := left(trim(coalesce(p_name, '')), 24);
+begin
+  if n = '' then raise exception 'name needed'; end if;
+  if bday_known(n) then return; end if;
+  if (select count(*) from bday_guest) >= 80 then raise exception 'full'; end if;
+  insert into bday_guest (name) values (n);
+end $$;
+revoke all on function bday_card_add(text) from public;
+grant execute on function bday_card_add(text) to anon, authenticated;
