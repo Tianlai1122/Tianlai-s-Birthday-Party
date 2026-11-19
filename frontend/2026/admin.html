@@ -82,10 +82,14 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .g-pic img{display:block;width:112px;height:112px;object-fit:cover;margin-bottom:5px}
 .g-pic .bar{margin:5px 0 0;gap:5px;flex-wrap:nowrap}
 .g-pic button{padding:3px 8px;font-size:12px}
-.note-row{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
+.note-text{flex:1;min-width:180px}
+.note-who{display:flex;gap:6px;align-items:center;flex:none}
+.note-who input{flex:none;width:120px;min-width:0;padding:6px 9px;border-width:1px;border-color:var(--line);font-size:14px}
+.note-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
 .note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
 .gcard .bar{margin:10px 0 0;gap:8px}
+select{font:inherit;padding:10px 12px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);max-width:200px}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 </style>
 </head>
@@ -134,8 +138,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
     <div class="cards" id="cards"></div>
 
+    <h2>爱心</h2>
+    <p class="soft">选两个人，网页上他们的卡片会并排贴在一起，中间一颗爱心贴纸。一个人只能在一对里。</p>
+    <div class="bar"><select id="h-a" aria-label="第一个人"></select><select id="h-b" aria-label="第二个人"></select><button type="button" id="h-add">贴上爱心</button><span class="soft" id="h-state" role="status"></span></div>
+    <div class="card" id="hearts"><p class="soft">还没有。</p></div>
+
     <h2>卡片上的留言</h2>
-    <p class="soft">大家在别人卡片上写的话，可以匿名。有不合适的就删。</p>
+    <p class="soft">大家在别人卡片上写的话。没署名的显示成「匿名」：在右边的框里写上名字，点「存名字」，网页上就改成那个名字；清空再存就变回匿名。不合适的可以删。</p>
     <div class="card" id="notes"><p class="soft">还没有留言。</p></div>
 
     <h2>厨房分组</h2>
@@ -174,7 +183,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       .then(function (r) { return r.text().then(function (t) { if (!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
   }
 
-  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [], albums = {};
+  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [], albums = {}, hearts = [];
   try { pass = sessionStorage.getItem("bday-admin") || ""; } catch (e) {}
 
   function count(list, key, labels) {
@@ -203,11 +212,34 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     $("stamp").textContent = "更新于 " + new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
     renderCards();
     renderNotes();
+    renderHearts();
     renderTeams();
   }
+  function renderHearts() {
+    var names = cardNames(), opts = '<option value="">选一个人</option>' + names.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + "</option>"; }).join("");
+    var a0 = $("h-a").value, b0 = $("h-b").value;
+    $("h-a").innerHTML = opts; $("h-b").innerHTML = opts; $("h-a").value = a0; $("h-b").value = b0;
+    $("hearts").innerHTML = hearts.length ? hearts.map(function (h, i) {
+      return '<div class="note-row"><span><b>' + esc(h[0]) + "</b> ❤ <b>" + esc(h[1]) + '</b></span><button type="button" class="ghost small" data-heart="' + i + '">拆开</button></div>';
+    }).join("") : '<p class="soft">还没有。</p>';
+  }
+  function saveHearts(next, okText) {
+    return rpc("bday_admin_set_hearts", { p_pass: pass, p_hearts: next }).then(function () { hearts = next; renderHearts(); $("h-state").textContent = okText; })
+      .catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); $("h-state").textContent = "没存上。数据库的新脚本跑了吗？"; });
+  }
+  $("h-add").addEventListener("click", function () {
+    var x = $("h-a").value, y = $("h-b").value;
+    if (!x || !y || x === y) { $("h-state").textContent = "选两个不同的人。"; return; }
+    if (hearts.some(function (h) { return h.indexOf(x) >= 0 || h.indexOf(y) >= 0; })) { $("h-state").textContent = "其中一个人已经在一对里了，先拆开。"; return; }
+    saveHearts(hearts.concat([[x, y]]), "贴上了，网页上看得到。").then(function () { $("h-a").value = ""; $("h-b").value = ""; });
+  });
+  $("hearts").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-heart]"); if (!b) return;
+    var i = Number(b.dataset.heart); saveHearts(hearts.filter(function (_, k) { return k !== i; }), "拆开了。");
+  });
   function renderNotes() {
     $("notes").innerHTML = notes.length ? notes.map(function (x) {
-      return '<div class="note-row"><span>给 <b>' + esc(x.guest) + "</b>：" + esc(x.body) + ' <span class="soft">— ' + esc(x.who || "匿名") + '</span></span><button type="button" class="ghost small" data-note="' + esc(x.id) + '">删除</button></div>';
+      return '<div class="note-row"><span class="note-text">给 <b>' + esc(x.guest) + "</b>：" + esc(x.body) + '</span><span class="note-who"><input type="text" maxlength="24" placeholder="匿名" aria-label="这句是谁写的" value="' + esc(x.who || "") + '" data-who="' + esc(x.id) + '"><button type="button" class="small" data-savewho="' + esc(x.id) + '">存名字</button><button type="button" class="ghost small" data-note="' + esc(x.id) + '">删除</button></span></div>';
     }).join("") : '<p class="soft">还没有留言。</p>';
   }
 
@@ -465,6 +497,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
           rows.forEach(function (r) { if (r.name === n) r.name = to; });
           [cards, pending, versions, originals, albums].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
           extra = extra.map(function (x) { return x === n ? to : x; });
+          if (hearts.some(function (h) { return h.indexOf(n) >= 0; })) {
+            var moved = hearts.map(function (h) { return h.map(function (x) { return x === n ? to : x; }); });
+            rpc("bday_admin_set_hearts", { p_pass: pass, p_hearts: moved }).then(function () { hearts = moved; }).catch(function () {});
+          }
           el.dataset.name = to; n = to;
         });
       }
@@ -516,6 +552,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       notes = ns || [];
       return loadAlbums();
     }).then(function () {
+      return rpc("bday_hearts_get").catch(function () { return []; });
+    }).then(function (hs) {
+      hearts = Array.isArray(hs) ? hs.filter(function (h) { return Array.isArray(h) && h.length === 2; }) : [];
       return rpc("bday_teams_get");
     }).then(function (t) {
       published = t || [];
@@ -551,6 +590,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
 
   var noteArmed = null;
   $("notes").addEventListener("click", function (e) {
+    var sw = e.target.closest("[data-savewho]");
+    if (sw) {
+      var nid = Number(sw.dataset.savewho), field = sw.parentNode.querySelector("[data-who]"), who = field.value.trim().slice(0, 24);
+      sw.disabled = true;
+      rpc("bday_admin_note_who", { p_pass: pass, p_id: nid, p_who: who }).then(function () {
+        notes.forEach(function (x) { if (Number(x.id) === nid) x.who = who; });
+        sw.disabled = false; sw.textContent = "存好了"; setTimeout(function () { sw.textContent = "存名字"; }, 1500);
+      }).catch(function (err) { sw.disabled = false; if (/bad passcode/.test(String(err && err.message))) return fail(err); sw.textContent = "没存上"; });
+      return;
+    }
     var b = e.target.closest("[data-note]"); if (!b) return;
     if (noteArmed !== b) { if (noteArmed) noteArmed.textContent = "删除"; noteArmed = b; b.textContent = "再点一次确认"; return; }
     b.disabled = true; noteArmed = null;

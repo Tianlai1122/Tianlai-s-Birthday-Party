@@ -327,3 +327,29 @@ end $$;
 
 revoke all on function bday_pic_delete(bigint, text) from public;
 grant execute on function bday_pic_delete(bigint, text), bday_card_photo(text, text) to anon, authenticated;
+
+-- ---------- a heart between two people, set by the host ----------
+alter table bday_admin add column if not exists hearts jsonb not null default '[]'::jsonb;
+
+create or replace function bday_hearts_get()
+returns jsonb language sql security definer set search_path = public as $$
+  select hearts from bday_admin where id = 1;
+$$;
+
+create or replace function bday_admin_set_hearts(p_pass text, p_hearts jsonb)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  perform bday_admin_check(p_pass);
+  update bday_admin set hearts = coalesce(p_hearts, '[]'::jsonb) where id = 1;
+end $$;
+
+-- ---------- the host can put a name on a note that was left unsigned (or correct one) ----------
+create or replace function bday_admin_note_who(p_pass text, p_id bigint, p_who text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  perform bday_admin_check(p_pass);
+  update bday_note set who = left(trim(coalesce(p_who, '')), 24) where id = p_id;
+end $$;
+
+revoke all on function bday_hearts_get(), bday_admin_set_hearts(text, jsonb), bday_admin_note_who(text, bigint, text) from public;
+grant execute on function bday_hearts_get(), bday_admin_set_hearts(text, jsonb), bday_admin_note_who(text, bigint, text) to anon, authenticated;
