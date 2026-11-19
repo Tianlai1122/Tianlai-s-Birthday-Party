@@ -77,6 +77,11 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16);break-inside:avoid;font-weight:500}
 .list svg{flex:none;color:var(--pop)}
 
+.dress{display:grid;grid-template-columns:1fr 116px;gap:12px;align-items:center;margin-top:30px}
+.dress .sub{margin-top:0}
+.dress .say{margin-top:4px}
+.dress .stk{width:116px;transform:rotate(6deg)}
+
 /* ---------- buttons: little stickers ---------- */
 .bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
 .bigbtn:active,.btn:active{transform:scale(.97)}
@@ -214,8 +219,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     </div>
     <p class="sub">现场能玩的</p>
     <ul class="list"><li><span>Switch</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>桌游</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>台球</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>乒乓球</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>迷你 golf</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>酒水零食</span><svg width="18" height="18"><use href="#s-star"/></svg></li></ul>
-    <p class="sub">Dress code</p>
-    <p class="say" style="margin-top:4px">打扮得帅气美丽就行。</p>
+    <div class="dress">
+      <div><p class="sub">Dress code</p><p class="say">打扮得帅气美丽就行。</p></div>
+      <img class="stk" src="stk/mirror.webp" width="260" height="203" loading="lazy" alt="戴橙色帽子的小白狗在照镜子">
+    </div>
   </section>
 
   <section class="page" id="where">
@@ -240,8 +247,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   </section>
 
   <section class="page" id="venue">
-    <img class="stk corner" src="stk/mirror.webp" width="260" height="203" loading="lazy" alt="戴橙色帽子的小白狗在照镜子">
-    <h2 class="hd sec pad">场地</h2>
+    <h2 class="hd sec">场地</h2>
     <div class="polas">
       <figure class="pola"><i class="tape" aria-hidden="true"></i>
         <button type="button" class="ph" data-full="img/entrance.jpg" aria-label="放大看门口照片"><img src="img/entrance.jpg" alt="99 Claremont 门口：石头拱门下两扇深色木门，门楣上刻着 99 McGiffert Hall" loading="lazy"></button>
