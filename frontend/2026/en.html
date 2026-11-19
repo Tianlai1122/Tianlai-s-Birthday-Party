@@ -163,7 +163,22 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .c-add button{appearance:none;border:0;border-radius:12px;background:var(--ink);color:#fff;font:inherit;font-size:15px;font-weight:800;padding:0 16px;cursor:pointer}
 .c-add label{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--soft)}
 .c-add .c-msg{grid-column:1/-1;font-size:13px;color:var(--ink);font-weight:700;min-height:0}
-/* the Tianlai toy */
+/* the Tianlai toy: a small figure pinned bottom right, opening a sheet from the bottom */
+.tlf{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:35;display:flex;align-items:flex-end;gap:2px;transition:transform .25s ease,opacity .25s ease}
+.tlf.away{transform:translateX(130%);opacity:0;pointer-events:none}
+.tlf-btn{appearance:none;border:0;background:transparent;padding:0;cursor:pointer;line-height:0}
+.tlf-btn:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+#tlf-cv{width:60px;height:72px;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.25)) drop-shadow(0 6px 10px rgba(0,0,0,.14))}
+.tlf-tick{max-width:min(210px,calc(100vw - 100px));margin:0 0 34px;padding:7px 11px;background:#fff;box-shadow:0 2px 3px rgba(0,0,0,.16),0 8px 16px rgba(0,0,0,.1);font-family:var(--hand);font-weight:700;font-size:21px;line-height:1.15;transform:rotate(-3deg);pointer-events:none}
+.tlf-tick[hidden]{display:none}
+.tl-sheet{position:fixed;top:auto;right:0;bottom:0;left:0;margin:0 auto;width:min(520px,100%);max-width:100%;max-height:88dvh;border:0;padding:24px 22px calc(26px + env(safe-area-inset-bottom));background:var(--paper);color:var(--ink);overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
+.tl-sheet::backdrop{background:rgba(20,20,22,.45)}
+.tl-sheet[open]{animation:sheetup .28s ease-out}
+.tl-sheet .lb-close{top:10px;right:10px}
+.tl-sheet .hd{padding-right:54px}
+@keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+@media (min-width:700px){#tlf-cv{width:80px;height:96px}.tlf{right:18px;bottom:18px}}
+@media (prefers-reduced-motion:reduce){.tl-sheet[open]{animation:none}.tlf{transition:none}}
 .tl-stage{position:relative;margin-top:14px;display:flex;flex-direction:column;align-items:center}
 .tl-name{font-family:var(--hand);font-weight:700;font-size:34px;line-height:1;transform:rotate(-3deg);margin-bottom:2px}
 .tl-say{position:absolute;left:calc(50% + 48px);top:66px;width:calc(50% - 50px);font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.1;text-align:left;transform:rotate(-4deg);transform-origin:left top}
@@ -267,7 +282,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .sheet .tape{width:84px;height:26px;left:24px;top:-13px;transform:rotate(-5deg)}
 
 /* ---------- footer ---------- */
-footer.page{margin-top:90px;padding-bottom:70px;text-align:center}
+footer.page{margin-top:90px;padding-bottom:120px;text-align:center}
 footer .stk{width:150px;margin:0 auto;transform:rotate(-4deg)}
 footer .bye{margin-top:14px;font-family:var(--hand);font-weight:700;font-size:46px;line-height:1;color:var(--blue)}
 footer .thx{margin-top:12px;font-size:14px}
@@ -369,28 +384,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     </div>
   </section>
 
-  <section class="page" id="tl">
-    <h2 class="hd sec">Mess with the birthday boy</h2>
-    <div class="tl-stage">
-      <p class="tl-name">Tianlai</p>
-      <p class="tl-say" id="tl-say" aria-live="polite"></p>
-      <canvas id="tl-cv" width="40" height="48" role="img" aria-label="Pixel Tianlai"></canvas>
-    </div>
-    <div class="tl-btns">
-      <button type="button" class="bigbtn" id="tl-cake"><span aria-hidden="true">🍰</span>Cake his face</button>
-      <button type="button" class="bigbtn" id="tl-drink"><span aria-hidden="true">🍺</span>Drink with him</button>
-    </div>
-    <form class="rx-ask" id="tl-ask" hidden><input type="text" maxlength="24" placeholder="Name" aria-label="Your name first"><button type="submit">OK</button></form>
-    <p class="tl-stats" id="tl-stats"></p>
-    <p class="tl-last" id="tl-last" aria-live="polite"></p>
-    <div class="sheet" id="tl-board" hidden>
-      <i class="tape" aria-hidden="true"></i>
-      <p class="sub" style="margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px">Most drinks</p>
-      <ul class="who" id="tl-top"></ul>
-      <p class="tl-rule">The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.</p>
-    </div>
-  </section>
-
   <section class="page" id="guests" hidden>
     <h2 class="hd sec">Who's coming<span id="guest-n"></span></h2>
     <p class="say" id="guests-say" hidden>Tap a card to leave a line or react.</p>
@@ -479,6 +472,33 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <p class="thx">Special thanks to <b>@Lucy</b> <b>@Yerin</b> for the space</p>
 </footer>
 
+<div class="tlf" id="tlf">
+  <p class="tlf-tick" id="tlf-tick" hidden></p>
+  <button type="button" class="tlf-btn" id="tlf-btn" aria-label="Mess with Tianlai" aria-haspopup="dialog"><canvas id="tlf-cv" width="40" height="48" aria-hidden="true"></canvas></button>
+</div>
+<dialog class="tl-sheet" id="tl-sheet" aria-label="Mess with the birthday boy">
+  <button type="button" class="lb-close" id="tl-close" aria-label="Close">×</button>
+  <h2 class="hd sec">Mess with the birthday boy</h2>
+    <div class="tl-stage">
+      <p class="tl-name">Tianlai</p>
+      <p class="tl-say" id="tl-say" aria-live="polite"></p>
+      <canvas id="tl-cv" width="40" height="48" role="img" aria-label="Pixel Tianlai"></canvas>
+    </div>
+    <div class="tl-btns">
+      <button type="button" class="bigbtn" id="tl-cake"><span aria-hidden="true">🍰</span>Cake his face</button>
+      <button type="button" class="bigbtn" id="tl-drink"><span aria-hidden="true">🍺</span>Drink with him</button>
+    </div>
+    <form class="rx-ask" id="tl-ask" hidden><input type="text" maxlength="24" placeholder="Name" aria-label="Your name first"><button type="submit">OK</button></form>
+    <p class="tl-stats" id="tl-stats"></p>
+    <p class="tl-last" id="tl-last" aria-live="polite"></p>
+    <div class="sheet" id="tl-board" hidden>
+      <i class="tape" aria-hidden="true"></i>
+      <p class="sub" style="margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px">Most drinks</p>
+      <ul class="who" id="tl-top"></ul>
+      <p class="tl-rule">The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.</p>
+    </div>
+  </dialog>
+
 <dialog class="card-dlg" id="card" aria-label="Who's coming">
   <button type="button" class="lb-close" id="card-close" aria-label="Close">×</button>
   <div id="card-body"></div>
@@ -490,7 +510,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's coming", "guests_say": "Tap a card to leave a line or react.", "c_count": "{n} notes", "add_tile": "Add someone", "add_h": "Add someone", "add_me_pre": "Is it you? ", "add_me": "Fill in the sign-up", "add_me_post": " and your card appears.", "add_friend": "Adding a friend? Their name:", "add_ph": "A friend's name", "add_ok": "Add", "add_fail": "Didn't work. Try again.", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's coming", "guests_say": "Tap a card to leave a line or react.", "c_count": "{n} notes", "add_tile": "Add someone", "add_h": "Add someone", "add_me_pre": "Is it you? ", "add_me": "Fill in the sign-up", "add_me_post": " and your card appears.", "add_friend": "Adding a friend? Their name:", "add_ph": "A friend's name", "add_ok": "Add", "add_fail": "Didn't work. Try again.", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_open": "Mess with Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_top": "Most drinks", "tl_rule": "The top three each get one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -899,6 +919,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   (function () {
     var cv = $("tl-cv"); if (!cv) return;
     var ctx = cv.getContext("2d"), say = $("tl-say"), bCake = $("tl-cake"), bDrink = $("tl-drink"), ask = $("tl-ask");
+    var fab = $("tlf"), mini = $("tlf-cv").getContext("2d"), tick = $("tlf-tick"), sheet = $("tl-sheet"), tickTimer = 0, lastSeen = null;
     var SOFA = 8, WINDOW = 30 * 60 * 1000;
     var st = { cakes: 0, drinks: 0, recent: 0, top: [], last: null }, shared = false, localDrinks = [];
     var pose = "idle", poseAt = 0, bubble = "", bubbleUntil = 0, wantDrink = false;
@@ -1042,8 +1063,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       var lv = level(), now = Date.now();
       say.textContent = now < bubbleUntil ? bubble : T.tl_b[lv === 3 ? "sofa" : lv === 2 ? "drunk" : lv === 1 ? "tipsy" : "idle"];
       $("tl-stats").textContent = T.tl_stats.replace("{c}", st.cakes).replace("{d}", st.drinks);
-      var l = st.last;
-      $("tl-last").textContent = l && l.kind ? T[l.kind === "cake" ? "tl_last_cake" : "tl_last_drink"].replace("{who}", l.who || T.someone) : "";
+      $("tl-last").textContent = lastText();
       var top = (st.top || []).filter(function (x) { return x && x.who; });
       $("tl-board").hidden = !top.length;
       $("tl-top").innerHTML = top.map(function (x, i) { return "<li><b>" + (i + 1) + ". " + esc(x.who) + "</b><span>" + esc(T.tl_cups.replace("{n}", x.n)) + "</span></li>"; }).join("");
@@ -1056,16 +1076,41 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (pose === "cake" && now - poseAt > 2600) { settle(); text(); }
       if (!busy()) settle();
       if (bubbleUntil && now > bubbleUntil) { bubbleUntil = 0; text(); }
-      drawTianlai(ctx, { pose: pose, t: now - poseAt, drunk: Math.min(2, level()), clock: reduce && !busy() ? 300 : now });
+      var s = { pose: pose, t: now - poseAt, drunk: Math.min(2, level()), clock: reduce && !busy() ? 300 : now };
+      drawTianlai(mini, s);
+      if (sheet.open) drawTianlai(ctx, s);
     }
-    var seen = true;
-    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }).observe(cv);
-    setInterval(function () { if (seen && !document.hidden) frame(); }, 90);
+    setInterval(function () { if (!document.hidden) frame(); }, 90);
+    /* the little note next to the corner figure: an invitation at first, then whatever someone just did to him */
+    function note(t, ms) {
+      if (sheet.open || !t) return;
+      tick.textContent = t; tick.hidden = false;
+      clearTimeout(tickTimer); tickTimer = setTimeout(function () { tick.hidden = true; }, ms || 6000);
+    }
+    function lastText() { var l = st.last; return l && l.kind ? T[l.kind === "cake" ? "tl_last_cake" : "tl_last_drink"].replace("{who}", l.who || T.someone) : ""; }
+    function news() {
+      var key = st.cakes + "/" + st.drinks;
+      if (lastSeen !== null && key !== lastSeen) note(lastText());
+      lastSeen = key;
+    }
+    $("tlf-btn").addEventListener("click", function () {
+      tick.hidden = true;
+      if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
+      text(); frame();
+    });
+    $("tl-close").addEventListener("click", function () { sheet.close(); });
+    sheet.addEventListener("click", function (e) { if (e.target === sheet) sheet.close(); });
+    /* step aside while someone is typing, so the figure never sits on the keyboard or a field */
+    document.addEventListener("focusin", function (e) {
+      var el = e.target, typing = el && (el.tagName === "TEXTAREA" || (el.tagName === "INPUT" && /^(text|search|email|tel|url|number|password)$/.test(el.type)));
+      fab.classList.toggle("away", !!typing && !sheet.contains(el));
+    });
+    document.addEventListener("focusout", function () { setTimeout(function () { var el = document.activeElement; if (!el || el === document.body || !/^(INPUT|TEXTAREA)$/.test(el.tagName)) fab.classList.remove("away"); }, 120); });
     function take(res) {
       if (!res || typeof res.cakes !== "number") return;
       shared = true; st = res;
     }
-    function sync() { return rpc("bday_poke_state").then(function (r) { take(r); text(); }).catch(function () {}); }
+    function sync() { return rpc("bday_poke_state").then(function (r) { take(r); text(); news(); }).catch(function () {}); }
     function localRecent() { var cut = Date.now() - WINDOW; localDrinks = localDrinks.filter(function (t) { return t > cut; }); return localDrinks.length; }
     function act(kind) {
       if (busy()) return;
@@ -1083,7 +1128,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         take(r);
         if (r && r.refused === "slow") shout("slow", 3000);
         if (r && r.refused === "sofa") shout("sofa", 3000);
-        text();
+        text(); lastSeen = st.cakes + "/" + st.drinks;
       }).catch(function () { if (!shared) { st.recent = localRecent(); text(); } else sync(); });
     }
     bCake.addEventListener("click", function () { act("cake"); });
@@ -1096,7 +1141,8 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (wantDrink) { wantDrink = false; act("drink"); }
     });
     text(); frame(); sync();
-    setInterval(function () { if (seen && !document.hidden && !busy()) { if (shared) sync(); else { st.recent = localRecent(); text(); } } }, 20000);
+    setTimeout(function () { if (level() < 3) note(T.tl_b.idle, 5000); }, 1800);
+    setInterval(function () { if (!document.hidden && !busy()) { if (shared) sync(); else { st.recent = localRecent(); text(); } } }, 20000);
   })();
 
   /* music: first play starts at the big swell; nothing loads until play is pressed */
