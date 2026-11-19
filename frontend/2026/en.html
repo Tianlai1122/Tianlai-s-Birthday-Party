@@ -1233,6 +1233,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       }).catch(function () { say(T.c_bad); });
     }
 
+    var shuffled = {};
     function loadCards() {
       return Promise.all([
         rpc("bday_rsvp_list3").then(function (r) { cardPhotoOK = true; return r; }).catch(function () { return rpc("bday_rsvp_list2"); }).catch(function () { return rpc("bday_rsvp_list"); }).catch(function () { return []; }),
@@ -1259,7 +1260,9 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         var extra = res[5], pinned = extra && !Array.isArray(extra) && Array.isArray(extra.pins) ? extra.pins : [];
         var heartList = Array.isArray(extra) ? extra : extra && Array.isArray(extra.hearts) ? extra.hearts : [];
         function rank(p) { var i = pinned.indexOf(p.name); return i >= 0 ? i : name && p.name === name ? 1000 : 2000; }
-        people = people.map(function (p, i) { return [rank(p), i, p]; }).sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; }).map(function (x) { return x[2]; });
+        // everyone else comes in a different order each visit; the order is drawn once per visit, so cards don't jump around while the page is open
+        people = people.map(function (p, i) { var r = rank(p); return [r, r === 2000 ? (shuffled[p.name] = shuffled[p.name] || Math.random()) : i, p]; })
+          .sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; }).map(function (x) { return x[2]; });
         gl.innerHTML = "";
         // two people the host joined with a heart sit side by side in one double-width slot, heart between them
         var mate = {}, done = {};
