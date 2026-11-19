@@ -66,10 +66,13 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .bright{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;font-weight:700}
 .bright input{flex:1;max-width:260px;accent-color:var(--ink)}
 .bright span{font-weight:500;color:var(--soft);min-width:4em}
-.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.pic{background:#fff;padding:8px;box-shadow:0 2px 3px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.07);font-size:13px}
-.pic img{display:block;width:100%;height:140px;object-fit:cover;margin-bottom:6px}
-.pic button{margin-top:6px}
+.g-album{grid-column:1/-1;border-top:1px solid var(--line);padding-top:10px}
+.g-album p{margin-bottom:8px}
+.g-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.g-pic{flex:none;width:112px;font-size:12px}
+.g-pic img{display:block;width:112px;height:112px;object-fit:cover;margin-bottom:5px}
+.g-pic .bar{margin:5px 0 0;gap:5px;flex-wrap:nowrap}
+.g-pic button{padding:3px 8px;font-size:12px}
 .note-row{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
 .note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
@@ -114,7 +117,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
+    <p class="soft">别人给谁加了照片，会排在那个人卡片的下面：点「当封面」把它换成封面，点「删除」删掉。照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「有谁来」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
@@ -125,11 +128,6 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     <h2>卡片上的留言</h2>
     <p class="soft">大家在别人卡片上写的话，可以匿名。有不合适的就删。</p>
     <div class="card" id="notes"><p class="soft">还没有留言。</p></div>
-
-    <h2>大家加的照片</h2>
-    <p class="soft">别人给卡片加的照片（不是封面）。有不合适的就删；想让哪张当封面，点「设为封面」，框一下、抠好，再到那个人的卡片上点「保存」。</p>
-    <div class="bar"><button type="button" class="ghost" id="pics-load">看照片</button><span class="soft" id="pics-state"></span></div>
-    <div class="pics" id="pics"></div>
 
     <h2>厨房分组</h2>
     <p class="soft">只算下午 2 点和 4 点来的人。一位大厨配一个帮手，多出来的人加进现有的组。点「发布」后，大家在网页上就能看到。</p>
@@ -166,7 +164,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       .then(function (r) { return r.text().then(function (t) { if (!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
   }
 
-  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [];
+  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [], albums = {};
   try { pass = sessionStorage.getItem("bday-admin") || ""; } catch (e) {}
 
   function count(list, key, labels) {
@@ -207,7 +205,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   var PHOTO_OK = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/;
   function cardNames() {
     var seen = {}, out = [];
-    rows.map(function (r) { return r.name; }).concat(Object.keys(cards), extra).forEach(function (n) { if (n && !seen[n]) { seen[n] = 1; out.push(n); } });
+    rows.map(function (r) { return r.name; }).concat(Object.keys(cards), Object.keys(albums), extra).forEach(function (n) { if (n && !seen[n]) { seen[n] = 1; out.push(n); } });
     return out;
   }
   function cardEl(n) { return Array.prototype.filter.call($("cards").querySelectorAll(".gcard"), function (c) { return c.dataset.name === n; })[0]; }
@@ -222,7 +220,23 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       (originals[n] && photo ? '<button type="button" class="ghost small g-recut">重抠</button>' : "") +
       (v && v.cut && photo ? '<button type="button" class="ghost small g-swap">' + (photo === v.cut ? "不抠，用原图" : "用抠好的") + "</button>" : "") +
       (photo ? '<button type="button" class="ghost small g-nophoto">去掉照片</button>' : "") +
-      (cards[n] ? '<button type="button" class="ghost small g-del">从网页撤下</button>' : "") + '<span class="soft g-state" role="status"></span></div></div></div>';
+      (cards[n] ? '<button type="button" class="ghost small g-del">从网页撤下</button>' : "") + '<span class="soft g-state" role="status"></span></div></div>' + albumHTML(n) + "</div>";
+  }
+  /* photos other people added to this person's card: pick one as the cover, or delete */
+  function albumHTML(n) {
+    var list = (albums[n] || []).filter(function (x) { return PHOTO_OK.test(x.photo || ""); });
+    if (!list.length) return "";
+    return '<div class="g-album"><p class="soft">别人给 ' + esc(n) + " 加的照片，共 " + list.length + ' 张</p><div class="g-strip">' + list.map(function (x) {
+      return '<div class="g-pic"><img src="' + x.photo + '" alt=""><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><div class="bar"><button type="button" class="small g-setcover" data-id="' + esc(x.id) + '">当封面</button><button type="button" class="ghost small g-delpic" data-id="' + esc(x.id) + '">删除</button></div></div>';
+    }).join("") + "</div></div>";
+  }
+  function loadAlbums() {
+    albums = {};
+    return rpc("bday_pics_count").then(function (counts) {
+      return (counts || []).filter(function (c) { return Number(c.n) > 0; }).reduce(function (chain, c) {
+        return chain.then(function () { return rpc("bday_pics_list", { p_guest: c.guest }); }).then(function (rows) { albums[c.guest] = rows || []; });
+      }, Promise.resolve());
+    }).catch(function () {});
   }
   function renderCards() {
     var names = cardNames();
@@ -406,6 +420,27 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var el = e.target.closest(".gcard"); if (!el) return;
     var n = el.dataset.name, st = el.querySelector(".g-state");
     if (e.target.closest(".g-recut")) { cutFrom(n); return; }
+    var sc = e.target.closest(".g-setcover"), dp = e.target.closest(".g-delpic");
+    if (sc || dp) {
+      var pid = Number((sc || dp).dataset.id), item = (albums[n] || []).filter(function (x) { return Number(x.id) === pid; })[0];
+      if (!item) return;
+      if (sc) {
+        // an album photo becomes the cover through the same box-and-cut-out step, then waits for Save
+        var im = new Image();
+        im.onload = function () {
+          var c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext("2d").drawImage(im, 0, 0);
+          originals[n] = c; cutFrom(n, "封面换好了，点「保存」才会上网页");
+        };
+        im.src = item.photo;
+        return;
+      }
+      if (dp.dataset.sure !== "1") { dp.dataset.sure = "1"; dp.textContent = "再点一次"; return; }
+      dp.disabled = true;
+      rpc("bday_admin_pic_delete", { p_pass: pass, p_id: pid }).then(function () {
+        albums[n] = (albums[n] || []).filter(function (x) { return Number(x.id) !== pid; }); redraw(n, "删掉了一张");
+      }).catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = "没删成，再试一次。"; });
+      return;
+    }
     if (e.target.closest(".g-swap")) { var v = versions[n]; pending[n] = pending[n] === v.cut ? v.plain : v.cut; redraw(n, "照片还没保存"); return; }
     if (e.target.closest(".g-nophoto")) { pending[n] = ""; delete versions[n]; delete originals[n]; redraw(n, cards[n] && cards[n].photo ? "去掉了，还没保存" : ""); return; }
     if (e.target.closest(".g-save")) {
@@ -418,7 +453,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         var inDb = rows.some(function (r) { return r.name === n; }) || !!cards[n];
         step = (inDb ? rpc("bday_admin_rename", { p_pass: pass, p_old: n, p_new: to }) : Promise.resolve()).then(function () {
           rows.forEach(function (r) { if (r.name === n) r.name = to; });
-          [cards, pending, versions, originals].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
+          [cards, pending, versions, originals, albums].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
           extra = extra.map(function (x) { return x === n ? to : x; });
           el.dataset.name = to; n = to;
         });
@@ -469,6 +504,8 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       return rpc("bday_notes_list").catch(function () { return []; });
     }).then(function (ns) {
       notes = ns || [];
+      return loadAlbums();
+    }).then(function () {
       return rpc("bday_teams_get");
     }).then(function (t) {
       published = t || [];
@@ -500,51 +537,6 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     b.disabled = true;
     rpc("bday_admin_delete", { p_pass: pass, p_name: b.dataset.del }).then(load).catch(fail);
     armed = null;
-  });
-
-  /* album photos are fetched only when asked for, one card at a time */
-  var picArmed = null, picData = {};
-  $("pics-load").addEventListener("click", function () {
-    $("pics-state").textContent = "…"; $("pics").innerHTML = "";
-    rpc("bday_pics_count").then(function (counts) {
-      counts = (counts || []).filter(function (c) { return Number(c.n) > 0; });
-      if (!counts.length) { $("pics-state").textContent = "还没有人加照片。"; return; }
-      var total = 0;
-      return counts.reduce(function (chain, c) {
-        return chain.then(function () { return rpc("bday_pics_list", { p_guest: c.guest }); }).then(function (rows) {
-          (rows || []).forEach(function (x) {
-            if (!PHOTO_OK.test(x.photo || "")) return;
-            total++;
-            var d = document.createElement("div"); d.className = "pic";
-            picData[x.id] = { guest: c.guest, photo: x.photo };
-            d.innerHTML = '<img src="' + x.photo + '" alt="">给 <b>' + esc(c.guest) + '</b><br><span class="soft">' + esc(x.who ? x.who + " 传的" : "没署名") + '</span><br><button type="button" class="small" data-cover="' + esc(x.id) + '">设为封面</button> <button type="button" class="ghost small" data-pic="' + esc(x.id) + '">删除</button>';
-            $("pics").appendChild(d);
-          });
-        });
-      }, Promise.resolve()).then(function () { $("pics-state").textContent = "共 " + total + " 张"; });
-    }).catch(function () { $("pics-state").textContent = "没读到。数据库的新脚本跑了吗？"; });
-  });
-  $("pics").addEventListener("click", function (e) {
-    /* make an album photo the cover: it goes through the same box-and-cut-out step, then waits for Save on that person's card */
-    var cv = e.target.closest("[data-cover]");
-    if (cv) {
-      var item = picData[cv.dataset.cover]; if (!item) return;
-      var card = cardEl(item.guest);
-      if (!card) { extra.push(item.guest); renderCards(); card = cardEl(item.guest); }
-      var img = new Image();
-      img.onload = function () {
-        var c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext("2d").drawImage(img, 0, 0);
-        originals[item.guest] = c;
-        if (card) card.scrollIntoView({ block: "center" });
-        cutFrom(item.guest, "封面换好了，点「保存」才会上网页");
-      };
-      img.src = item.photo;
-      return;
-    }
-    var b = e.target.closest("[data-pic]"); if (!b) return;
-    if (picArmed !== b) { if (picArmed) picArmed.textContent = "删除"; picArmed = b; b.textContent = "再点一次确认"; return; }
-    b.disabled = true; picArmed = null;
-    rpc("bday_admin_pic_delete", { p_pass: pass, p_id: Number(b.dataset.pic) }).then(function () { b.closest(".pic").remove(); }).catch(fail);
   });
 
   var noteArmed = null;
