@@ -55,6 +55,16 @@ td.diet{min-width:160px}
 .g-prev input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .g-prev:focus-within{outline:2px solid var(--ink);outline-offset:3px}
 .gcard b{font-weight:800;font-size:16px}
+.gcard input.g-name{margin-top:0;font-weight:800;font-size:16px;border-color:transparent;padding-left:0;background:transparent}
+.gcard input.g-name:hover,.gcard input.g-name:focus{border-color:var(--line);padding-left:10px;background:#fff}
+dialog.crop{width:min(560px,calc(100vw - 24px));border:0;padding:18px;background:#fff;color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+dialog.crop::backdrop{background:rgba(20,20,22,.6)}
+.crop-box{position:relative;margin:12px auto 0;width:fit-content;max-width:100%;overflow:hidden;touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none;line-height:0}
+.crop-box canvas{display:block;max-width:100%;max-height:62vh;height:auto}
+.crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(20,20,22,.55);pointer-events:none}
+.crop-sel[hidden]{display:none}
+.note-row{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
+.note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
 .gcard .bar{margin:10px 0 0;gap:8px}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
@@ -97,13 +107,17 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「今晚有谁」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，选完会自动把人抠出来做成贴纸。</p>
+    <p class="soft">照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「今晚有谁」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分，再自动把人抠出来做成贴纸。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
       <button type="button" class="ghost" id="g-add">加一张卡片</button>
     </div>
     <div class="cards" id="cards"></div>
+
+    <h2>卡片上的留言</h2>
+    <p class="soft">大家在别人卡片上写的话，可以匿名。有不合适的就删。</p>
+    <div class="card" id="notes"><p class="soft">还没有留言。</p></div>
 
     <h2>厨房分组</h2>
     <p class="soft">只算下午 2 点和 4 点来的人。一位大厨配一个帮手，多出来的人加进现有的组。点「发布」后，大家在网页上就能看到。</p>
@@ -117,6 +131,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   </div>
 </div>
 
+<dialog class="crop" id="crop" aria-label="选范围">
+  <p><b>先框出要用的部分</b></p>
+  <p class="soft">在照片上拖一下，框住要留的人。框错了重新拖。不框就用整张。</p>
+  <div class="crop-box" id="crop-box"><canvas id="crop-cv"></canvas><i class="crop-sel" id="crop-sel" hidden></i></div>
+  <div class="bar"><button type="button" id="crop-ok">就用这块</button><button type="button" class="ghost" id="crop-all">用整张</button><button type="button" class="ghost" id="crop-cancel">取消</button></div>
+</dialog>
+
 <script>
 (function () {
   "use strict";
@@ -125,14 +146,14 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   var MODE = { dodge: "逃酒", sip: "小酌", all: "不醉不归", sleep: "睡 Tianlai 家" };
   var ROLE = { chef: "大厨", helper: "打下手", "": "" };
   function $(id) { return document.getElementById(id); }
-  function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function rpc(fn, args) {
     return fetch(SB_URL + "/rest/v1/rpc/" + fn, { method: "POST", cache: "no-store",
       headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify(args || {}) })
       .then(function (r) { return r.text().then(function (t) { if (!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
   }
 
-  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [];
+  var pass = "", rows = [], draft = null, published = [], cards = {}, pending = {}, versions = {}, extra = [], notes = [];
   try { pass = sessionStorage.getItem("bday-admin") || ""; } catch (e) {}
 
   function count(list, key, labels) {
@@ -160,7 +181,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     }).join("") : '<tr><td colspan="8" class="soft">还没人填。</td></tr>';
     $("stamp").textContent = "更新于 " + new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
     renderCards();
+    renderNotes();
     renderTeams();
+  }
+  function renderNotes() {
+    $("notes").innerHTML = notes.length ? notes.map(function (x) {
+      return '<div class="note-row"><span>给 <b>' + esc(x.guest) + "</b>：" + esc(x.body) + ' <span class="soft">— ' + esc(x.who || "匿名") + '</span></span><button type="button" class="ghost small" data-note="' + esc(x.id) + '">删除</button></div>';
+    }).join("") : '<p class="soft">还没有留言。</p>';
   }
 
   /* guest cards: one per person, saved one at a time */
@@ -175,7 +202,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var c = cards[n] || {}, v = versions[n];
     var photo = n in pending ? pending[n] : (c.photo || "");
     return '<div class="card gcard" data-name="' + esc(n) + '"><label class="g-prev">' + (PHOTO_OK.test(photo) ? '<img src="' + photo + '" alt="">' : "<span>点这里<br>选照片</span>") +
-      '<input type="file" accept="image/*" aria-label="' + esc(n) + ' 的照片"></label><div><b>' + esc(n) + "</b>" + (cards[n] ? ' <span class="soft">已上网页</span>' : "") +
+      '<input type="file" accept="image/*" aria-label="' + esc(n) + ' 的照片"></label><div><input type="text" class="g-name" maxlength="24" aria-label="名字，可以改" title="点一下可以改名字" value="' + esc(n) + '">' + (cards[n] ? '<span class="soft">已上网页</span>' : "") +
       '<input type="text" class="g-title" maxlength="40" placeholder="当晚身份（选填），比如：气氛组组长" aria-label="' + esc(n) + ' 的当晚身份" value="' + esc(c.title || "") + '">' +
       '<input type="text" class="g-line" maxlength="120" placeholder="一句话介绍（选填），比如：Tianlai 在 Paris 的朋友" aria-label="一句话介绍 ' + esc(n) + '" value="' + esc(c.line || "") + '">' +
       '<div class="bar"><button type="button" class="small g-save">保存</button>' +
@@ -268,11 +295,51 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     sx.putImageData(p, 0, 0);
     return [x0, y0, x1 - x0 + 1, y1 - y0 + 1];
   }
+  function fit(src, x, y, w, h, max) {
+    var k = Math.min(1, max / Math.max(w, h)), c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+    var cx = c.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.drawImage(src, x, y, w, h, 0, 0, c.width, c.height);
+    return c;
+  }
+  /* shows the photo and lets the host drag a box around the part to keep. Resolves with that part (or the whole
+     photo), sized for the cut-out step; resolves with null if cancelled. */
+  function pickCrop(src) {
+    return new Promise(function (done) {
+      var dlg = $("crop"), cv = $("crop-cv"), box = $("crop-box"), sel = $("crop-sel"), rect = null, start = null;
+      cv.width = src.width; cv.height = src.height; cv.getContext("2d").drawImage(src, 0, 0);
+      sel.hidden = true;
+      function at(e) { var b = cv.getBoundingClientRect(); return [Math.max(0, Math.min(b.width, e.clientX - b.left)), Math.max(0, Math.min(b.height, e.clientY - b.top)), b]; }
+      function show() {
+        if (!rect) { sel.hidden = true; return; }
+        sel.hidden = false; sel.style.left = rect[0] + "px"; sel.style.top = rect[1] + "px"; sel.style.width = rect[2] + "px"; sel.style.height = rect[3] + "px";
+      }
+      function down(e) { start = at(e); rect = null; show(); try { box.setPointerCapture(e.pointerId); } catch (x) {} e.preventDefault(); }
+      function move(e) { if (!start) return; var p = at(e); rect = [Math.min(start[0], p[0]), Math.min(start[1], p[1]), Math.abs(p[0] - start[0]), Math.abs(p[1] - start[1])]; show(); }
+      function up() { start = null; if (rect && (rect[2] < 16 || rect[3] < 16)) { rect = null; show(); } }
+      function finish(result) {
+        box.removeEventListener("pointerdown", down); box.removeEventListener("pointermove", move); box.removeEventListener("pointerup", up); box.removeEventListener("pointercancel", up);
+        $("crop-ok").onclick = $("crop-all").onclick = $("crop-cancel").onclick = null; dlg.oncancel = null;
+        if (dlg.open) dlg.close();
+        done(result);
+      }
+      function part() {
+        if (!rect) return fit(src, 0, 0, src.width, src.height, 720);
+        var b = cv.getBoundingClientRect(), k = src.width / b.width;
+        return fit(src, Math.round(rect[0] * k), Math.round(rect[1] * k), Math.max(1, Math.round(rect[2] * k)), Math.max(1, Math.round(rect[3] * k)), 720);
+      }
+      box.addEventListener("pointerdown", down); box.addEventListener("pointermove", move); box.addEventListener("pointerup", up); box.addEventListener("pointercancel", up);
+      $("crop-ok").onclick = function () { finish(part()); };
+      $("crop-all").onclick = function () { rect = null; finish(part()); };
+      $("crop-cancel").onclick = function () { finish(null); };
+      dlg.oncancel = function (e) { e.preventDefault(); finish(null); };
+      dlg.showModal();
+    });
+  }
   function readImage(file) {
     return new Promise(function (ok, no) {
       var img = new Image(), url = URL.createObjectURL(file);
       img.onload = function () {
-        var k = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+        var k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
         c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
         var cx = c.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url); ok(c);
@@ -285,7 +352,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     var f = e.target.files && e.target.files[0], el = e.target.closest(".gcard");
     if (!f || !el) return;
     var n = el.dataset.name;
-    readImage(f).then(function (src) {
+    e.target.value = "";
+    readImage(f).then(pickCrop).then(function (src) {
+      if (!src) return;
       var plain = pack(src, 0, 0, src.width, src.height);
       if (!plain) throw new Error("too big");
       delete versions[n]; pending[n] = plain;
@@ -305,12 +374,29 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     if (e.target.closest(".g-swap")) { var v = versions[n]; pending[n] = pending[n] === v.cut ? v.plain : v.cut; redraw(n, "照片还没保存"); return; }
     if (e.target.closest(".g-nophoto")) { pending[n] = ""; delete versions[n]; redraw(n, cards[n] && cards[n].photo ? "去掉了，还没保存" : ""); return; }
     if (e.target.closest(".g-save")) {
-      var title = el.querySelector(".g-title").value.trim(), line = el.querySelector(".g-line").value.trim(), photo = n in pending ? pending[n] : null;
+      var title = el.querySelector(".g-title").value.trim(), line = el.querySelector(".g-line").value.trim();
+      var to = el.querySelector(".g-name").value.trim().slice(0, 24) || n, renamed = to !== n, step = Promise.resolve();
+      if (renamed && cardNames().indexOf(to) >= 0) { st.textContent = "已经有人叫「" + to + "」了，换一个。"; return; }
       st.textContent = "…";
-      rpc("bday_admin_guest_save", { p_pass: pass, p_name: n, p_title: title, p_line: line, p_photo: photo }).then(function () {
-        cards[n] = { title: title, line: line, photo: photo === null ? ((cards[n] || {}).photo || "") : photo };
-        delete pending[n]; delete versions[n]; redraw(n, "已保存，网页上看得到了");
-      }).catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = "没存上。数据库的新脚本跑了吗？"; });
+      if (renamed) {
+        // someone who signed up or already has a card is renamed in the database; a card not saved yet is renamed here only
+        var inDb = rows.some(function (r) { return r.name === n; }) || !!cards[n];
+        step = (inDb ? rpc("bday_admin_rename", { p_pass: pass, p_old: n, p_new: to }) : Promise.resolve()).then(function () {
+          rows.forEach(function (r) { if (r.name === n) r.name = to; });
+          [cards, pending, versions].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
+          extra = extra.map(function (x) { return x === n ? to : x; });
+          el.dataset.name = to; n = to;
+        });
+      }
+      step.then(function () {
+        var photo = n in pending ? pending[n] : null;
+        return rpc("bday_admin_guest_save", { p_pass: pass, p_name: n, p_title: title, p_line: line, p_photo: photo }).then(function () {
+          cards[n] = { title: title, line: line, photo: photo === null ? ((cards[n] || {}).photo || "") : photo };
+          delete pending[n]; delete versions[n];
+          if (renamed) return load().then(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "名字改好了，已保存"; });
+          redraw(n, "已保存，网页上看得到了");
+        });
+      }).catch(function (err) { if (/bad passcode/.test(String(err && err.message))) return fail(err); st.textContent = /name taken/.test(String(err && err.message)) ? "已经有人叫这个名字了，换一个。" : "没存上。数据库的新脚本跑了吗？"; });
       return;
     }
     var del = e.target.closest(".g-del");
@@ -345,6 +431,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     }).then(function (g) {
       cards = {}; pending = {}; versions = {};
       (g || []).forEach(function (c) { cards[c.name] = { title: c.title || "", line: c.line || "", photo: c.photo || "" }; });
+      return rpc("bday_notes_list").catch(function () { return []; });
+    }).then(function (ns) {
+      notes = ns || [];
       return rpc("bday_teams_get");
     }).then(function (t) {
       published = t || [];
@@ -376,6 +465,15 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     b.disabled = true;
     rpc("bday_admin_delete", { p_pass: pass, p_name: b.dataset.del }).then(load).catch(fail);
     armed = null;
+  });
+
+  var noteArmed = null;
+  $("notes").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-note]"); if (!b) return;
+    if (noteArmed !== b) { if (noteArmed) noteArmed.textContent = "删除"; noteArmed = b; b.textContent = "再点一次确认"; return; }
+    b.disabled = true; noteArmed = null;
+    var id = Number(b.dataset.note);
+    rpc("bday_admin_note_delete", { p_pass: pass, p_id: id }).then(function () { notes = notes.filter(function (x) { return x.id !== id; }); renderNotes(); }).catch(fail);
   });
 
   /* kitchen teams: every chef gets a helper; spare helpers join existing teams; spare chefs pair up */

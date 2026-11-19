@@ -124,6 +124,55 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .g b{display:block;margin-top:6px;font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.05;overflow-wrap:anywhere}
 .g em{display:inline-block;margin-top:7px;font-style:normal;font-size:12.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:999px;padding:1px 9px;line-height:1.5;overflow-wrap:anywhere}
 .g p{margin-top:7px;font-size:14px;line-height:1.45;color:var(--soft);overflow-wrap:anywhere}
+#guest-n{margin-left:10px;font-family:var(--body);font-size:16px;font-weight:500;color:var(--soft);letter-spacing:0}
+.g-open{appearance:none;display:block;width:100%;border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:center;cursor:pointer}
+.g-open:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.g-one{display:block;margin-top:7px;font-size:14px;line-height:1.45;color:var(--soft);overflow-wrap:anywhere}
+.g-say{appearance:none;display:block;margin:8px auto 0;border:0;background:transparent;padding:2px 4px;font:inherit;font-size:13px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+/* one person's card, opened */
+.card-dlg{width:min(420px,calc(100vw - 28px));max-height:calc(100dvh - 40px);margin:auto;border:0;padding:26px 20px 22px;background:#fff;color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35);overflow-y:auto;text-align:center}
+.card-dlg::backdrop{background:rgba(20,20,22,.6)}
+.card-dlg .lb-close{top:8px;right:8px;background:var(--chipbg,#F1F0EB)}
+.c-ph{width:150px;height:150px;margin:0 auto;display:flex;align-items:center;justify-content:center;transform:rotate(-3deg)}
+.c-ph img{max-width:100%;max-height:100%;filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.22)) drop-shadow(0 8px 14px rgba(0,0,0,.12))}
+.c-ph span{width:74%;aspect-ratio:1;border-radius:50%;background:#F1F0EB;display:flex;align-items:center;justify-content:center;font-family:var(--hand);font-weight:700;font-size:64px;line-height:1}
+.c-name{margin:8px 0 0;font-family:var(--hand);font-weight:700;font-size:36px;line-height:1.05;overflow-wrap:anywhere}
+.card-dlg em{display:inline-block;margin-top:8px;font-style:normal;font-size:13px;font-weight:700;border:1.5px solid var(--ink);border-radius:999px;padding:1px 10px;line-height:1.5}
+.c-meta{margin-top:8px;font-size:13.5px;color:var(--soft)}
+.c-line{margin-top:10px;font-size:15.5px;line-height:1.5}
+.c-talk b{font-weight:800}
+.c-mine{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.c-pick{position:relative;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1.5px solid var(--ink);border-radius:999px;font-size:14px;font-weight:700;cursor:pointer}
+.c-pick input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.c-pick:focus-within{outline:2px solid var(--ink);outline-offset:3px}
+.c-state{font-size:13px;color:var(--soft);min-height:1.2em}
+.c-h{margin:22px 0 4px;font-size:15.5px;font-weight:800;text-align:left}
+.c-notes{list-style:none;margin:0;padding:0;text-align:left}
+.c-notes li{padding:9px 0;border-top:1px solid rgba(29,29,31,.12);font-family:var(--hand);font-weight:600;font-size:23px;line-height:1.2;overflow-wrap:anywhere}
+.c-notes li:first-child{border-top:0}
+.c-notes li span{display:block;margin-top:2px;font-family:var(--body);font-weight:500;font-size:12.5px;color:var(--soft)}
+.c-notes .none{font-family:var(--body);font-weight:500;font-size:14px;color:var(--soft)}
+.c-add{display:grid;grid-template-columns:1fr auto;gap:8px 8px;margin-top:10px;text-align:left}
+.c-add input[type=text]{min-width:0;font:inherit;font-size:15px;padding:9px 11px;border:1.5px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
+.c-add button{appearance:none;border:0;border-radius:12px;background:var(--ink);color:#fff;font:inherit;font-size:15px;font-weight:800;padding:0 16px;cursor:pointer}
+.c-add label{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--soft)}
+.c-add .c-msg{grid-column:1/-1;font-size:13px;color:var(--ink);font-weight:700;min-height:0}
+/* the Tianlai toy */
+.tl-stage{margin-top:14px;display:flex;flex-direction:column;align-items:center}
+.tl-say{min-height:34px;font-family:var(--hand);font-weight:700;font-size:29px;line-height:1.15;text-align:center;transform:rotate(-3deg)}
+#tl-cv{width:200px;height:240px;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.2)) drop-shadow(0 8px 14px rgba(0,0,0,.1))}
+.tl-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.tl-btns .bigbtn{min-height:62px;padding:8px 10px;font-size:15.5px;line-height:1.25;gap:6px}
+.tl-btns .bigbtn span{font-size:22px}
+.tl-btns .bigbtn:first-child{transform:rotate(-1.5deg)}
+.tl-btns .bigbtn:last-child{transform:rotate(1.2deg)}
+.tl-btns .bigbtn:disabled{opacity:.45;cursor:default}
+#tl-ask{max-width:300px;margin:12px auto 0}
+.tl-stats{margin-top:14px;text-align:center;font-weight:800;font-size:15.5px;font-variant-numeric:tabular-nums}
+.tl-last{margin-top:2px;min-height:1.5em;text-align:center;font-size:14px;color:var(--soft)}
+.tl-rule{margin-top:10px;font-size:13.5px;line-height:1.5;color:var(--soft)}
+#tl-board{margin-top:40px}
+#tl-top li span{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
 /* reactions under each card: tap an emoji, tap the count to see who */
 .rx{display:flex;justify-content:center;gap:5px;margin-top:10px}
 .rx button{appearance:none;position:relative;display:flex;align-items:center;gap:3px;border:0;background:#fff;color:var(--ink);font:inherit;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 7px;min-height:36px;border-radius:999px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.16)}
@@ -135,7 +184,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 @keyframes rxpop{0%{transform:scale(1)}40%{transform:scale(1.7) rotate(-12deg)}100%{transform:scale(1)}}
 @keyframes rxfly{0%{transform:translateY(0) scale(.8);opacity:1}100%{transform:translateY(-70px) scale(1.5) rotate(14deg);opacity:0}}
 .rx-n{appearance:none;display:block;margin:7px auto 0;border:0;background:transparent;padding:2px 4px;font:inherit;font-size:12.5px;color:var(--soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.g .rx-names{margin-top:4px;font-size:13px;line-height:1.6;color:var(--ink);text-align:left;display:inline-block}
+.g .rx-names,.card-dlg .rx-names{margin-top:4px;font-size:13px;line-height:1.6;color:var(--ink);text-align:left;display:inline-block}
 .rx-ask{display:flex;gap:6px;margin-top:8px}
 .rx-ask input{flex:1;min-width:0;font:inherit;font-size:14px;padding:6px 9px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
 .rx-ask button{appearance:none;border:0;border-radius:10px;background:var(--ink);color:#fff;font:inherit;font-size:14px;font-weight:700;padding:0 12px;cursor:pointer}
@@ -275,6 +324,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       <form id="rsvp-form" class="form">
         <label class="fl" for="r-name">Name</label>
         <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
+        <label class="fl" for="r-talk">Talk to me about<small>optional, goes on your card</small></label>
+        <input id="r-talk" type="text" maxlength="40" placeholder="Skiing, cats, the best hot pot in town…">
         <fieldset><legend class="fl">Around what time?</legend>
           <div class="chips">
             <label><input type="radio" name="arrive" value="16" required><span>4 PM, cooking</span></label>
@@ -309,15 +360,31 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
         <p class="form-msg" id="r-msg" role="status"></p>
       </form>
     </div>
-    <div class="sheet who-sheet">
+  </section>
+
+  <section class="page" id="tl">
+    <h2 class="hd sec">Mess with the birthday boy</h2>
+    <div class="tl-stage">
+      <p class="tl-say" id="tl-say" aria-live="polite"></p>
+      <canvas id="tl-cv" width="40" height="48" role="img" aria-label="Pixel Tianlai"></canvas>
+    </div>
+    <div class="tl-btns">
+      <button type="button" class="bigbtn" id="tl-cake"><span aria-hidden="true">🍰</span>Cake his face</button>
+      <button type="button" class="bigbtn" id="tl-drink"><span aria-hidden="true">🍺</span>Drink with him</button>
+    </div>
+    <form class="rx-ask" id="tl-ask" hidden><input type="text" maxlength="24" placeholder="Name" aria-label="Your name first"><button type="submit">OK</button></form>
+    <p class="tl-stats" id="tl-stats"></p>
+    <p class="tl-last" id="tl-last" aria-live="polite"></p>
+    <div class="sheet" id="tl-board" hidden>
       <i class="tape" aria-hidden="true"></i>
-      <p class="sub">Who's coming <span id="who-n" style="margin-left:6px;color:var(--soft);font-weight:500"></span></p>
-      <ul class="who" id="who"></ul>
+      <p class="sub" style="margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px">Most drinks</p>
+      <ul class="who" id="tl-top"></ul>
+      <p class="tl-rule">Whoever tops this gets one on the night: Tianlai drinks one for you, or you make him drink one.</p>
     </div>
   </section>
 
   <section class="page" id="guests" hidden>
-    <h2 class="hd sec">Who's who</h2>
+    <h2 class="hd sec">Who's who<span id="guest-n"></span></h2>
     <ul class="gs" id="guest-list"></ul>
     <p class="credit" id="emoji-credit" hidden>Animated emoji: Google Noto Emoji · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit">CC BY 4.0</a></p>
   </section>
@@ -404,18 +471,23 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <p class="thx">Special thanks to <b>@Lucy</b> <b>@Yerin</b> for the space</p>
 </footer>
 
+<dialog class="card-dlg" id="card" aria-label="Who's who">
+  <button type="button" class="lb-close" id="card-close" aria-label="Close">×</button>
+  <div id="card-body"></div>
+</dialog>
+
 <div class="lightbox" id="lightbox" hidden>
   <button type="button" class="lb-close" id="lb-close" aria-label="Close">×</button>
   <img id="lb-img" alt="">
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's who", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "music_t": "Chopin · Piano Concerto No. 2 · II. Larghetto", "play_l": "Play or pause the music", "seek_l": "Playback position", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Fill this in first", "rsvp_say": "It tells me how much food and drink to get.", "f_name": "Name", "guests_h": "Who's who", "f_talk": "Talk to me about", "talk_note": "optional, goes on your card", "talk_ph": "Skiing, cats, the best hot pot in town…", "talk_pre": "Talk to me about: ", "c_open": "Leave a line", "c_notes": "What people say", "c_none": "Nothing yet. Write the first one.", "c_ph": "Say something about them", "c_anon": "Anonymous", "c_send": "Post", "c_fail": "Didn't go through. Try again.", "c_photo": "Change my photo", "c_busy": "Cutting you out…", "c_bad": "That one didn't work, try another.", "c_saved": "Done", "anon": "anonymous", "tl_h": "Mess with the birthday boy", "tl_alt": "Pixel Tianlai", "tl_cake": "Cake his face", "tl_drink": "Drink with him", "tl_stats": "Caked {c}× · {d} drinks down", "tl_last_cake": "{who} just caked him", "tl_last_drink": "{who} just had a drink with him", "someone": "Someone", "tl_b": {"idle": "Come on then", "cake": "Who did that?!", "drink": "Cheers!", "tipsy": "I'm fine", "drunk": "One… one more", "sofa": "I'm done. Come back later", "sofa_cake": "Hm…? (still asleep)", "slow": "Easy. Let someone else have a turn"}, "tl_top": "Most drinks", "tl_rule": "Whoever tops this gets one on the night: Tianlai drinks one for you, or you make him drink one.", "tl_cups": "{n}", "rx": {"like": "Like", "lol": "LOL", "love": "Love"}, "rx_n": "{n} reacted", "rx_ask": "Your name first", "rx_ph": "Name", "rx_ok": "OK", "emoji_credit": "Animated emoji: Google Noto Emoji", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "aremote": "Joining remotely", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "Tipsy", "m_all": "Getting wasted", "m_sleep": "Passing out at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Your card is below. Tap it to add a photo.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9", "remote": "remote"}, "mode_s": {"dodge": "dodging drinks", "sip": "tipsy", "all": "getting wasted", "sleep": "passing out at Tianlai's"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function $(id) { return document.getElementById(id); }
-  function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function norm(s) { return String(s || "").trim().toLowerCase().replace(/\s+/g, " "); }
   function hash(str) {
     var h = 2166136261;
@@ -484,7 +556,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     var sec = $("rsvp"), form = $("rsvp-form"), msg = $("r-msg"), RK = "bday-2026-rsvp";
     sec.hidden = false;
     try { var saved = JSON.parse(localStorage.getItem(RK) || "null"); if (saved) {
-      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || "";
+      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || ""; $("r-talk").value = saved.talk || "";
       (saved.tags || []).forEach(function (v) { form.querySelectorAll('[name="tag"]').forEach(function (el) { if (el.value === v) el.checked = true; }); });
       $("r-dish").value = saved.dish || "";
       ["arrive", "mode", "role"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
@@ -506,113 +578,282 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       $("r-cook").hidden = !cook; $("r-dish").hidden = !chef;
     }
     form.addEventListener("change", cookUI); cookUI();
-    function list() {
-      return rpc("bday_rsvp_list2").catch(function () { return rpc("bday_rsvp_list"); }).then(function (rows) {
-        rows = rows || [];
-        $("who-n").textContent = rows.length ? "· " + rows.length : "";
-        $("who").innerHTML = rows.length ? rows.map(function (r) {
-          return "<li><b>" + esc(r.name) + "</b>" + (r.role === "chef" ? "<em>" + esc(T.chef_tag) + "</em>" : "") + "<span>" + esc((T.arrive_s[r.arrive] || "") + " · " + (T.mode_s[r.mode] || "")) + "</span></li>";
-        }).join("") : '<li class="none">' + esc(T.who_empty) + "</li>";
-      }).catch(function () {});
-    }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim() };
+      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim(), talk: $("r-talk").value.trim() };
       d.diet = d.tags.concat(d.other ? [d.other] : []).join(T.diet_sep);
       var cook = d.arrive === "14" || d.arrive === "16";
       d.role = cook ? (fd.get("role") || "") : ""; d.dish = d.role === "chef" ? $("r-dish").value.trim() : "";
       if (!d.name || !d.arrive || !d.mode) return;
       $("r-send").disabled = true; msg.textContent = "";
-      rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish }).catch(function () {
+      rpc("bday_rsvp_save3", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish, p_talk: d.talk }).catch(function () {
+        return rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish });
+      }).catch(function () {
         return rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet });
       }).then(function () {
         try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}
         setName(d.name);
         msg.textContent = T.sent; burst(50, form.getBoundingClientRect().bottom - 40);
-        return list();
+        return loadCards();
       }).catch(function () { msg.textContent = T.send_fail; }).then(function () { $("r-send").disabled = false; });
     });
-    list();
-    /* guest cards the host wrote in the back office, each with emoji reactions anyone can tap */
+    /* who's who: one card for everyone who signed up or was added by the host. On a card anyone can tap an emoji
+       or leave a line (signed or anonymous); you can put a photo on your own. */
     var EMO = [["like", "1f44d", "👍"], ["lol", "1f923", "🤣"], ["love", "2764_fe0f", "❤️"]];
-    var guests = [], reacts = null, openNames = {}, asking = null;
+    var PHOTO_OK = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/;
+    var people = [], reacts = null, notes = null, openNames = {}, asking = null, want = "", current = "";
+    var dlg = $("card"), cbody = $("card-body"), gl = $("guest-list");
+    function person(g) { for (var i = 0; i < people.length; i++) if (people[i].name === g) return people[i]; return null; }
     function emoSrc(code) { return "https://fonts.gstatic.com/s/e/notoemoji/latest/" + code + "/512.webp"; }
     function whoOf(g, e) { return ((reacts || {})[g] || {})[e] || []; }
+    function notesOf(g) { return (notes || {})[g] || []; }
+    function photoHTML(p) {
+      return PHOTO_OK.test(p.photo || "") ? '<img src="' + p.photo + '" alt="" loading="lazy">' : '<span aria-hidden="true">' + esc(Array.from(p.name)[0] || "") + "</span>";
+    }
     function rxHTML(g) {
       if (!reacts) return "";
-      var people = {}, names = [];
+      var seen = {}, names = [];
       var btns = EMO.map(function (em) {
         var who = whoOf(g, em[0]), mine = !!name && who.indexOf(name) >= 0;
-        who.forEach(function (w) { people[w] = 1; });
+        who.forEach(function (w) { seen[w] = 1; });
         if (who.length) names.push(em[2] + " " + who.map(esc).join(T.diet_sep));
         return '<button type="button" data-e="' + em[0] + '" aria-pressed="' + mine + '" aria-label="' + esc(T.rx[em[0]] + (who.length ? " " + who.length : "")) + '">' +
           '<img src="' + emoSrc(em[1]) + '" alt="' + em[2] + '" width="24" height="24" loading="lazy">' + (who.length ? "<span>" + who.length + "</span>" : "") + "</button>";
       }).join("");
       return '<div class="rx">' + btns + "</div>" +
         (asking === g ? '<form class="rx-ask"><input type="text" maxlength="24" placeholder="' + esc(T.rx_ph) + '" aria-label="' + esc(T.rx_ask) + '"><button type="submit">' + esc(T.rx_ok) + "</button></form>" : "") +
-        (names.length ? '<button type="button" class="rx-n" aria-expanded="' + !!openNames[g] + '">' + esc(T.rx_n.replace("{n}", Object.keys(people).length)) + "</button>" +
+        (names.length ? '<button type="button" class="rx-n" aria-expanded="' + !!openNames[g] + '">' + esc(T.rx_n.replace("{n}", Object.keys(seen).length)) + "</button>" +
           (openNames[g] ? '<p class="rx-names">' + names.join("<br>") + "</p>" : "") : "");
     }
-    function cardInner(g) {
-      var ok = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(g.photo || "");
-      return '<div class="g-ph">' + (ok ? '<img src="' + g.photo + '" alt="" loading="lazy">' : "<span aria-hidden=\"true\">" + esc(Array.from(g.name)[0] || "") + "</span>") + "</div><b>" + esc(g.name) + "</b>" +
-        (g.title ? "<em>" + esc(g.title) + "</em>" : "") + (g.line ? "<p>" + esc(g.line) + "</p>" : "") + '<div class="rx-box">' + rxHTML(g.name) + "</div>";
+    function oneLine(p) {
+      var ns = notesOf(p.name);
+      return p.line || (p.talk ? T.talk_pre + p.talk : "") || (ns.length ? "「" + ns[ns.length - 1].body + "」" : "");
     }
-    function drawRx(g) {
-      var li = Array.prototype.filter.call($("guest-list").children, function (x) { return x.dataset.g === g; })[0];
-      if (li) li.querySelector(".rx-box").innerHTML = rxHTML(g);
-      return li;
+    function tileHTML(p) {
+      var one = oneLine(p), n = notesOf(p.name).length;
+      return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + "</b>" +
+        (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (one ? '<span class="g-one">' + esc(one) + "</span>" : "") + "</button>" +
+        '<div class="rx-box">' + rxHTML(p.name) + "</div>" +
+        (notes ? '<button type="button" class="g-say">' + esc(T.c_open) + (n ? " · " + n : "") + "</button>" : "");
     }
-    function loadRx() {
-      return rpc("bday_react_list").then(function (rows) {
-        var m = {};
-        (rows || []).forEach(function (r) { ((m[r.guest] = m[r.guest] || {})[r.emoji] = m[r.guest][r.emoji] || []).push(r.who); });
-        reacts = m; $("emoji-credit").hidden = false;
-        guests.forEach(function (g) { drawRx(g.name); });
-      }).catch(function () {});
+    function dialogHTML(p) {
+      var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode], p.role === "chef" ? T.chef_tag : ""].filter(Boolean).join(" · ");
+      var ns = notesOf(p.name), mine = !!name && p.name === name;
+      return '<div class="c-ph">' + photoHTML(p) + '</div><h3 class="c-name">' + esc(p.name) + "</h3>" +
+        (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (meta ? '<p class="c-meta">' + esc(meta) + "</p>" : "") +
+        (p.line ? '<p class="c-line">' + esc(p.line) + "</p>" : "") +
+        (p.talk ? '<p class="c-line c-talk"><b>' + esc(T.talk_pre) + "</b>" + esc(p.talk) + "</p>" : "") +
+        (mine && cardPhotoOK ? '<div class="c-mine"><label class="c-pick">' + esc(T.c_photo) + '<input type="file" accept="image/*"></label><span class="c-state" role="status"></span></div>' : "") +
+        '<div class="rx-box">' + rxHTML(p.name) + "</div>" +
+        (notes ? '<h4 class="c-h">' + esc(T.c_notes) + '</h4><ul class="c-notes">' + (ns.length ? ns.map(function (x) {
+          return "<li>" + esc(x.body) + "<span>— " + esc(x.who || T.anon) + "</span></li>";
+        }).join("") : '<li class="none">' + esc(T.c_none) + "</li>") + "</ul>" +
+        '<form class="c-add"><input type="text" maxlength="60" placeholder="' + esc(T.c_ph) + '" aria-label="' + esc(T.c_ph) + '"><button type="submit">' + esc(T.c_send) + "</button>" +
+          (name ? '<label><input type="checkbox"> ' + esc(T.c_anon) + "</label>" : "") + '<p class="c-msg" role="status"></p></form>' : "");
     }
-    function react(g, e) {
+    function tile(g) { return Array.prototype.filter.call(gl.children, function (x) { return x.dataset.g === g; })[0]; }
+    function redraw(g) {
+      var p = person(g); if (!p) return;
+      var li = tile(g); if (li) li.innerHTML = tileHTML(p);
+      if (current === g && dlg.open) {
+        var typed = cbody.querySelector(".c-add input[type=text]"), keep = typed ? typed.value : "", top = dlg.scrollTop;
+        cbody.innerHTML = dialogHTML(p);
+        typed = cbody.querySelector(".c-add input[type=text]"); if (typed) typed.value = keep;
+        dlg.scrollTop = top;
+      }
+    }
+    function openCard(g, focusNote) {
+      var p = person(g); if (!p) return;
+      current = g; cbody.dataset.g = g; cbody.innerHTML = dialogHTML(p);
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+      dlg.scrollTop = 0;
+      var inp = cbody.querySelector(".c-add input[type=text]"); if (focusNote && inp) inp.focus();
+    }
+    $("card-close").addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (ev) { if (ev.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", function () { current = ""; asking = null; });
+
+    function react(g, e, root) {
       var list = ((reacts[g] = reacts[g] || {})[e] = reacts[g][e] || []), at = list.indexOf(name), adding = at < 0;
       if (adding) list.push(name); else list.splice(at, 1);
-      var li = drawRx(g), b = li && li.querySelector('[data-e="' + e + '"]');
+      redraw(g);
+      var host = root === cbody ? cbody : tile(g), b = host && host.querySelector('.rx [data-e="' + e + '"]');
       if (b && adding) {
         b.classList.add("pop");
         var src = b.querySelector("img, .emo"), fly = src.cloneNode(true); fly.className = (src.tagName === "IMG" ? "" : "emo ") + "fly"; fly.removeAttribute("loading"); b.appendChild(fly);
         fly.addEventListener("animationend", function () { fly.remove(); });
       }
-      rpc("bday_react_toggle", { p_guest: g, p_emoji: e, p_who: name }).catch(function () { return loadRx(); });
+      rpc("bday_react_toggle", { p_guest: g, p_emoji: e, p_who: name }).catch(function () { return loadCards(); });
     }
-    $("guest-list").addEventListener("click", function (ev) {
-      var li = ev.target.closest("li.g"); if (!li || !reacts) return;
-      var g = li.dataset.g, b = ev.target.closest(".rx button");
-      if (b) {
-        if (!name) { asking = g; li.dataset.want = b.dataset.e; drawRx(g); li.querySelector(".rx-ask input").focus(); return; }
-        react(g, b.dataset.e); return;
+    /* clicks inside a tile or inside the opened card */
+    function onClick(ev, root, g) {
+      var b = ev.target.closest(".rx button");
+      if (b && reacts) {
+        if (!name) { asking = g; want = b.dataset.e; redraw(g); var f = (root === cbody ? cbody : tile(g)).querySelector(".rx-ask input"); if (f) f.focus(); return true; }
+        react(g, b.dataset.e, root); return true;
       }
-      if (ev.target.closest(".rx-n")) { openNames[g] = !openNames[g]; drawRx(g); li.querySelector(".rx-n").focus(); }
+      if (ev.target.closest(".rx-n")) { openNames[g] = !openNames[g]; redraw(g); return true; }
+      return false;
+    }
+    gl.addEventListener("click", function (ev) {
+      var li = ev.target.closest("li.g"); if (!li) return;
+      var g = li.dataset.g;
+      if (onClick(ev, gl, g)) return;
+      if (ev.target.closest(".g-say")) { openCard(g, true); return; }
+      if (ev.target.closest(".g-open")) openCard(g, false);
     });
-    /* if the animated emoji can't load, fall back to the plain one */
-    $("guest-list").addEventListener("error", function (ev) {
-      var im = ev.target;
-      if (!im || im.tagName !== "IMG" || !im.closest(".rx")) return;
-      var s = document.createElement("i"); s.className = "emo"; s.textContent = im.alt; im.replaceWith(s);
-    }, true);
-    $("guest-list").addEventListener("submit", function (ev) {
+    cbody.addEventListener("click", function (ev) { if (current) onClick(ev, cbody, current); });
+    function onAsk(ev, g) {
+      if (!ev.target.classList.contains("rx-ask")) return false;
       ev.preventDefault();
-      var li = ev.target.closest("li.g"), v = ev.target.querySelector("input").value.trim().slice(0, 24);
-      if (!li || !v) return;
+      var v = ev.target.querySelector("input").value.trim().slice(0, 24); if (!v) return true;
       setName(v); asking = null;
       if (!$("r-name").value) $("r-name").value = v;
-      react(li.dataset.g, li.dataset.want || "like");
+      react(g, want || "like", ev.currentTarget);
+      return true;
+    }
+    gl.addEventListener("submit", function (ev) { var li = ev.target.closest("li.g"); if (li) onAsk(ev, li.dataset.g); });
+    cbody.addEventListener("submit", function (ev) {
+      if (!current || onAsk(ev, current)) return;
+      ev.preventDefault();
+      var f = ev.target; if (!f.classList.contains("c-add")) return;
+      var inp = f.querySelector("input[type=text]"), body = inp.value.trim().slice(0, 60), g = current; if (!body) { inp.focus(); return; }
+      var box = f.querySelector("input[type=checkbox]"), who = name && !(box && box.checked) ? name : "";
+      var btn = f.querySelector("button"); btn.disabled = true;
+      rpc("bday_note_add", { p_guest: g, p_body: body, p_who: who }).then(function () {
+        (notes[g] = notes[g] || []).push({ body: body, who: who });
+        inp.value = ""; redraw(g);
+        var again = cbody.querySelector(".c-add input[type=text]"); if (again) again.focus();
+      }).catch(function () { btn.disabled = false; f.querySelector(".c-msg").textContent = T.c_fail; });
     });
-    rpc("bday_guests_get").then(function (gs) {
-      guests = (gs || []).filter(function (g) { return g && g.name; });
-      if (!guests.length) return;
-      var ul = $("guest-list"); ul.innerHTML = "";
-      guests.forEach(function (g) { var li = document.createElement("li"); li.className = "g"; li.dataset.g = g.name; li.innerHTML = cardInner(g); ul.appendChild(li); });
-      $("guests").hidden = false;
-      return loadRx();
-    }).catch(function () {});
+    /* if the animated emoji can't load, fall back to the plain one */
+    function emoFallback(ev) {
+      var im = ev.target;
+      if (!im || im.tagName !== "IMG" || !im.closest(".rx")) return;
+      if (im.classList.contains("fly")) { im.remove(); return; }
+      var s = document.createElement("i"); s.className = "emo"; s.textContent = im.alt; im.replaceWith(s);
+    }
+    gl.addEventListener("error", emoFallback, true); cbody.addEventListener("error", emoFallback, true);
+
+    /* your own photo: cut out and shrunk here in the browser, only the small result is saved */
+    var cardPhotoOK = false, MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14", segP = null;
+    function hasClear(c) {
+      var px = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      for (var i = 3; i < px.length; i += 4) if (px[i] < 250) return true;
+      return false;
+    }
+    function pack(src, x, y, w, h) {
+      var sizes = [360, 300, 240, 180];
+      for (var i = 0; i < sizes.length; i++) {
+        var k = Math.min(1, sizes[i] / Math.max(w, h)), c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+        var cx = c.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.drawImage(src, x, y, w, h, 0, 0, c.width, c.height);
+        var d = c.toDataURL("image/webp", 0.82);
+        if (d.indexOf("data:image/webp") !== 0) d = hasClear(c) ? c.toDataURL("image/png") : c.toDataURL("image/jpeg", 0.85);
+        if (d.length <= 300000 && PHOTO_OK.test(d)) return d;
+      }
+      return null;
+    }
+    function segmenter() {
+      if (!segP) segP = import(MP + "/vision_bundle.mjs").then(function (m) {
+        return m.FilesetResolver.forVisionTasks(MP + "/wasm").then(function (fs) {
+          return m.ImageSegmenter.createFromOptions(fs, { baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite", delegate: "CPU" },
+            runningMode: "IMAGE", outputCategoryMask: false, outputConfidenceMasks: true });
+        });
+      }).catch(function (e) { segP = null; throw e; });
+      return segP;
+    }
+    /* keep only the biggest connected person shape, so passers-by in the background drop out */
+    function keepMain(f, mw, mh) {
+      var n = mw * mh, lab = new Int32Array(n), sizes = [0], stack = [], best = 0, i, k;
+      for (i = 0; i < n; i++) {
+        if (lab[i] || f[i] >= 0.5) continue;
+        var id = sizes.length, size = 0; lab[i] = id; stack.push(i);
+        while (stack.length) {
+          var p = stack.pop(), x = p % mw, y = (p - x) / mw; size++;
+          for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+            var nx = x + dx, ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= mw || ny >= mh) continue;
+            k = ny * mw + nx;
+            if (!lab[k] && f[k] < 0.5) { lab[k] = id; stack.push(k); }
+          }
+        }
+        sizes.push(size); if (size > sizes[best]) best = id;
+      }
+      var out = new Float32Array(n);
+      for (i = 0; i < n; i++) out[i] = lab[i] === best && best ? 1 - f[i] : 0;
+      return out;
+    }
+    function cutout(src, seg) {
+      var W = src.width, H = src.height, sx = src.getContext("2d");
+      var r = seg.segment(src), bg = r.confidenceMasks[0], mw = bg.width, mh = bg.height, person1 = keepMain(bg.getAsFloat32Array(), mw, mh);
+      var mc = document.createElement("canvas"); mc.width = mw; mc.height = mh;
+      var mx = mc.getContext("2d"), md = mx.createImageData(mw, mh);
+      for (var i = 0; i < person1.length; i++) md.data[i * 4 + 3] = Math.round(person1[i] * 255);
+      mx.putImageData(md, 0, 0); if (r.close) r.close();
+      var big = document.createElement("canvas"); big.width = W; big.height = H;
+      var bx = big.getContext("2d"); bx.imageSmoothingQuality = "high"; bx.drawImage(mc, 0, 0, W, H);
+      var a = bx.getImageData(0, 0, W, H).data, p = sx.getImageData(0, 0, W, H), x0 = W, y0 = H, x1 = -1, y1 = -1, kept = 0;
+      for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+        var k = (y * W + x) * 4 + 3, v = (a[k] / 255 - 0.4) / 0.25; v = v < 0 ? 0 : v > 1 ? 1 : v;
+        p.data[k] = Math.round(p.data[k] * v);
+        if (v > 0.5) { kept++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      }
+      if (x1 < 0 || kept / (W * H) < 0.03) return null;
+      sx.putImageData(p, 0, 0);
+      return [x0, y0, x1 - x0 + 1, y1 - y0 + 1];
+    }
+    function readImage(file) {
+      return new Promise(function (ok, no) {
+        var img = new Image(), url = URL.createObjectURL(file);
+        img.onload = function () {
+          var k = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+          c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
+          var cx = c.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.drawImage(img, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(url); ok(c);
+        };
+        img.onerror = function () { URL.revokeObjectURL(url); no(new Error("unreadable")); };
+        img.src = url;
+      });
+    }
+    cbody.addEventListener("change", function (ev) {
+      var f = ev.target.files && ev.target.files[0], g = current, p = person(g);
+      if (!f || !p || ev.target.type !== "file") return;
+      function say(t) { var st = cbody.querySelector(".c-state"); if (st) st.textContent = t; }
+      say(T.c_busy);
+      readImage(f).then(function (src) {
+        var plain = pack(src, 0, 0, src.width, src.height);
+        if (!plain) throw new Error("too big");
+        if (hasClear(src)) return plain;
+        return segmenter().then(function (seg) { var box = cutout(src, seg); return (box && pack(src, box[0], box[1], box[2], box[3])) || plain; }).catch(function () { return plain; });
+      }).then(function (photo) {
+        return rpc("bday_card_photo", { p_name: g, p_photo: photo }).then(function () { p.photo = photo; redraw(g); say(T.c_saved); });
+      }).catch(function () { say(T.c_bad); });
+    });
+
+    function loadCards() {
+      return Promise.all([
+        rpc("bday_rsvp_list3").then(function (r) { cardPhotoOK = true; return r; }).catch(function () { return rpc("bday_rsvp_list2"); }).catch(function () { return rpc("bday_rsvp_list"); }).catch(function () { return []; }),
+        rpc("bday_guests_get").catch(function () { return []; }),
+        rpc("bday_react_list").catch(function () { return null; }),
+        rpc("bday_notes_list").catch(function () { return null; })
+      ]).then(function (res) {
+        var by = {}; people = [];
+        (res[0] || []).forEach(function (r) { if (r && r.name && !by[r.name]) people.push(by[r.name] = { name: r.name, arrive: r.arrive, mode: r.mode, role: r.role, talk: r.talk || "" }); });
+        (res[1] || []).forEach(function (c) {
+          if (!c || !c.name) return;
+          var p = by[c.name]; if (!p) people.push(p = by[c.name] = { name: c.name, talk: "" });
+          p.title = c.title || ""; p.line = c.line || ""; p.photo = c.photo || "";
+        });
+        if (res[2]) { reacts = {}; res[2].forEach(function (r) { ((reacts[r.guest] = reacts[r.guest] || {})[r.emoji] = reacts[r.guest][r.emoji] || []).push(r.who); }); } else reacts = null;
+        if (res[3]) { notes = {}; res[3].forEach(function (n) { (notes[n.guest] = notes[n.guest] || []).push({ body: n.body, who: n.who || "" }); }); } else notes = null;
+        $("guests").hidden = !people.length; $("guest-n").textContent = people.length ? "· " + people.length : ""; $("emoji-credit").hidden = !reacts;
+        gl.innerHTML = "";
+        people.forEach(function (p) { var li = document.createElement("li"); li.className = "g"; li.dataset.g = p.name; li.innerHTML = tileHTML(p); gl.appendChild(li); });
+        if (current && dlg.open) redraw(current);
+      }).catch(function () {});
+    }
+    loadCards();
     rpc("bday_teams_get").then(function (teams) {
       if (!teams || !teams.length) return;
       $("teams").hidden = false;
@@ -620,6 +861,211 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         return "<li><b>" + esc([t.chef].concat(t.helpers || []).join(" + ")) + "</b><span>" + esc(t.dish || T.dish_tbd) + "</span></li>";
       }).join("");
     }).catch(function () {});
+  })();
+
+  /* the Tianlai toy: cake in his face, or have a drink with him. Counts are shared through Supabase; if the
+     database part isn't there yet it still plays, just for this visitor. */
+  (function () {
+    var cv = $("tl-cv"); if (!cv) return;
+    var ctx = cv.getContext("2d"), say = $("tl-say"), bCake = $("tl-cake"), bDrink = $("tl-drink"), ask = $("tl-ask");
+    var SOFA = 8, WINDOW = 30 * 60 * 1000;
+    var st = { cakes: 0, drinks: 0, recent: 0, top: [], last: null }, shared = false, localDrinks = [];
+    var pose = "idle", poseAt = 0, bubble = "", bubbleUntil = 0, wantDrink = false;
+  /* Pixel Tianlai on a 40x48 grid: tall and slim, tousled hair swept up, black tee under a navy overshirt.
+     Drawn rect by rect so poses can move parts.
+     s = { pose: "idle" | "drink" | "cake" | "sofa", t: ms since the pose began, drunk: 0..2, clock: ms } */
+  function drawTianlai(ctx, s) {
+    var C = { hair: "#16161d", hairHi: "#3a3a48", skin: "#f3c9a2", skinSh: "#dfae86", eye: "#16161d", mouth: "#a8483f", blush: "#f08f7f", teeth: "#ffffff",
+      tee: "#1d1d22", jkt: "#27345a", jktHi: "#3b4b7c", jean: "#33363f", jeanSh: "#26282f", shoe: "#f4f4f4", sole: "#aeb2bd",
+      mug: "#f6b63c", mugSh: "#d38f24", foam: "#fffaf0", cream: "#fff6ee", creamSh: "#f1d6cc", pink: "#f7a8b8", cherry: "#d6323c", sponge: "#f2cf8a",
+      sofa: "#e58a3a", sofaHi: "#f2a257", sofaSh: "#c06d28", sofaDk: "#8f4d1c", drool: "#9fd0f0" };
+    var ox = 0, oy = 0;
+    function r(x, y, w, h, c, a) { if (w <= 0 || h <= 0) return; ctx.globalAlpha = a === undefined ? 1 : a; ctx.fillStyle = c; ctx.fillRect(x + ox, y + oy, w, h); ctx.globalAlpha = 1; }
+    function mug(x, y) {
+      r(x, y + 1, 4, 4, C.mug); r(x, y + 4, 4, 1, C.mugSh); r(x + 3, y + 1, 1, 4, C.mugSh); r(x, y, 4, 1, C.foam); r(x - 1, y, 1, 1, C.foam); r(x + 4, y + 2, 1, 2, C.mugSh);
+    }
+    ctx.clearRect(0, 0, 40, 48);
+    var t = s.t || 0, clock = s.clock || 0;
+
+    if (s.pose === "sofa") {
+      oy = 8;
+      r(1, 19, 38, 9, C.sofa); r(1, 19, 38, 1, C.sofaHi); r(2, 18, 36, 1, C.sofa);
+      r(3, 28, 34, 5, C.sofaHi); r(3, 32, 34, 1, C.sofa);
+      r(0, 22, 4, 12, C.sofaSh); r(0, 22, 4, 1, C.sofa); r(36, 22, 4, 12, C.sofaSh); r(36, 22, 4, 1, C.sofa);
+      r(1, 33, 38, 2, C.sofaDk); r(2, 35, 2, 2, C.hair); r(36, 35, 2, 2, C.hair);
+      r(23, 23, 13, 3, C.jean); r(23, 25, 13, 1, C.jeanSh); r(36, 19, 3, 5, C.shoe); r(39, 19, 1, 5, C.sole);     // long legs, feet over the arm
+      r(12, 22, 12, 5, C.jkt); r(13, 23, 10, 3, C.tee); r(12, 22, 12, 1, C.jktHi);                                // body
+      r(16, 26, 2, 7, C.jkt); r(16, 33, 2, 2, C.skin);                                                           // dangling arm
+      oy = 8 + (Math.floor(clock / 900) % 2 ? 0 : -1);                                                           // slow breathing
+      r(5, 19, 7, 7, C.skin); r(6, 26, 5, 1, C.skin); r(12, 22, 1, 2, C.skin);
+      r(4, 17, 9, 3, C.hair); r(5, 16, 2, 1, C.hair); r(8, 15, 1, 1, C.hair); r(8, 16, 3, 1, C.hair); r(12, 16, 2, 1, C.hair); r(3, 18, 1, 1, C.hair); r(4, 19, 2, 6, C.hair); r(3, 21, 1, 1, C.hair);
+      r(6, 18, 2, 1, C.hairHi); r(9, 17, 1, 1, C.hairHi); r(11, 18, 1, 1, C.hairHi);
+      r(7, 22, 2, 1, C.eye); r(10, 22, 2, 1, C.eye);
+      r(6, 23, 1, 1, C.blush); r(11, 23, 1, 1, C.blush); r(6, 24, 2, 1, C.blush, .7); r(10, 24, 2, 1, C.blush, .7);
+      r(8, 24, 2, 1, C.mouth); r(9, 25, 1, 1 + (Math.floor(clock / 600) % 2), C.drool);
+      oy = 8;
+      r(21, 35, 4, 2, C.mug); r(21, 36, 4, 1, C.mugSh); r(25, 36, 3, 1, C.foam); r(20, 35, 1, 2, C.foam);         // tipped mug
+      oy = 0;
+      var ph = (clock / 500) % 4;
+      [[14, 19], [19, 13], [25, 6]].forEach(function (p, i) {
+        if (ph < i + .5) return;
+        var x = p[0], y = p[1] - Math.round((ph - i) * .6), n = i > 1 ? 5 : 4;
+        r(x, y, n, 1, C.hair); r(x, y + n - 1, n, 1, C.hair);
+        for (var k = 1; k < n - 1; k++) r(x + n - 1 - k, y + k, 1, 1, C.hair);
+      });
+      return;
+    }
+
+    var drink = s.pose === "drink", cake = s.pose === "cake";
+    var sip = drink && t >= 250 && t < 1000, after = drink && t >= 1000;
+    var hit = cake && t >= 300, drunk = s.drunk || 0;
+    var sway = 0;
+    if (hit && t < 800) sway = [0, -1, 1, -1, 1][Math.floor((t - 300) / 100)] || 0;      // shake when caked
+    else if (drunk >= 2 && !drink) sway = Math.round(Math.sin(clock / 420) * 1.2);      // wobble when drunk
+    var bob = (!drink && !cake && Math.floor(clock / 700) % 2) ? 1 : 0;                 // idle breathing
+
+    r(13, 46, 14, 1, "#000", .14);
+    // long legs, white sneakers
+    ox = Math.round(sway / 2);
+    r(16, 30, 8, 2, C.jean); r(16, 31, 3, 13, C.jean); r(21, 31, 3, 13, C.jean); r(18, 33, 1, 11, C.jeanSh); r(23, 33, 1, 11, C.jeanSh);
+    r(15, 44, 4, 2, C.shoe); r(15, 45, 4, 1, C.sole); r(21, 44, 4, 2, C.shoe); r(21, 45, 4, 1, C.sole);
+    // slim torso: black tee, open navy overshirt
+    ox = sway; oy = bob;
+    r(17, 18, 6, 12, C.tee);
+    r(15, 18, 3, 13, C.jkt); r(22, 18, 3, 13, C.jkt); r(17, 18, 1, 9, C.jktHi); r(22, 18, 1, 9, C.jktHi); r(16, 17, 3, 1, C.jkt); r(21, 17, 3, 1, C.jkt);
+    r(13, 19, 2, 10, C.jkt); r(13, 29, 2, 2, C.skin);
+    if (drink && !sip) { r(25, 19, 2, 6, C.jkt); r(25, 23, 5, 2, C.jkt); r(30, 22, 2, 2, C.skin); mug(31, 18); }   // mug held out
+    else if (sip) { r(25, 19, 2, 3, C.jkt); r(24, 15, 3, 5, C.jkt); }                                             // arm up
+    else { r(25, 19, 2, 10, C.jkt); r(25, 29, 2, 2, C.skin); }
+    r(19, 16, 2, 2, C.skinSh);
+    // head: long face, narrow jaw
+    oy = bob + (sip ? -1 : 0);
+    r(16, 7, 8, 8, C.skin); r(17, 15, 6, 1, C.skin); r(18, 16, 4, 1, C.skin); r(15, 10, 1, 2, C.skin); r(24, 10, 1, 2, C.skin);
+    r(16, 14, 1, 1, C.skinSh); r(23, 14, 1, 1, C.skinSh); r(17, 15, 1, 1, C.skinSh); r(22, 15, 1, 1, C.skinSh);
+    var hair = s.hair || "messy";
+    if (hair === "back") {            // slicked back: clean high hairline, tight faded sides, combed streaks
+      r(18, 2, 5, 1, C.hair); r(16, 3, 8, 1, C.hair); r(15, 4, 10, 3, C.hair);
+      r(15, 7, 1, 3, C.hairHi); r(24, 7, 1, 3, C.hairHi); r(16, 7, 1, 1, C.hair); r(23, 7, 1, 1, C.hair);
+      r(18, 3, 4, 1, C.hairHi); r(17, 5, 6, 1, C.hairHi, .7); r(22, 4, 2, 1, C.hairHi, .5);
+    } else if (hair === "part") {     // middle part with curtain bangs
+      r(17, 1, 6, 1, C.hair); r(16, 2, 8, 1, C.hair); r(15, 3, 10, 4, C.hair);
+      r(15, 7, 4, 1, C.hair); r(21, 7, 4, 1, C.hair); r(15, 8, 3, 1, C.hair); r(22, 8, 3, 1, C.hair);
+      r(15, 9, 1, 1, C.hair); r(24, 9, 1, 1, C.hair);
+      r(19, 3, 1, 3, C.hairHi, .6); r(17, 4, 1, 3, C.hairHi); r(22, 4, 1, 3, C.hairHi); r(16, 6, 1, 2, C.hairHi, .6); r(23, 6, 1, 2, C.hairHi, .6);
+    } else if (hair === "spiky") {    // hedgehog: short spikes standing up all over, tight sides
+      r(18, 0, 1, 1, C.hair); r(21, 0, 1, 1, C.hair); r(16, 1, 1, 1, C.hair); r(18, 1, 2, 1, C.hair); r(21, 1, 2, 1, C.hair); r(24, 1, 1, 1, C.hair);
+      r(15, 2, 2, 1, C.hair); r(18, 2, 5, 1, C.hair); r(24, 2, 1, 1, C.hair); r(15, 3, 10, 4, C.hair);
+      r(14, 3, 1, 1, C.hair); r(25, 3, 1, 1, C.hair); r(14, 5, 1, 1, C.hair); r(25, 5, 1, 1, C.hair);
+      r(15, 7, 1, 2, C.hairHi); r(24, 7, 1, 2, C.hairHi); r(17, 7, 1, 1, C.hair); r(22, 7, 1, 1, C.hair);
+      r(18, 1, 1, 2, C.hairHi); r(21, 1, 1, 2, C.hairHi); r(16, 3, 1, 2, C.hairHi); r(23, 3, 1, 2, C.hairHi); r(19, 4, 1, 2, C.hairHi, .7); r(21, 5, 1, 1, C.hairHi, .7);
+    } else if (hair === "messy") {    // bed-head: uneven spikes pushed back and to one side, loose tufts at the edges
+      r(20, 0, 1, 1, C.hair); r(23, 0, 2, 1, C.hair); r(17, 1, 1, 1, C.hair); r(20, 1, 2, 1, C.hair); r(23, 1, 3, 1, C.hair);
+      r(16, 2, 3, 1, C.hair); r(20, 2, 6, 1, C.hair); r(15, 3, 11, 1, C.hair); r(27, 2, 1, 1, C.hair); r(26, 3, 1, 1, C.hair);
+      r(15, 4, 11, 1, C.hair); r(14, 4, 1, 1, C.hair); r(14, 5, 12, 1, C.hair); r(15, 6, 10, 1, C.hair); r(26, 6, 1, 1, C.hair);
+      r(15, 7, 1, 2, C.hair); r(24, 7, 2, 1, C.hair); r(24, 8, 1, 1, C.hair); r(16, 7, 1, 1, C.hair); r(22, 7, 1, 1, C.hair);
+      r(18, 3, 1, 1, C.hairHi); r(17, 4, 1, 1, C.hairHi); r(21, 2, 1, 1, C.hairHi); r(20, 3, 1, 1, C.hairHi); r(24, 2, 1, 1, C.hairHi); r(23, 3, 1, 1, C.hairHi);
+      r(22, 4, 1, 1, C.hairHi, .7); r(19, 5, 1, 1, C.hairHi, .7); r(16, 5, 1, 1, C.hairHi, .7); r(24, 5, 1, 1, C.hairHi, .7);
+    } else {                          // quiff: front lifted up and over to one side, short sides
+      r(18, 0, 5, 1, C.hair); r(17, 1, 7, 1, C.hair); r(16, 2, 8, 1, C.hair); r(15, 3, 10, 4, C.hair);
+      r(15, 7, 1, 2, C.hairHi); r(24, 7, 1, 2, C.hairHi); r(16, 7, 1, 1, C.hair);
+      r(19, 1, 3, 1, C.hairHi); r(17, 3, 3, 1, C.hairHi); r(21, 3, 2, 1, C.hairHi, .7); r(18, 5, 5, 1, C.hairHi, .6);
+    }
+    var blink = Math.floor(clock / 100) % 34 === 0;
+    var closed = sip || blink || (drunk >= 2 && Math.floor(clock / 100) % 12 < 4);
+    if (!hit) { r(17, 9, 2, 1, C.hair, .85); r(21, 9, 2, 1, C.hair, .85); }
+    if (closed || drunk >= 2) { r(17, 11, 2, 1, C.eye); r(21, 11, 2, 1, C.eye); }
+    else { r(17, 10, 2, 2, C.eye); r(21, 10, 2, 2, C.eye); r(18, 10, 1, 1, "#fff", .9); r(22, 10, 1, 1, "#fff", .9); }
+    var blush = after || drunk >= 2 ? 1 : drunk === 1 ? .7 : 0;
+    if (blush) { r(16, 12, 1, 1, C.blush, blush); r(23, 12, 1, 1, C.blush, blush); if (drunk >= 2) { r(16, 13, 2, 1, C.blush, .6); r(22, 13, 2, 1, C.blush, .6); } }
+    if (after || drunk >= 2) { r(18, 13, 4, 2, C.mouth); r(19, 13, 2, 1, C.teeth); }                               // open laugh
+    else if (hit) r(19, 14, 2, 1, C.mouth);
+    else { r(18, 13, 4, 1, C.teeth); r(17, 13, 1, 1, C.mouth); r(22, 13, 1, 1, C.mouth); r(18, 14, 4, 1, C.mouth); } // wide grin
+    if (sip) { mug(20, 11); r(24, 13, 2, 2, C.skin); }
+
+    if (cake && !hit) {
+      var k = t / 300, cx = Math.round(40 - k * 20), cy = Math.round(4 - Math.sin(k * Math.PI) * 3 + k * 5);
+      ox = 0; oy = 0;
+      r(cx, cy + 2, 6, 3, C.sponge); r(cx, cy, 6, 2, C.cream); r(cx, cy + 3, 6, 1, C.pink); r(cx + 2, cy - 2, 2, 2, C.cherry);
+    } else if (cake) {
+      var a = t > 2100 ? Math.max(0, 1 - (t - 2100) / 500) : 1, d = Math.min(4, Math.floor((t - 300) / 450));
+      oy = bob;
+      r(16, 8, 8, 6, C.cream, a); r(17, 7, 6, 1, C.cream, a); r(17, 14, 6, 1, C.cream, a); r(15, 10, 1, 2, C.cream, a); r(24, 9, 1, 3, C.cream, a);
+      r(16, 13, 8, 1, C.creamSh, a); r(20, 10, 2, 1, C.creamSh, a);
+      r(17, 14, 2, 1 + d, C.cream, a); r(22, 14, 1, d, C.cream, a); r(19, 15, 2, d - 1, C.cream, a);
+      r(18, 9, 1, 1, C.pink, a); r(22, 11, 1, 1, C.pink, a); r(17, 12, 1, 1, C.pink, a);
+      r(19, 7 + Math.min(3, d), 2, 2, C.cherry, a);
+      if (t > 1100) { r(17, 11, 2, 1, C.eye, a); r(21, 11, 2, 1, C.eye, a); }
+      if (t < 800) {
+        var q = (t - 300) / 500; ox = 0; oy = 0;
+        [[-1, -.8], [1, -.9], [-1.2, .1], [1.3, 0], [-.6, -1.3], [.5, -1.4], [0, -1.6]].forEach(function (v, i) {
+          r(Math.round(20 + v[0] * (3 + q * 9)), Math.round(11 + v[1] * (3 + q * 7) + q * q * 6), 1 + (i % 2), 1 + (i % 2), i % 3 ? C.cream : C.pink, 1 - q * .6);
+        });
+      }
+    }
+    ox = 0; oy = 0;
+  }
+    function level() { return st.recent >= SOFA ? 3 : st.recent >= 5 ? 2 : st.recent >= 2 ? 1 : 0; }
+    function busy() { return pose !== "idle" && pose !== "sofa"; }
+    function settle() { pose = level() === 3 ? "sofa" : "idle"; }
+    function text() {
+      var lv = level(), now = Date.now();
+      say.textContent = now < bubbleUntil ? bubble : T.tl_b[lv === 3 ? "sofa" : lv === 2 ? "drunk" : lv === 1 ? "tipsy" : "idle"];
+      $("tl-stats").textContent = T.tl_stats.replace("{c}", st.cakes).replace("{d}", st.drinks);
+      var l = st.last;
+      $("tl-last").textContent = l && l.kind ? T[l.kind === "cake" ? "tl_last_cake" : "tl_last_drink"].replace("{who}", l.who || T.someone) : "";
+      var top = (st.top || []).filter(function (x) { return x && x.who; });
+      $("tl-board").hidden = !top.length;
+      $("tl-top").innerHTML = top.map(function (x, i) { return "<li><b>" + (i + 1) + ". " + esc(x.who) + "</b><span>" + esc(T.tl_cups.replace("{n}", x.n)) + "</span></li>"; }).join("");
+      bCake.disabled = busy(); bDrink.disabled = busy() || lv === 3;
+    }
+    function shout(key, ms) { bubble = T.tl_b[key]; bubbleUntil = Date.now() + (ms || 2600); }
+    function frame() {
+      var now = Date.now();
+      if (pose === "drink" && now - poseAt > 1500) { settle(); text(); }
+      if (pose === "cake" && now - poseAt > 2600) { settle(); text(); }
+      if (!busy()) settle();
+      if (bubbleUntil && now > bubbleUntil) { bubbleUntil = 0; text(); }
+      drawTianlai(ctx, { pose: pose, t: now - poseAt, drunk: Math.min(2, level()), clock: reduce && !busy() ? 300 : now });
+    }
+    var seen = true;
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }).observe(cv);
+    setInterval(function () { if (seen && !document.hidden) frame(); }, 90);
+    function take(res) {
+      if (!res || typeof res.cakes !== "number") return;
+      shared = true; st = res;
+    }
+    function sync() { return rpc("bday_poke_state").then(function (r) { take(r); text(); }).catch(function () {}); }
+    function localRecent() { var cut = Date.now() - WINDOW; localDrinks = localDrinks.filter(function (t) { return t > cut; }); return localDrinks.length; }
+    function act(kind) {
+      if (busy()) return;
+      var lv = level();
+      if (kind === "drink") {
+        if (lv === 3) { shout("sofa"); text(); return; }
+        if (!name) { wantDrink = true; ask.hidden = false; ask.querySelector("input").focus(); return; }
+      }
+      if (kind === "cake" && lv === 3) { st.cakes++; st.last = { kind: "cake", who: name }; shout("sofa_cake"); }
+      else { pose = kind; poseAt = Date.now(); shout(kind, kind === "cake" ? 2600 : 1800);
+        if (kind === "cake") st.cakes++; else { st.drinks++; st.recent++; localDrinks.push(Date.now()); }
+        st.last = { kind: kind, who: name }; }
+      text(); frame();
+      rpc("bday_poke_add", { p_kind: kind, p_who: name }).then(function (r) {
+        take(r);
+        if (r && r.refused === "slow") shout("slow", 3000);
+        if (r && r.refused === "sofa") shout("sofa", 3000);
+        text();
+      }).catch(function () { if (!shared) { st.recent = localRecent(); text(); } else sync(); });
+    }
+    bCake.addEventListener("click", function () { act("cake"); });
+    bDrink.addEventListener("click", function () { act("drink"); });
+    ask.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var v = ask.querySelector("input").value.trim().slice(0, 24); if (!v) return;
+      setName(v); ask.hidden = true;
+      if (!$("r-name").value) $("r-name").value = v;
+      if (wantDrink) { wantDrink = false; act("drink"); }
+    });
+    text(); frame(); sync();
+    setInterval(function () { if (seen && !document.hidden && !busy()) { if (shared) sync(); else { st.recent = localRecent(); text(); } } }, 20000);
   })();
 
   /* music: first play starts at the big swell; nothing loads until play is pressed */
