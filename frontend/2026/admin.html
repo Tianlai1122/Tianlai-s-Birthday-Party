@@ -48,7 +48,8 @@ td.diet{min-width:160px}
 .team:last-child{border-bottom:0}
 .team b{font-weight:800}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.gcard{display:grid;grid-template-columns:104px 1fr;gap:14px;align-items:start}
+.gcard{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;align-items:start}
+.gcard > div{min-width:0}
 .g-prev{width:104px;height:104px;background:var(--paper);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden}
 .g-prev img{max-width:84%;max-height:84%;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.22))}
 .g-prev span{font-size:12.5px;color:var(--soft);text-align:center;line-height:1.35;padding:0 8px}
@@ -90,7 +91,7 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
 .gcard .bar{margin:10px 0 0;gap:8px}
 .g-flagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.g-flagrow select{flex:1 1 150px;min-width:0;max-width:none;padding:8px 10px;border-width:1px;border-color:var(--line)}
+.g-flagrow select{flex:1 1 130px;width:0;min-width:0;max-width:100%;padding:8px 10px;border-width:1px;border-color:var(--line);text-overflow:ellipsis}
 .g-flags{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;letter-spacing:.06em}
 select{font:inherit;padding:10px 12px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);max-width:200px}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
