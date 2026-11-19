@@ -225,13 +225,36 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     }).catch(function (e) { segP = null; throw e; });
     return segP;
   }
-  /* erases the background of the canvas in place and returns the box around the people, or null if nobody was found */
+  /* the model marks every person in the photo, passers-by in the background included. Keep only the biggest connected
+     shape (people standing together touch, so they stay together) and drop the loose bits. f: background probability per mask pixel */
+  function keepMain(f, mw, mh) {
+    var n = mw * mh, lab = new Int32Array(n), sizes = [0], stack = [], best = 0, i, k;
+    for (i = 0; i < n; i++) {
+      if (lab[i] || f[i] >= 0.5) continue;
+      var id = sizes.length, size = 0; lab[i] = id; stack.push(i);
+      while (stack.length) {
+        var p = stack.pop(), x = p % mw, y = (p - x) / mw; size++;
+        for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+          var nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= mw || ny >= mh) continue;
+          k = ny * mw + nx;
+          if (!lab[k] && f[k] < 0.5) { lab[k] = id; stack.push(k); }
+        }
+      }
+      sizes.push(size); if (size > sizes[best]) best = id;
+    }
+    var out = new Float32Array(n);
+    for (i = 0; i < n; i++) out[i] = lab[i] === best && best ? 1 - f[i] : 0;
+    return out;
+  }
+  /* erases the background of the canvas in place and returns the box around the main person, or null if nobody was found */
   function cutout(src, seg) {
     var W = src.width, H = src.height, sx = src.getContext("2d");
     var r = seg.segment(src), bg = r.confidenceMasks[0], mw = bg.width, mh = bg.height, f = bg.getAsFloat32Array();
     var mc = document.createElement("canvas"); mc.width = mw; mc.height = mh;
     var mx = mc.getContext("2d"), md = mx.createImageData(mw, mh);
-    for (var i = 0; i < f.length; i++) md.data[i * 4 + 3] = Math.round((1 - f[i]) * 255);
+    var person = keepMain(f, mw, mh);
+    for (var i = 0; i < person.length; i++) md.data[i * 4 + 3] = Math.round(person[i] * 255);
     mx.putImageData(md, 0, 0); if (r.close) r.close();
     var big = document.createElement("canvas"); big.width = W; big.height = H;
     var bx = big.getContext("2d"); bx.imageSmoothingQuality = "high"; bx.drawImage(mc, 0, 0, W, H);
