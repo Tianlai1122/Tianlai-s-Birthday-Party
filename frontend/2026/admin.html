@@ -63,6 +63,9 @@ dialog.crop::backdrop{background:rgba(20,20,22,.6)}
 .crop-box canvas{display:block;max-width:100%;max-height:62vh;height:auto}
 .crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(20,20,22,.55);pointer-events:none}
 .crop-sel[hidden]{display:none}
+.bright{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;font-weight:700}
+.bright input{flex:1;max-width:260px;accent-color:var(--ink)}
+.bright span{font-weight:500;color:var(--soft);min-width:4em}
 .note-row{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
 .note-row:last-child{border-bottom:0}
 .gcard input[type=text]{display:block;width:100%;min-width:0;margin-top:8px;padding:8px 10px;border-width:1px;border-color:var(--line)}
@@ -107,7 +110,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
     </div>
 
     <h2>嘉宾卡片</h2>
-    <p class="soft">照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「今晚有谁」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分，再自动把人抠出来做成贴纸。</p>
+    <p class="soft">照片、当晚身份、一句话介绍，三样都是选填。点「保存」后，网页上「今晚有谁」那里所有人都看得到；没保存过的人不会出现。照片点左边的方块选，先框出要用的部分、调一下亮度，再自动把人抠出来做成贴纸。不满意点「重抠」重新框。</p>
     <div class="bar">
       <label for="g-new" style="position:absolute;left:-9999px">名单外的人的名字</label>
       <input type="text" id="g-new" maxlength="24" placeholder="还没报名的人，写名字" style="flex:0 1 240px">
@@ -135,6 +138,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   <p><b>先框出要用的部分</b></p>
   <p class="soft">在照片上拖一下，框住要留的人。框错了重新拖。不框就用整张。</p>
   <div class="crop-box" id="crop-box"><canvas id="crop-cv"></canvas><i class="crop-sel" id="crop-sel" hidden></i></div>
+  <label class="bright" for="crop-bright">亮度 <input type="range" id="crop-bright" min="100" max="170" step="5" value="100"> <span id="crop-bright-n">原样</span></label>
   <div class="bar"><button type="button" id="crop-ok">就用这块</button><button type="button" class="ghost" id="crop-all">用整张</button><button type="button" class="ghost" id="crop-cancel">取消</button></div>
 </dialog>
 
@@ -206,6 +210,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       '<input type="text" class="g-title" maxlength="40" placeholder="当晚身份（选填），比如：气氛组组长" aria-label="' + esc(n) + ' 的当晚身份" value="' + esc(c.title || "") + '">' +
       '<input type="text" class="g-line" maxlength="120" placeholder="一句话介绍（选填），比如：Tianlai 在 Paris 的朋友" aria-label="一句话介绍 ' + esc(n) + '" value="' + esc(c.line || "") + '">' +
       '<div class="bar"><button type="button" class="small g-save">保存</button>' +
+      (originals[n] && photo ? '<button type="button" class="ghost small g-recut">重抠</button>' : "") +
       (v && v.cut && photo ? '<button type="button" class="ghost small g-swap">' + (photo === v.cut ? "不抠，用原图" : "用抠好的") + "</button>" : "") +
       (photo ? '<button type="button" class="ghost small g-nophoto">去掉照片</button>' : "") +
       (cards[n] ? '<button type="button" class="ghost small g-del">从网页撤下</button>' : "") + '<span class="soft g-state" role="status"></span></div></div></div>';
@@ -303,10 +308,21 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   }
   /* shows the photo and lets the host drag a box around the part to keep. Resolves with that part (or the whole
      photo), sized for the cut-out step; resolves with null if cancelled. */
+  function brighten(c, pct) {
+    if (pct <= 100) return c;
+    var x = c.getContext("2d"), d = x.getImageData(0, 0, c.width, c.height), p = d.data, k = pct / 100;
+    for (var i = 0; i < p.length; i += 4) { p[i] = Math.min(255, p[i] * k); p[i + 1] = Math.min(255, p[i + 1] * k); p[i + 2] = Math.min(255, p[i + 2] * k); }
+    x.putImageData(d, 0, 0);
+    return c;
+  }
+  var lastBright = 100;
   function pickCrop(src) {
     return new Promise(function (done) {
       var dlg = $("crop"), cv = $("crop-cv"), box = $("crop-box"), sel = $("crop-sel"), rect = null, start = null;
+      var slider = $("crop-bright"), sn = $("crop-bright-n");
       cv.width = src.width; cv.height = src.height; cv.getContext("2d").drawImage(src, 0, 0);
+      function tone() { var v = Number(slider.value); cv.style.filter = v > 100 ? "brightness(" + v + "%)" : ""; sn.textContent = v > 100 ? "+" + (v - 100) + "%" : "原样"; }
+      slider.value = lastBright; slider.oninput = tone; tone();
       sel.hidden = true;
       function at(e) { var b = cv.getBoundingClientRect(); return [Math.max(0, Math.min(b.width, e.clientX - b.left)), Math.max(0, Math.min(b.height, e.clientY - b.top)), b]; }
       function show() {
@@ -318,14 +334,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       function up() { start = null; if (rect && (rect[2] < 16 || rect[3] < 16)) { rect = null; show(); } }
       function finish(result) {
         box.removeEventListener("pointerdown", down); box.removeEventListener("pointermove", move); box.removeEventListener("pointerup", up); box.removeEventListener("pointercancel", up);
-        $("crop-ok").onclick = $("crop-all").onclick = $("crop-cancel").onclick = null; dlg.oncancel = null;
+        $("crop-ok").onclick = $("crop-all").onclick = $("crop-cancel").onclick = null; dlg.oncancel = null; slider.oninput = null;
+        if (result) lastBright = Number(slider.value);
         if (dlg.open) dlg.close();
         done(result);
       }
       function part() {
-        if (!rect) return fit(src, 0, 0, src.width, src.height, 720);
+        var v = Number(slider.value);
+        if (!rect) return brighten(fit(src, 0, 0, src.width, src.height, 720), v);
         var b = cv.getBoundingClientRect(), k = src.width / b.width;
-        return fit(src, Math.round(rect[0] * k), Math.round(rect[1] * k), Math.max(1, Math.round(rect[2] * k)), Math.max(1, Math.round(rect[3] * k)), 720);
+        return brighten(fit(src, Math.round(rect[0] * k), Math.round(rect[1] * k), Math.max(1, Math.round(rect[2] * k)), Math.max(1, Math.round(rect[3] * k)), 720), v);
       }
       box.addEventListener("pointerdown", down); box.addEventListener("pointermove", move); box.addEventListener("pointerup", up); box.addEventListener("pointercancel", up);
       $("crop-ok").onclick = function () { finish(part()); };
@@ -348,12 +366,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
       img.src = url;
     });
   }
-  $("cards").addEventListener("change", function (e) {
-    var f = e.target.files && e.target.files[0], el = e.target.closest(".gcard");
-    if (!f || !el) return;
-    var n = el.dataset.name;
-    e.target.value = "";
-    readImage(f).then(pickCrop).then(function (src) {
+  /* the picked photo is kept (in this tab only) so the box, the brightness and the cut-out can be redone */
+  var originals = {};
+  function cutFrom(n) {
+    var orig = originals[n]; if (!orig) return;
+    pickCrop(orig).then(function (src) {
       if (!src) return;
       var plain = pack(src, 0, 0, src.width, src.height);
       if (!plain) throw new Error("too big");
@@ -366,13 +383,22 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         if (pending[n] !== plain) return;
         versions[n] = { cut: cut, plain: plain }; pending[n] = cut; redraw(n, "抠好了，还没保存");
       }).catch(function () { if (pending[n] === plain) redraw(n, "没抠出来，先用了原图。还没保存"); });
-    }).catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "这张图打不开，换一张（JPG 或 PNG）。"; });
+    }).catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "这张图处理不了，换一张（JPG 或 PNG）。"; });
+  }
+  $("cards").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0], el = e.target.closest(".gcard");
+    if (!f || !el || e.target.type !== "file") return;
+    var n = el.dataset.name;
+    e.target.value = "";
+    readImage(f).then(function (orig) { originals[n] = orig; cutFrom(n); })
+      .catch(function () { var c = cardEl(n); if (c) c.querySelector(".g-state").textContent = "这张图打不开，换一张（JPG 或 PNG）。"; });
   });
   $("cards").addEventListener("click", function (e) {
     var el = e.target.closest(".gcard"); if (!el) return;
     var n = el.dataset.name, st = el.querySelector(".g-state");
+    if (e.target.closest(".g-recut")) { cutFrom(n); return; }
     if (e.target.closest(".g-swap")) { var v = versions[n]; pending[n] = pending[n] === v.cut ? v.plain : v.cut; redraw(n, "照片还没保存"); return; }
-    if (e.target.closest(".g-nophoto")) { pending[n] = ""; delete versions[n]; redraw(n, cards[n] && cards[n].photo ? "去掉了，还没保存" : ""); return; }
+    if (e.target.closest(".g-nophoto")) { pending[n] = ""; delete versions[n]; delete originals[n]; redraw(n, cards[n] && cards[n].photo ? "去掉了，还没保存" : ""); return; }
     if (e.target.closest(".g-save")) {
       var title = el.querySelector(".g-title").value.trim(), line = el.querySelector(".g-line").value.trim();
       var to = el.querySelector(".g-name").value.trim().slice(0, 24) || n, renamed = to !== n, step = Promise.resolve();
@@ -383,7 +409,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
         var inDb = rows.some(function (r) { return r.name === n; }) || !!cards[n];
         step = (inDb ? rpc("bday_admin_rename", { p_pass: pass, p_old: n, p_new: to }) : Promise.resolve()).then(function () {
           rows.forEach(function (r) { if (r.name === n) r.name = to; });
-          [cards, pending, versions].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
+          [cards, pending, versions, originals].forEach(function (m) { if (n in m) { m[to] = m[n]; delete m[n]; } });
           extra = extra.map(function (x) { return x === n ? to : x; });
           el.dataset.name = to; n = to;
         });
