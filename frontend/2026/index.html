@@ -131,6 +131,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .g-plus .g-ph span{background:transparent;box-shadow:none;border:2.5px dashed var(--ink);font-family:var(--body);font-weight:500;font-size:44px;padding-bottom:6px}
 .g-plus b{font-family:var(--body);font-weight:700;font-size:15px}
 .c-link{appearance:none;border:0;background:transparent;padding:0;font:inherit;font-weight:800;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.g-meta{display:block;margin-top:4px;font-size:12.5px;line-height:1.35;color:var(--soft)}
 .g-sum{display:block;margin-top:7px;font-size:12.5px;line-height:1.4;color:var(--soft);font-variant-numeric:tabular-nums;white-space:pre-wrap}
 .card-dlg .rx{margin-top:16px}
 .c-credit{margin-top:18px;font-size:11px;color:var(--soft)}
@@ -664,7 +665,9 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
       var one = oneLine(p), n = notesOf(p.name).length, bits = [];
       EMO.forEach(function (em) { var k = whoOf(p.name, em[0]).length; if (k) bits.push(em[2] + " " + k); });
       if (n) bits.push(T.c_count.replace("{n}", n));
+      var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode]].filter(Boolean).join(" · ");
       return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + "</b>" +
+        (meta ? '<span class="g-meta">' + esc(meta) + "</span>" : "") +
         (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (one ? '<span class="g-one">' + esc(one) + "</span>" : "") +
         (bits.length ? '<span class="g-sum">' + bits.join("  ") + "</span>" : "") + "</button>";
     }
