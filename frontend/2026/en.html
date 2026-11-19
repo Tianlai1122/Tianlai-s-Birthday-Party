@@ -352,8 +352,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       <form id="rsvp-form" class="form">
         <label class="fl" for="r-name">Name</label>
         <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
-        <label class="fl" for="r-talk">Talk to me about<small>optional, goes on your card</small></label>
-        <input id="r-talk" type="text" maxlength="40" placeholder="Skiing, cats, the best hot pot in town…">
         <fieldset><legend class="fl">Around what time?</legend>
           <div class="chips">
             <label><input type="radio" name="arrive" value="16" required><span>4 PM, cooking</span></label>
@@ -590,7 +588,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     var sec = $("rsvp"), form = $("rsvp-form"), msg = $("r-msg"), RK = "bday-2026-rsvp";
     sec.hidden = false;
     try { var saved = JSON.parse(localStorage.getItem(RK) || "null"); if (saved) {
-      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || ""; $("r-talk").value = saved.talk || "";
+      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || "";
       (saved.tags || []).forEach(function (v) { form.querySelectorAll('[name="tag"]').forEach(function (el) { if (el.value === v) el.checked = true; }); });
       $("r-dish").value = saved.dish || "";
       ["arrive", "mode", "role"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
@@ -614,15 +612,13 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     form.addEventListener("change", cookUI); cookUI();
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim(), talk: $("r-talk").value.trim() };
+      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim() };
       d.diet = d.tags.concat(d.other ? [d.other] : []).join(T.diet_sep);
       var cook = d.arrive === "14" || d.arrive === "16";
       d.role = cook ? (fd.get("role") || "") : ""; d.dish = d.role === "chef" ? $("r-dish").value.trim() : "";
       if (!d.name || !d.arrive || !d.mode) return;
       $("r-send").disabled = true; msg.textContent = "";
-      rpc("bday_rsvp_save3", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish, p_talk: d.talk }).catch(function () {
-        return rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish });
-      }).catch(function () {
+      rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish }).catch(function () {
         return rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet });
       }).then(function () {
         try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}

@@ -352,8 +352,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       <form id="rsvp-form" class="form">
         <label class="fl" for="r-name">名字</label>
         <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
-        <label class="fl" for="r-talk">可以找我聊<small>选填，会写在你的卡片上</small></label>
-        <input id="r-talk" type="text" maxlength="40" placeholder="滑雪、猫、哪家火锅好吃…">
         <fieldset><legend class="fl">大概几点到</legend>
           <div class="chips">
             <label><input type="radio" name="arrive" value="16" required><span>下午 4 点，做饭</span></label>
@@ -590,7 +588,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     var sec = $("rsvp"), form = $("rsvp-form"), msg = $("r-msg"), RK = "bday-2026-rsvp";
     sec.hidden = false;
     try { var saved = JSON.parse(localStorage.getItem(RK) || "null"); if (saved) {
-      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || ""; $("r-talk").value = saved.talk || "";
+      $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || "";
       (saved.tags || []).forEach(function (v) { form.querySelectorAll('[name="tag"]').forEach(function (el) { if (el.value === v) el.checked = true; }); });
       $("r-dish").value = saved.dish || "";
       ["arrive", "mode", "role"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
@@ -614,15 +612,13 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     form.addEventListener("change", cookUI); cookUI();
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim(), talk: $("r-talk").value.trim() };
+      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim() };
       d.diet = d.tags.concat(d.other ? [d.other] : []).join(T.diet_sep);
       var cook = d.arrive === "14" || d.arrive === "16";
       d.role = cook ? (fd.get("role") || "") : ""; d.dish = d.role === "chef" ? $("r-dish").value.trim() : "";
       if (!d.name || !d.arrive || !d.mode) return;
       $("r-send").disabled = true; msg.textContent = "";
-      rpc("bday_rsvp_save3", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish, p_talk: d.talk }).catch(function () {
-        return rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish });
-      }).catch(function () {
+      rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish }).catch(function () {
         return rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet });
       }).then(function () {
         try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}
