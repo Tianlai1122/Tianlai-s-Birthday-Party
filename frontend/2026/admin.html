@@ -102,7 +102,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
 (function () {
   "use strict";
   var SB_URL = "https://ckzfcplwgpniaosxbrkg.supabase.co", SB_KEY = "sb_publishable_5YQNSlzqL1OonmQBKrl0AQ_NAX582Yx";
-  var ARRIVE = { "14": "下午 2 点买菜", "16": "下午 4 点做饭", "1930": "晚上 7 点半", "21": "晚上 9 点后" };
+  var ARRIVE = { "14": "下午 2 点买菜", "16": "下午 4 点做饭", "1930": "晚上 7 点半", "21": "晚上 9 点后", "remote": "远程参加" };
   var MODE = { dodge: "逃酒", sip: "小酌", all: "不醉不归", sleep: "睡 Tianlai 家" };
   var ROLE = { chef: "大厨", helper: "打下手", "": "" };
   function $(id) { return document.getElementById(id); }
@@ -126,7 +126,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
   }
   function render() {
     var cooks = rows.filter(function (r) { return r.arrive === "14" || r.arrive === "16"; });
-    $("tiles").innerHTML = [[rows.length, "人报名"], [cooks.length, "人下午来做饭"], [rows.length - cooks.length, "人只来晚上"],
+    $("tiles").innerHTML = [[rows.length, "人报名"], [cooks.length, "人下午来做饭"], [rows.filter(function (r) { return r.arrive === "1930" || r.arrive === "21"; }).length, "人只来晚上"], [rows.filter(function (r) { return r.arrive === "remote"; }).length, "人远程"],
       [rows.filter(function (r) { return r.role === "chef"; }).length, "位大厨"], [rows.filter(function (r) { return r.mode === "sleep"; }).length, "人要睡你家"]]
       .map(function (t) { return '<div class="card tile"><b>' + t[0] + "</b><span>" + t[1] + "</span></div>"; }).join("");
     kv($("by-arrive"), count(rows, "arrive", ARRIVE), "还没人");
