@@ -124,6 +124,23 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .g b{display:block;margin-top:6px;font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.05;overflow-wrap:anywhere}
 .g em{display:inline-block;margin-top:7px;font-style:normal;font-size:12.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:999px;padding:1px 9px;line-height:1.5;overflow-wrap:anywhere}
 .g p{margin-top:7px;font-size:14px;line-height:1.45;color:var(--soft);overflow-wrap:anywhere}
+/* reactions under each card: tap an emoji, tap the count to see who */
+.rx{display:flex;justify-content:center;gap:5px;margin-top:10px}
+.rx button{appearance:none;position:relative;display:flex;align-items:center;gap:3px;border:0;background:#fff;color:var(--ink);font:inherit;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 7px;min-height:36px;border-radius:999px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.16)}
+.rx button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.rx img{width:24px;height:24px;display:block}
+.rx .emo{display:block;width:24px;height:24px;font-style:normal;font-size:19px;line-height:24px;text-align:center}
+.rx button.pop img{animation:rxpop .45s cubic-bezier(.3,1.6,.5,1)}
+.rx .fly{position:absolute;left:50%;bottom:60%;width:30px;height:30px;margin-left:-15px;pointer-events:none;animation:rxfly .9s ease-out forwards}
+@keyframes rxpop{0%{transform:scale(1)}40%{transform:scale(1.7) rotate(-12deg)}100%{transform:scale(1)}}
+@keyframes rxfly{0%{transform:translateY(0) scale(.8);opacity:1}100%{transform:translateY(-70px) scale(1.5) rotate(14deg);opacity:0}}
+.rx-n{appearance:none;display:block;margin:7px auto 0;border:0;background:transparent;padding:2px 4px;font:inherit;font-size:12.5px;color:var(--soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.g .rx-names{margin-top:4px;font-size:13px;line-height:1.6;color:var(--ink);text-align:left;display:inline-block}
+.rx-ask{display:flex;gap:6px;margin-top:8px}
+.rx-ask input{flex:1;min-width:0;font:inherit;font-size:14px;padding:6px 9px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
+.rx-ask button{appearance:none;border:0;border-radius:10px;background:var(--ink);color:#fff;font:inherit;font-size:14px;font-weight:700;padding:0 12px;cursor:pointer}
+.rx button:focus-visible,.rx-n:focus-visible,.rx-ask input:focus-visible,.rx-ask button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.rx button.pop img{animation:none}.rx .fly{display:none}}
 @media (min-width:560px){.gs{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .teams li{height:80px;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
 .teams span{margin-left:0;text-align:left;font-size:14px}
@@ -302,6 +319,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <section class="page" id="guests" hidden>
     <h2 class="hd sec">今晚有谁</h2>
     <ul class="gs" id="guest-list"></ul>
+    <p class="credit" id="emoji-credit" hidden>会动的表情：Google Noto Emoji · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit">CC BY 4.0</a></p>
   </section>
 
   <section class="page" id="teams" hidden>
@@ -392,7 +410,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "耍起！", "note": "see you<br>there!", "music_t": "肖邦 · 第二钢琴协奏曲 · 第二乐章", "play_l": "播放或暂停音乐", "seek_l": "播放进度", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "p1_when": "下午 4 点", "p1_say": "想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，三四个人就够，想去的跟我说。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "guests_h": "今晚有谁", "f_arrive": "大概几点到", "a14": "下午 2 点买菜<small>三四个人就够<\/small>", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "aremote": "远程参加", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "喝到直接睡在 Tianlai 家", "f_diet": "忌口", "diet_note": "可以多选，没有就不选。只有我看得到", "diet_ph": "还有别的？写这儿", "diet_sep": "、", "diet": ["我是 foodie，啥都吃", "素食", "不吃猪肉", "不吃牛肉", "不吃辣", "不吃香菜", "海鲜过敏", "鸡蛋过敏", "坚果过敏", "乳糖不耐"], "send": "提交", "sent": "收到了！想改就再交一次。", "send_fail": "没交上，再试一次。", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "f_role": "做饭你想", "role_chef": "我来当大厨", "role_helper": "我打下手", "dish_ph": "想做什么菜？", "chef_tag": "大厨", "teams_h": "厨房分组", "teams_say": "两三个人一组，一起做一道菜。", "dish_tbd": "做什么到时候商量", "arrive_s": {"14": "下午 2 点买菜", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后", "remote": "远程参加"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "喝到睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 4 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
+var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "耍起！", "note": "see you<br>there!", "music_t": "肖邦 · 第二钢琴协奏曲 · 第二乐章", "play_l": "播放或暂停音乐", "seek_l": "播放进度", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "p1_when": "下午 4 点", "p1_say": "想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，三四个人就够，想去的跟我说。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "guests_h": "今晚有谁", "rx": {"like": "赞", "lol": "笑死", "love": "爱了"}, "rx_n": "{n} 人点过", "rx_ask": "先写个名字", "rx_ph": "名字", "rx_ok": "好", "emoji_credit": "会动的表情：Google Noto Emoji", "f_arrive": "大概几点到", "a14": "下午 2 点买菜<small>三四个人就够<\/small>", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "aremote": "远程参加", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "喝到直接睡在 Tianlai 家", "f_diet": "忌口", "diet_note": "可以多选，没有就不选。只有我看得到", "diet_ph": "还有别的？写这儿", "diet_sep": "、", "diet": ["我是 foodie，啥都吃", "素食", "不吃猪肉", "不吃牛肉", "不吃辣", "不吃香菜", "海鲜过敏", "鸡蛋过敏", "坚果过敏", "乳糖不耐"], "send": "提交", "sent": "收到了！想改就再交一次。", "send_fail": "没交上，再试一次。", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "f_role": "做饭你想", "role_chef": "我来当大厨", "role_helper": "我打下手", "dish_ph": "想做什么菜？", "chef_tag": "大厨", "teams_h": "厨房分组", "teams_say": "两三个人一组，一起做一道菜。", "dish_tbd": "做什么到时候商量", "arrive_s": {"14": "下午 2 点买菜", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后", "remote": "远程参加"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "喝到睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 4 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -515,16 +533,85 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
       }).catch(function () { msg.textContent = T.send_fail; }).then(function () { $("r-send").disabled = false; });
     });
     list();
-    /* guest cards the host wrote in the back office */
-    rpc("bday_guests_get").then(function (gs) {
-      gs = (gs || []).filter(function (g) { return g && g.name; });
-      if (!gs.length) return;
-      $("guest-list").innerHTML = gs.map(function (g) {
-        var ok = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(g.photo || "");
-        return '<li class="g"><div class="g-ph">' + (ok ? '<img src="' + g.photo + '" alt="" loading="lazy">' : "<span aria-hidden=\"true\">" + esc(Array.from(g.name)[0] || "") + "</span>") + "</div><b>" + esc(g.name) + "</b>" +
-          (g.title ? "<em>" + esc(g.title) + "</em>" : "") + (g.line ? "<p>" + esc(g.line) + "</p>" : "") + "</li>";
+    /* guest cards the host wrote in the back office, each with emoji reactions anyone can tap */
+    var EMO = [["like", "1f44d", "👍"], ["lol", "1f923", "🤣"], ["love", "2764_fe0f", "❤️"]];
+    var guests = [], reacts = null, openNames = {}, asking = null;
+    function emoSrc(code) { return "https://fonts.gstatic.com/s/e/notoemoji/latest/" + code + "/512.webp"; }
+    function whoOf(g, e) { return ((reacts || {})[g] || {})[e] || []; }
+    function rxHTML(g) {
+      if (!reacts) return "";
+      var people = {}, names = [];
+      var btns = EMO.map(function (em) {
+        var who = whoOf(g, em[0]), mine = !!name && who.indexOf(name) >= 0;
+        who.forEach(function (w) { people[w] = 1; });
+        if (who.length) names.push(em[2] + " " + who.map(esc).join(T.diet_sep));
+        return '<button type="button" data-e="' + em[0] + '" aria-pressed="' + mine + '" aria-label="' + esc(T.rx[em[0]] + (who.length ? " " + who.length : "")) + '">' +
+          '<img src="' + emoSrc(em[1]) + '" alt="' + em[2] + '" width="24" height="24" loading="lazy">' + (who.length ? "<span>" + who.length + "</span>" : "") + "</button>";
       }).join("");
+      return '<div class="rx">' + btns + "</div>" +
+        (asking === g ? '<form class="rx-ask"><input type="text" maxlength="24" placeholder="' + esc(T.rx_ph) + '" aria-label="' + esc(T.rx_ask) + '"><button type="submit">' + esc(T.rx_ok) + "</button></form>" : "") +
+        (names.length ? '<button type="button" class="rx-n" aria-expanded="' + !!openNames[g] + '">' + esc(T.rx_n.replace("{n}", Object.keys(people).length)) + "</button>" +
+          (openNames[g] ? '<p class="rx-names">' + names.join("<br>") + "</p>" : "") : "");
+    }
+    function cardInner(g) {
+      var ok = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(g.photo || "");
+      return '<div class="g-ph">' + (ok ? '<img src="' + g.photo + '" alt="" loading="lazy">' : "<span aria-hidden=\"true\">" + esc(Array.from(g.name)[0] || "") + "</span>") + "</div><b>" + esc(g.name) + "</b>" +
+        (g.title ? "<em>" + esc(g.title) + "</em>" : "") + (g.line ? "<p>" + esc(g.line) + "</p>" : "") + '<div class="rx-box">' + rxHTML(g.name) + "</div>";
+    }
+    function drawRx(g) {
+      var li = Array.prototype.filter.call($("guest-list").children, function (x) { return x.dataset.g === g; })[0];
+      if (li) li.querySelector(".rx-box").innerHTML = rxHTML(g);
+      return li;
+    }
+    function loadRx() {
+      return rpc("bday_react_list").then(function (rows) {
+        var m = {};
+        (rows || []).forEach(function (r) { ((m[r.guest] = m[r.guest] || {})[r.emoji] = m[r.guest][r.emoji] || []).push(r.who); });
+        reacts = m; $("emoji-credit").hidden = false;
+        guests.forEach(function (g) { drawRx(g.name); });
+      }).catch(function () {});
+    }
+    function react(g, e) {
+      var list = ((reacts[g] = reacts[g] || {})[e] = reacts[g][e] || []), at = list.indexOf(name), adding = at < 0;
+      if (adding) list.push(name); else list.splice(at, 1);
+      var li = drawRx(g), b = li && li.querySelector('[data-e="' + e + '"]');
+      if (b && adding) {
+        b.classList.add("pop");
+        var src = b.querySelector("img, .emo"), fly = src.cloneNode(true); fly.className = (src.tagName === "IMG" ? "" : "emo ") + "fly"; fly.removeAttribute("loading"); b.appendChild(fly);
+        fly.addEventListener("animationend", function () { fly.remove(); });
+      }
+      rpc("bday_react_toggle", { p_guest: g, p_emoji: e, p_who: name }).catch(function () { return loadRx(); });
+    }
+    $("guest-list").addEventListener("click", function (ev) {
+      var li = ev.target.closest("li.g"); if (!li || !reacts) return;
+      var g = li.dataset.g, b = ev.target.closest(".rx button");
+      if (b) {
+        if (!name) { asking = g; li.dataset.want = b.dataset.e; drawRx(g); li.querySelector(".rx-ask input").focus(); return; }
+        react(g, b.dataset.e); return;
+      }
+      if (ev.target.closest(".rx-n")) { openNames[g] = !openNames[g]; drawRx(g); li.querySelector(".rx-n").focus(); }
+    });
+    /* if the animated emoji can't load, fall back to the plain one */
+    $("guest-list").addEventListener("error", function (ev) {
+      var im = ev.target;
+      if (!im || im.tagName !== "IMG" || !im.closest(".rx")) return;
+      var s = document.createElement("i"); s.className = "emo"; s.textContent = im.alt; im.replaceWith(s);
+    }, true);
+    $("guest-list").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var li = ev.target.closest("li.g"), v = ev.target.querySelector("input").value.trim().slice(0, 24);
+      if (!li || !v) return;
+      setName(v); asking = null;
+      if (!$("r-name").value) $("r-name").value = v;
+      react(li.dataset.g, li.dataset.want || "like");
+    });
+    rpc("bday_guests_get").then(function (gs) {
+      guests = (gs || []).filter(function (g) { return g && g.name; });
+      if (!guests.length) return;
+      var ul = $("guest-list"); ul.innerHTML = "";
+      guests.forEach(function (g) { var li = document.createElement("li"); li.className = "g"; li.dataset.g = g.name; li.innerHTML = cardInner(g); ul.appendChild(li); });
       $("guests").hidden = false;
+      return loadRx();
     }).catch(function () {});
     rpc("bday_teams_get").then(function (teams) {
       if (!teams || !teams.length) return;
