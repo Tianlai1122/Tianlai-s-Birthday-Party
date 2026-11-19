@@ -74,13 +74,35 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .two p.say{margin-top:6px}
 .sub{margin-top:34px;font-weight:800;font-size:17px}
 .list{list-style:none;margin:6px 0 0;padding:0;columns:2;column-gap:28px}
-.list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16);break-inside:avoid;font-weight:500}
-.list svg{flex:none;color:var(--pop)}
+.list li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16);break-inside:avoid;font-weight:500}
+.list i{font-style:normal;font-size:19px;line-height:1}
 
 .dress{display:grid;grid-template-columns:1fr 116px;gap:12px;align-items:center;margin-top:30px}
 .dress .sub{margin-top:0}
 .dress .say{margin-top:4px}
 .dress .stk{width:116px;transform:rotate(6deg)}
+
+/* ---------- rsvp ---------- */
+.form{display:flex;flex-direction:column;margin-top:8px}
+.form fieldset{border:0;margin:20px 0 0;padding:0;min-width:0}
+.form legend.fl{margin:0 0 8px}
+.fl{display:block;margin:20px 0 8px;padding:0;font-weight:800;font-size:16px}
+.form input[type=text]{width:100%;font:inherit;font-weight:700;padding:10px 4px;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink)}
+.form input[type=text]::placeholder{color:#9A9A95;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative;cursor:pointer}
+.chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chips span{display:block;padding:9px 14px;border:2px solid var(--ink);border-radius:999px;font-weight:700;font-size:15px;background:transparent}
+.chips input:checked + span{background:var(--ink);color:#fff}
+.chips input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
+.form .bigbtn{margin-top:26px;width:100%}
+.form .bigbtn:disabled{opacity:.5}
+.form-msg{min-height:1.6em;margin-top:10px;font-weight:700}
+.who{list-style:none;margin:6px 0 0;padding:0}
+.who li{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid rgba(29,29,31,.16)}
+.who b{font-weight:800}
+.who span{margin-left:auto;font-size:14px;color:var(--soft);text-align:right}
+.who .none{display:block;color:var(--soft);border:0}
 
 /* ---------- buttons: little stickers ---------- */
 .bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
@@ -111,10 +133,11 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .ph img{display:block;width:100%;height:100%;object-fit:cover}
 .pola figcaption{margin-top:8px;font-family:var(--hand);font-weight:600;font-size:21px;line-height:1.1;text-align:center}
 .credit{margin-top:16px;font-size:13px;color:var(--soft)}
-.venue-link{display:block;margin-top:22px;text-decoration:none}
-.venue-link b{font-weight:800;font-size:18px}
-.venue-link span{display:block}
-.venue-link .go{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.tour-tabs{display:flex;gap:16px;margin-top:8px}
+.tour-tabs button{appearance:none;font:inherit;font-size:15px;font-weight:700;padding:0 0 4px;border:0;background:transparent;color:#9A9A95;cursor:pointer}
+.tour-tabs button[aria-selected="true"]{color:var(--ink);box-shadow:0 3px 0 var(--pop)}
+.tour{margin-top:12px;background:#fff;padding:8px;box-shadow:0 2px 3px rgba(0,0,0,.16),0 10px 18px rgba(0,0,0,.1);transform:rotate(-.6deg)}
+.tour iframe{display:block;width:100%;aspect-ratio:4/3;border:0;background:#1d1d1f}
 .lightbox{position:fixed;inset:0;z-index:40;background:rgba(20,20,22,.92);display:flex;align-items:center;justify-content:center;padding:16px}
 .lightbox[hidden]{display:none}
 .lightbox img{max-width:100%;max-height:100%;border:8px solid #fff}
@@ -199,6 +222,37 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </header>
 
 <main>
+  <section class="page" id="rsvp" hidden>
+    <h2 class="hd sec">Before you come</h2>
+    <p class="say">So I know how much food and drink to get.</p>
+    <form id="rsvp-form" class="form">
+      <label class="fl" for="r-name">Name</label>
+      <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
+      <fieldset><legend class="fl">Around what time?</legend>
+        <div class="chips">
+          <label><input type="radio" name="arrive" value="14" required><span>2 PM, grocery run</span></label>
+          <label><input type="radio" name="arrive" value="16"><span>4 PM, cooking</span></label>
+          <label><input type="radio" name="arrive" value="1930"><span>7:30 PM</span></label>
+          <label><input type="radio" name="arrive" value="21"><span>After 9 PM</span></label>
+        </div>
+      </fieldset>
+      <fieldset><legend class="fl">Tonight I'm</legend>
+        <div class="chips">
+          <label><input type="radio" name="mode" value="dodge" required><span>Dodging drinks</span></label>
+          <label><input type="radio" name="mode" value="sip"><span>A drink or two</span></label>
+          <label><input type="radio" name="mode" value="all"><span>Going all in</span></label>
+          <label><input type="radio" name="mode" value="sleep"><span>Sleeping at Tianlai's</span></label>
+        </div>
+      </fieldset>
+      <label class="fl" for="r-diet">Anything you can't eat?</label>
+      <input id="r-diet" type="text" maxlength="200" placeholder="Skip if none. Only I can see this.">
+      <button class="bigbtn" type="submit" id="r-send">Send</button>
+      <p class="form-msg" id="r-msg" role="status"></p>
+    </form>
+    <p class="sub">Who's coming <span id="who-n"></span></p>
+    <ul class="who" id="who"></ul>
+  </section>
+
   <section class="page" id="plan">
     <h2 class="hd sec">The plan</h2>
     <div class="two">
@@ -218,7 +272,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       </div>
     </div>
     <p class="sub">Things to play</p>
-    <ul class="list"><li><span>Switch</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>Board games</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>Pool</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>Ping pong</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>Mini golf</span><svg width="18" height="18"><use href="#s-star"/></svg></li><li><span>Drinks & snacks</span><svg width="18" height="18"><use href="#s-star"/></svg></li></ul>
+    <ul class="list"><li><i aria-hidden="true">🎮</i><span>Switch</span></li><li><i aria-hidden="true">🎲</i><span>Board games</span></li><li><i aria-hidden="true">🎱</i><span>Pool</span></li><li><i aria-hidden="true">🏓</i><span>Ping pong</span></li><li><i aria-hidden="true">⚽</i><span>Foosball</span></li><li><i aria-hidden="true">⛳</i><span>Mini golf</span></li><li><i aria-hidden="true">🍻</i><span>Drinks & snacks</span></li></ul>
     <div class="dress">
       <div><p class="sub">Dress code</p><p class="say">Just look good.</p></div>
       <img class="stk" src="stk/mirror.webp" width="260" height="203" loading="lazy" alt="A fluffy white dog in an orange beanie looking in a mirror">
@@ -259,11 +313,13 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       </figure>
     </div>
     <p class="credit">Photos from Columbia. Tap to enlarge.</p>
-    <a class="venue-link" href="https://www.apartments.com/1440-amsterdam-ave-new-york-ny/vybcefg/" target="_blank" rel="noopener">
-      <b>1440 Amsterdam</b>
-      <span>Rooftop lounge and a music room.</span>
-      <span class="go">See photos ↗</span>
-    </a>
+    <p class="sub">1440 Amsterdam</p>
+    <div class="tour-tabs" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-tour="Fc3dWfzEcH9">Inside</button>
+      <button type="button" role="tab" aria-selected="false" data-tour="6HPNQ9vDfn3">Rooftop</button>
+    </div>
+    <div class="tour"><iframe id="tour" title="1440 Amsterdam 3D tour" src="https://my.matterport.com/show/?m=Fc3dWfzEcH9&amp;play=0&amp;qs=1&amp;brand=0" loading="lazy" allow="fullscreen; xr-spatial-tracking" allowfullscreen></iframe></div>
+    <p class="credit">Tap to walk around. 3D tour from 1440 Amsterdam's own site.</p>
   </section>
 
   <section class="page" id="board">
@@ -308,7 +364,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "It's my birthday this Saturday. Come hang out!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "2 PM", "p1_say": "Want to cook with us? Come in the afternoon. We shop around 2, start cooking after 4, and drink a little while we're at it. At 7 we head to 1440 together. Text me first if you're coming.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": ["Switch", "Board games", "Pool", "Ping pong", "Mini golf", "Drinks & snacks"], "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "2 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "v2_say": "Rooftop lounge and a music room.", "v2_go": "See photos ↗", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "It's my birthday this Saturday. Come hang out!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "2 PM", "p1_say": "Want to cook with us? Come in the afternoon. We shop around 2, start cooking after 4, and drink a little while we're at it. At 7 we head to 1440 together. Text me first if you're coming.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_a": "Inside", "tour_b": "Rooftop", "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Before you come", "rsvp_say": "So I know how much food and drink to get.", "f_name": "Name", "f_arrive": "Around what time?", "a14": "2 PM, grocery run", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "A drink or two", "m_all": "Going all in", "m_sleep": "Sleeping at Tianlai's", "f_diet": "Anything you can't eat?", "diet_ph": "Skip if none. Only I can see this.", "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "arrive_s": {"14": "2 PM", "16": "4 PM", "1930": "7:30 PM", "21": "after 9"}, "mode_s": {"dodge": "dodging drinks", "sip": "a drink or two", "all": "all in", "sleep": "sleeping over"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "2 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -366,8 +422,52 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   try { name = localStorage.getItem(KEY) || ""; } catch (e) {}
   function setName(v) { name = v; try { localStorage.setItem(KEY, v); } catch (e) {} }
 
-  /* scoreboard: shared through /api/board when storage is connected, otherwise kept on this phone */
-  var API = "../api/board", BOARDS = ["drinks", "dodges", "snacks"], LKEY = "bday-2026-board";
+  /* shared data lives in Supabase. The key below is the public "anon" key, which is meant to sit in a web page;
+     the tables are closed and only the bday_* functions can be called. Empty values: sign-up hidden, scores stay on this phone. */
+  var SB_URL = "", SB_KEY = "";
+  var SB = !!(SB_URL && SB_KEY);
+  function rpc(fn, args) {
+    return fetch(SB_URL.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, { method: "POST", cache: "no-store",
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify(args || {}) })
+      .then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) { return t ? JSON.parse(t) : null; });
+  }
+
+  /* sign-up: name, arrival and drinking plan are shown to everyone; the diet note is only readable in the Supabase dashboard */
+  (function () {
+    if (!SB) return;
+    var sec = $("rsvp"), form = $("rsvp-form"), msg = $("r-msg"), RK = "bday-2026-rsvp";
+    sec.hidden = false;
+    try { var saved = JSON.parse(localStorage.getItem(RK) || "null"); if (saved) {
+      $("r-name").value = saved.name || ""; $("r-diet").value = saved.diet || "";
+      ["arrive", "mode"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
+    } } catch (e) {}
+    if (!$("r-name").value && name) $("r-name").value = name;
+    function list() {
+      return rpc("bday_rsvp_list").then(function (rows) {
+        rows = rows || [];
+        $("who-n").textContent = rows.length ? "· " + rows.length : "";
+        $("who").innerHTML = rows.length ? rows.map(function (r) {
+          return "<li><b>" + esc(r.name) + "</b><span>" + esc((T.arrive_s[r.arrive] || "") + " · " + (T.mode_s[r.mode] || "")) + "</span></li>";
+        }).join("") : '<li class="none">' + esc(T.who_empty) + "</li>";
+      }).catch(function () {});
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), diet: $("r-diet").value.trim() };
+      if (!d.name || !d.arrive || !d.mode) return;
+      $("r-send").disabled = true; msg.textContent = "";
+      rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet }).then(function () {
+        try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}
+        setName(d.name); renderBoard();
+        msg.textContent = T.sent; burst(50, form.getBoundingClientRect().bottom - 40);
+        return list();
+      }).catch(function () { msg.textContent = T.send_fail; }).then(function () { $("r-send").disabled = false; });
+    });
+    list();
+  })();
+
+  /* scoreboard */
+  var BOARDS = ["drinks", "dodges", "snacks"], LKEY = "bday-2026-board";
   var local = { drinks: 0, dodges: 0, snacks: 0 };
   try { var lr = JSON.parse(localStorage.getItem(LKEY) || "null"); if (lr) BOARDS.forEach(function (k) { local[k] = +lr[k] || 0; }); } catch (e) {}
   var online = false, data = { drinks: {}, dodges: {}, snacks: {} }, tab = "drinks", hist = [], syncMsg = "";
@@ -387,11 +487,12 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     }).join("") : '<li class="empty-row">' + esc(T.nobody) + "</li>";
     $("sync").textContent = syncMsg || (online ? T.sync_on : T.sync_off);
   }
-  function take(d) { data = { drinks: d.drinks || {}, dodges: d.dodges || {}, snacks: d.snacks || {} }; }
   function pull() {
-    return fetch(API, { cache: "no-store" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
-      if (!d || !d.drinks) throw 0;
-      take(d); online = true; syncMsg = ""; renderBoard();
+    if (!SB) return Promise.reject(0);
+    return rpc("bday_board_get").then(function (rows) {
+      var d = { drinks: {}, dodges: {}, snacks: {} };
+      (rows || []).forEach(function (r) { if (d[r.board]) d[r.board][r.name] = r.n; });
+      data = d; online = true; syncMsg = ""; renderBoard();
     });
   }
   function send(k, delta) {
@@ -399,9 +500,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     if (!n) return;
     if (!online) { local[k] = Math.max(0, local[k] + delta); try { localStorage.setItem(LKEY, JSON.stringify(local)); } catch (e) {} renderBoard(); return; }
     data[k][n] = Math.max(0, (data[k][n] || 0) + delta); renderBoard();
-    fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ board: k, name: n, delta: delta }) })
-      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (d) { take(d); syncMsg = ""; renderBoard(); })
+    rpc("bday_board_add", { p_board: k, p_name: n, p_delta: delta }).then(function () { return pull(); })
       .catch(function () { data[k][n] = Math.max(0, (data[k][n] || 0) - delta); if (delta > 0) hist.pop(); syncMsg = T.sync_fail; renderBoard(); });
   }
   document.querySelectorAll("[data-add]").forEach(function (b) { b.addEventListener("click", function () { hist.push(b.dataset.add); send(b.dataset.add, 1); }); });
@@ -424,6 +523,14 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   });
   lb.addEventListener("click", function (e) { if (e.target !== lbImg) closeLb(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !lb.hidden) closeLb(); });
+
+  /* 3D tour tabs */
+  document.querySelectorAll("[data-tour]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("[data-tour]").forEach(function (o) { o.setAttribute("aria-selected", String(o === b)); });
+      $("tour").src = "https://my.matterport.com/show/?m=" + b.dataset.tour + "&play=0&qs=1&brand=0";
+    });
+  });
 
   /* copy buttons */
   document.querySelectorAll("[data-copy]").forEach(function (b) {
