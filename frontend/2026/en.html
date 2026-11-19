@@ -883,7 +883,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (picCount && picCount[p.name]) bits.push("📷 " + picCount[p.name]);
       if (n) bits.push(T.c_count.replace("{n}", n));
       var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode]].filter(Boolean).join(" · ");
-      return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + flagsHTML(p.flag) + (name && p.name === name ? '<i class="g-me">' + esc(T.me) + "</i>" : "") + "</b>" +
+      return '<button type="button" class="g-open"><span class="g-ph">' + photoHTML(p) + "</span><b>" + esc(p.name) + (name && p.name === name ? '<i class="g-me">' + esc(T.me) + "</i>" : "") + "</b>" +
         (meta ? '<span class="g-meta">' + esc(meta) + "</span>" : "") +
         (p.title ? "<em>" + esc(p.title) + "</em>" : "") + (one ? '<span class="g-one">' + esc(one) + "</span>" : "") +
         (bits.length ? '<span class="g-sum">' + bits.join("  ") + "</span>" : "") + "</button>";
