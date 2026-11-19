@@ -156,32 +156,9 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .namebox input{flex:1;min-width:150px;font:inherit;font-weight:700;padding:12px 4px;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent;color:var(--ink)}
 .namebox input::placeholder{color:#9A9A95;font-weight:500}
 
-/* ---------- board ---------- */
-.board-who{margin-top:16px;font-size:15px}
-.board-who b{font-weight:800}
-.counters{display:flex;flex-direction:column;gap:12px;margin-top:16px}
-.counters .bigbtn{justify-content:space-between;width:100%;background:#fff;color:var(--ink)}
-.counters .bigbtn:nth-child(1){transform:rotate(-.8deg)}
-.counters .bigbtn:nth-child(2){transform:rotate(.7deg)}
-.counters .bigbtn:nth-child(3){transform:rotate(-.5deg)}
-.counters .bigbtn:disabled{opacity:.5;cursor:default}
-.mine{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--soft);white-space:nowrap}
-.mine:empty{display:none}
-.undo{margin-top:14px}
+/* lined sheet */
 .sheet{position:relative;margin-top:56px;background:#fff repeating-linear-gradient(#fff 0 39px,rgba(29,29,31,.14) 39px 40px);padding:16px 18px 14px;transform:rotate(.8deg);box-shadow:0 2px 3px rgba(0,0,0,.16),0 10px 18px rgba(0,0,0,.1)}
 .sheet .tape{width:84px;height:26px;left:24px;top:-13px;transform:rotate(-5deg)}
-.sheet .stk{position:absolute;right:-10px;top:-50px;width:86px;transform:rotate(8deg)}
-.tabs{display:flex;gap:16px;height:40px;align-items:flex-end;padding-bottom:6px}
-.tabs button{appearance:none;font:inherit;font-size:15px;font-weight:700;padding:0;border:0;background:transparent;color:#9A9A95;cursor:pointer}
-.tabs button[aria-selected="true"]{color:var(--ink);box-shadow:0 3px 0 var(--pop)}
-.rank{list-style:none;margin:0;padding:0;min-height:120px}
-.rank li{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:6px;height:40px;font-family:var(--hand);font-weight:600;font-size:25px;line-height:1}
-.rank .pos{font-family:var(--cond);font-weight:600;font-size:15px;color:var(--soft)}
-.rank .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rank .ct{color:var(--blue)}
-.rank li.me .nm{text-decoration:underline;text-decoration-color:var(--pop);text-decoration-thickness:3px;text-underline-offset:4px}
-.rank .empty-row{display:flex;font-size:22px;color:var(--soft)}
-.sync{margin-top:16px;font-size:13px;color:var(--soft)}
 
 /* ---------- footer ---------- */
 footer.page{margin-top:90px;padding-bottom:70px;text-align:center}
@@ -233,6 +210,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     <p class="say">我好准备吃的喝的。</p>
     <div class="paper">
       <i class="tape" aria-hidden="true"></i>
+      <img class="stk" src="stk/drunk.webp" width="246" height="232" loading="lazy" alt="戴粉色帽子和墨镜的小白狗抱着酒杯躺着">
       <form id="rsvp-form" class="form">
         <label class="fl" for="r-name">名字</label>
         <input id="r-name" type="text" autocomplete="given-name" maxlength="24" required>
@@ -332,35 +310,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     <div class="tour"><iframe id="tour" title="1440 Amsterdam 3D 看房" src="https://my.matterport.com/show/?m=Fc3dWfzEcH9&amp;play=0&amp;qs=1&amp;brand=0" loading="lazy" allow="fullscreen; xr-spatial-tracking" allowfullscreen></iframe></div>
     <p class="credit">点一下就能在里面走。3D 来自 1440 Amsterdam 官网。</p>
   </section>
-
-  <section class="page" id="board">
-    <img class="stk corner" src="stk/drunk.webp" width="246" height="232" loading="lazy" alt="戴粉色帽子和墨镜的小白狗抱着酒杯躺着">
-    <h2 class="hd sec pad">排行榜</h2>
-    <p class="say pad">喝一杯、逃一次酒、吃一份，各点一下。</p>
-    <form class="namebox" id="board-name-form" hidden>
-      <label for="board-name" class="sr">你的名字</label>
-      <input id="board-name" type="text" placeholder="先输个名字" autocomplete="given-name">
-      <button class="btn" type="submit">确定</button>
-    </form>
-    <p class="board-who" id="board-who"></p>
-    <div class="counters">
-      <button type="button" class="bigbtn" data-add="drinks">喝了一杯 +1<span class="mine" id="mine-drinks"></span></button>
-      <button type="button" class="bigbtn" data-add="dodges">逃了一次酒 +1<span class="mine" id="mine-dodges"></span></button>
-      <button type="button" class="bigbtn" data-add="snacks">吃了一份 +1<span class="mine" id="mine-snacks"></span></button>
-    </div>
-    <button type="button" class="mini undo" id="board-undo">撤回上一下</button>
-    <div class="sheet">
-      <i class="tape" aria-hidden="true"></i>
-      <img class="stk" src="stk/judge.webp" width="285" height="284" loading="lazy" alt="留着大胡子的法官小白狗在敲法槌">
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" data-tab="drinks">酒量榜</button>
-        <button type="button" role="tab" data-tab="dodges">逃酒榜</button>
-        <button type="button" role="tab" data-tab="snacks">小馋猫榜</button>
-      </div>
-      <ol class="rank" id="rank" aria-live="polite"></ol>
-    </div>
-    <p class="sync" id="sync"></p>
-  </section>
 </main>
 
 <footer class="page">
@@ -428,13 +377,13 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
   }
   tick(); setInterval(tick, 1000);
 
-  /* the scoreboard name is shared by both language versions */
+  /* the name typed in the sign-up sheet is remembered across both language versions */
   var KEY = "bday-2026-name", name = "";
   try { name = localStorage.getItem(KEY) || ""; } catch (e) {}
   function setName(v) { name = v; try { localStorage.setItem(KEY, v); } catch (e) {} }
 
   /* shared data lives in Supabase. The key below is the public "anon" key, which is meant to sit in a web page;
-     the tables are closed and only the bday_* functions can be called. Empty values: sign-up hidden, scores stay on this phone. */
+     the tables are closed and only the bday_* functions can be called. Empty values: sign-up hidden. */
   var SB_URL = "https://ckzfcplwgpniaosxbrkg.supabase.co", SB_KEY = "sb_publishable_5YQNSlzqL1OonmQBKrl0AQ_NAX582Yx";
   var SB = !!(SB_URL && SB_KEY);
   function rpc(fn, args) {
@@ -480,62 +429,13 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
       $("r-send").disabled = true; msg.textContent = "";
       rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet }).then(function () {
         try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}
-        setName(d.name); renderBoard();
+        setName(d.name);
         msg.textContent = T.sent; burst(50, form.getBoundingClientRect().bottom - 40);
         return list();
       }).catch(function () { msg.textContent = T.send_fail; }).then(function () { $("r-send").disabled = false; });
     });
     list();
   })();
-
-  /* scoreboard */
-  var BOARDS = ["drinks", "dodges", "snacks"], LKEY = "bday-2026-board";
-  var local = { drinks: 0, dodges: 0, snacks: 0 };
-  try { var lr = JSON.parse(localStorage.getItem(LKEY) || "null"); if (lr) BOARDS.forEach(function (k) { local[k] = +lr[k] || 0; }); } catch (e) {}
-  var online = false, data = { drinks: {}, dodges: {}, snacks: {} }, tab = "drinks", hist = [], syncMsg = "";
-  function mine(k) { var n = name.trim(); return online ? (data[k][n] || 0) : local[k]; }
-  function renderBoard() {
-    var n = name.trim();
-    $("board-name-form").hidden = !!n;
-    $("board-who").innerHTML = n ? esc(T.you_are) + "<b>" + esc(n) + "</b>" : "";
-    BOARDS.forEach(function (k) { $("mine-" + k).textContent = n ? T.mine.replace("{c}", mine(k)) : ""; });
-    document.querySelectorAll("[data-add]").forEach(function (b) { b.disabled = !n; });
-    $("board-undo").disabled = !hist.length;
-    document.querySelectorAll("[data-tab]").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.tab === tab)); });
-    var rows = online ? Object.keys(data[tab]).map(function (k) { return [k, data[tab][k]]; }) : (n && local[tab] ? [[n, local[tab]]] : []);
-    rows = rows.filter(function (r) { return r[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 10);
-    $("rank").innerHTML = rows.length ? rows.map(function (r, i) {
-      return '<li class="' + (r[0] === n ? "me" : "") + '"><span class="pos">' + (i + 1) + '</span><span class="nm">' + esc(r[0]) + '</span><span class="ct">' + r[1] + "</span></li>";
-    }).join("") : '<li class="empty-row">' + esc(T.nobody) + "</li>";
-    $("sync").textContent = syncMsg || (online ? T.sync_on : T.sync_off);
-  }
-  function pull() {
-    if (!SB) return Promise.reject(0);
-    return rpc("bday_board_get").then(function (rows) {
-      var d = { drinks: {}, dodges: {}, snacks: {} };
-      (rows || []).forEach(function (r) { if (d[r.board]) d[r.board][r.name] = r.n; });
-      data = d; online = true; syncMsg = ""; renderBoard();
-    });
-  }
-  function send(k, delta) {
-    var n = name.trim();
-    if (!n) return;
-    if (!online) { local[k] = Math.max(0, local[k] + delta); try { localStorage.setItem(LKEY, JSON.stringify(local)); } catch (e) {} renderBoard(); return; }
-    data[k][n] = Math.max(0, (data[k][n] || 0) + delta); renderBoard();
-    rpc("bday_board_add", { p_board: k, p_name: n, p_delta: delta }).then(function () { return pull(); })
-      .catch(function () { data[k][n] = Math.max(0, (data[k][n] || 0) - delta); if (delta > 0) hist.pop(); syncMsg = T.sync_fail; renderBoard(); });
-  }
-  document.querySelectorAll("[data-add]").forEach(function (b) { b.addEventListener("click", function () { hist.push(b.dataset.add); send(b.dataset.add, 1); }); });
-  $("board-undo").addEventListener("click", function () { var k = hist.pop(); if (k) send(k, -1); });
-  document.querySelectorAll("[data-tab]").forEach(function (b) { b.addEventListener("click", function () { tab = b.dataset.tab; renderBoard(); }); });
-  $("board-name-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var v = $("board-name").value.trim();
-    if (!v) return;
-    setName(v); renderBoard();
-  });
-  renderBoard();
-  pull().then(function () { setInterval(function () { if (document.visibilityState === "visible") pull().catch(function () {}); }, 6000); }).catch(function () { online = false; renderBoard(); });
 
   /* photo lightbox */
   var lb = $("lightbox"), lbImg = $("lb-img"), from = null;
