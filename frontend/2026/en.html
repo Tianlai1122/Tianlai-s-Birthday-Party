@@ -524,12 +524,24 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       paint();
     }
     function open(v) { card.hidden = !v; btn.setAttribute("aria-expanded", v ? "true" : "false"); }
-    btn.addEventListener("click", function () {
-      open(true);
-      if (!a.paused) { a.pause(); return; }
+    function start() {
       if (first) seek(START);
-      var p = a.play(); if (p && p.catch) p.catch(function () { btn.setAttribute("aria-pressed", "false"); });
+      var p = a.play();
+      return p && p.catch ? p.catch(function (e) { btn.setAttribute("aria-pressed", "false"); throw e; }) : Promise.resolve();
+    }
+    btn.addEventListener("click", function () {
+      open(true); disarm();
+      if (!a.paused) { a.pause(); return; }
+      start().catch(function () {});
     });
+    /* play as soon as the page opens; where the browser wants a tap first, the first tap anywhere starts it */
+    var GEST = ["pointerdown", "touchend", "keydown"], armed = false;
+    function onGesture(e) { if ($("player").contains(e.target)) return; disarm(); start().catch(function () {}); }
+    function arm() { if (armed) return; armed = true; GEST.forEach(function (t) { document.addEventListener(t, onGesture, true); }); }
+    function disarm() { if (!armed) return; armed = false; GEST.forEach(function (t) { document.removeEventListener(t, onGesture, true); }); }
+    a.addEventListener("playing", disarm);
+    start().catch(arm);
+    document.addEventListener("WeixinJSBridgeReady", function () { if (a.paused && armed) start().catch(function () {}); });
     document.addEventListener("click", function (e) { if (!$("player").contains(e.target)) open(false); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") open(false); });
     a.addEventListener("play", function () { btn.setAttribute("aria-pressed", "true"); });
