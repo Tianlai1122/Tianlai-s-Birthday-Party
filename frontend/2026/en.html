@@ -509,7 +509,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   /* music: first play starts at the big swell; nothing loads until play is pressed */
   (function () {
     var a = $("audio"), btn = $("play"), card = $("p-card"), bar = $("p-bar"), fill = $("p-fill"), now = $("p-now"), dur = $("p-dur");
-    var START = 298, LEN = 567, first = true, pending = null;
+    var START = 47, LEN = 567, first = true, pending = null;
     function mmss(t) { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ":" + ("0" + t % 60).slice(-2); }
     function pos() { return pending != null ? pending : (first ? START : a.currentTime); }
     function paint() {
