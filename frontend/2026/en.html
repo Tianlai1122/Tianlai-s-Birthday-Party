@@ -164,12 +164,16 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .c-add label{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--soft)}
 .c-add .c-msg{grid-column:1/-1;font-size:13px;color:var(--ink);font-weight:700;min-height:0}
 /* the Tianlai toy: a small figure pinned bottom right, opening a sheet from the bottom */
-.tlf{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:35;display:flex;align-items:flex-end;gap:2px;transition:transform .25s ease,opacity .25s ease}
-.tlf.away{transform:translateX(130%);opacity:0;pointer-events:none}
+.tlf{position:fixed;right:0;top:33vh;z-index:35;display:flex;align-items:flex-end;gap:2px;transition:transform .25s ease,opacity .25s ease}
+.tlf.left{flex-direction:row-reverse}
+.tlf.away{transform:scale(.5);opacity:0;pointer-events:none}
+.tlf-btn{touch-action:none}
+.tlf.drag .tlf-btn{cursor:grabbing}
 .tlf-btn{appearance:none;border:0;background:transparent;padding:0;cursor:pointer;line-height:0}
 .tlf-btn:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
-#tlf-cv{width:60px;height:72px;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.25)) drop-shadow(0 6px 10px rgba(0,0,0,.14))}
-.tlf-tick{max-width:min(210px,calc(100vw - 100px));margin:0 0 34px;padding:7px 11px;background:#fff;box-shadow:0 2px 3px rgba(0,0,0,.16),0 8px 16px rgba(0,0,0,.1);font-family:var(--hand);font-weight:700;font-size:21px;line-height:1.15;transform:rotate(-3deg);pointer-events:none}
+#tlf-cv{width:80px;height:96px;image-rendering:pixelated;image-rendering:crisp-edges;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,.25)) drop-shadow(0 6px 10px rgba(0,0,0,.14))}
+.tlf.left .tlf-tick{margin:0 0 54px -8px}
+.tlf-tick{max-width:min(210px,calc(100vw - 110px));margin:0 -8px 54px 0;padding:7px 11px;background:#fff;box-shadow:0 2px 3px rgba(0,0,0,.16),0 8px 16px rgba(0,0,0,.1);font-family:var(--hand);font-weight:700;font-size:21px;line-height:1.15;transform:rotate(-3deg);pointer-events:none}
 .tlf-tick[hidden]{display:none}
 .tl-sheet{position:fixed;top:auto;right:0;bottom:0;left:0;margin:0 auto;width:min(520px,100%);max-width:100%;max-height:88dvh;border:0;padding:24px 22px calc(26px + env(safe-area-inset-bottom));background:var(--paper);color:var(--ink);overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
 .tl-sheet::backdrop{background:rgba(20,20,22,.45)}
@@ -177,8 +181,10 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .tl-sheet .lb-close{top:10px;right:10px}
 .tl-sheet .hd{padding-right:54px}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
-@media (min-width:700px){#tlf-cv{width:80px;height:96px}.tlf{right:18px;bottom:18px}}
-@media (prefers-reduced-motion:reduce){.tl-sheet[open]{animation:none}.tlf{transition:none}}
+.tlf-btn.hop{animation:tlhop .95s ease-out}
+@keyframes tlhop{0%,100%{transform:translateY(0)}14%{transform:translateY(-18px)}30%{transform:translateY(0)}46%{transform:translateY(-11px)}62%{transform:translateY(0)}}
+@media (min-width:700px){#tlf-cv{width:120px;height:144px}.tlf{right:8px}.tlf-tick{margin-bottom:84px;font-size:23px}}
+@media (prefers-reduced-motion:reduce){.tl-sheet[open]{animation:none}.tlf{transition:none}.tlf-btn.hop{animation:none}}
 .tl-stage{position:relative;margin-top:14px;display:flex;flex-direction:column;align-items:center}
 .tl-name{font-family:var(--hand);font-weight:700;font-size:34px;line-height:1;transform:rotate(-3deg);margin-bottom:2px}
 .tl-say{position:absolute;left:calc(50% + 48px);top:66px;width:calc(50% - 50px);font-family:var(--hand);font-weight:700;font-size:27px;line-height:1.1;text-align:left;transform:rotate(-4deg);transform-origin:left top}
@@ -1140,7 +1146,43 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       if (lastSeen !== null && key !== lastSeen) note(lastText());
       lastSeen = key;
     }
+    /* until someone has opened him once, he hops twice every few seconds to get noticed */
+    var HK = "bday-2026-tl-met", met = false, fbtn = $("tlf-btn");
+    try { met = localStorage.getItem(HK) === "1"; } catch (e) {}
+    function hop() {
+      if (met || reduce || document.hidden || sheet.open || fab.classList.contains("away") || level() === 3 || busy()) return;
+      fbtn.classList.remove("hop"); void fbtn.offsetWidth; fbtn.classList.add("hop");
+    }
+    setTimeout(hop, 3500); setInterval(hop, 7000);
+    /* he starts on the right edge a third of the way down, and can be dragged anywhere; where he is left is remembered */
+    var PK = "bday-2026-tl-pos", posF = null, dragging = false, moved = false, grab = null;
+    try { posF = JSON.parse(localStorage.getItem(PK) || "null"); } catch (e) {}
+    function place() {
+      if (!posF) { fab.style.left = fab.style.top = fab.style.right = ""; fab.classList.remove("left"); return; }
+      var w = fbtn.offsetWidth, h = fbtn.offsetHeight, x = Math.round(posF[0] * Math.max(0, innerWidth - w)), y = Math.round(posF[1] * Math.max(0, innerHeight - h));
+      var onLeft = x + w / 2 < innerWidth / 2;
+      fab.classList.toggle("left", onLeft);
+      fab.style.right = onLeft ? "auto" : (innerWidth - x - w) + "px"; fab.style.left = onLeft ? x + "px" : "auto"; fab.style.top = y + "px";
+    }
+    fbtn.addEventListener("pointerdown", function (e) { var b = fbtn.getBoundingClientRect(); grab = [e.clientX, e.clientY, e.clientX - b.left, e.clientY - b.top]; moved = false; });
+    window.addEventListener("pointermove", function (e) {
+      if (!grab) return;
+      if (!dragging && Math.abs(e.clientX - grab[0]) + Math.abs(e.clientY - grab[1]) < 8) return;
+      if (!dragging) { dragging = moved = true; fab.classList.add("drag"); fbtn.classList.remove("hop"); tick.hidden = true; try { fbtn.setPointerCapture(e.pointerId); } catch (x) {} }
+      var w = fbtn.offsetWidth, h = fbtn.offsetHeight;
+      posF = [Math.max(0, Math.min(1, (e.clientX - grab[2]) / Math.max(1, innerWidth - w))), Math.max(0, Math.min(1, (e.clientY - grab[3]) / Math.max(1, innerHeight - h)))];
+      place();
+    });
+    function drop() {
+      grab = null; if (!dragging) return;
+      dragging = false; fab.classList.remove("drag");
+      try { localStorage.setItem(PK, JSON.stringify(posF)); } catch (e) {}
+    }
+    window.addEventListener("pointerup", drop); window.addEventListener("pointercancel", drop);
+    window.addEventListener("resize", place); place();
     $("tlf-btn").addEventListener("click", function () {
+      if (moved) { moved = false; return; }
+      met = true; fbtn.classList.remove("hop"); try { localStorage.setItem(HK, "1"); } catch (e) {}
       tick.hidden = true;
       if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
       text(); frame();
