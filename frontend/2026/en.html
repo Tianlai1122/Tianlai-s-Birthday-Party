@@ -11,13 +11,12 @@
 <style>
 :root{
   /* A scrapbook page: textured white paper, die-cut stickers with white borders, a few pen doodles,
-     and one paper ticket taped on. Black ink only; the stickers bring the colour, and their orange is
-     borrowed for a few small marks. */
+     and paper notes taped on. Black ink on white paper only; all the colour comes from the stickers. */
   --paper:#F6F5F1;
   --ink:#1D1D1F;
   --soft:#72726E;
   --blue:#1D1D1F;
-  --pop:#EE7A1B;
+  --pop:#1D1D1F;
   --wide:"Unbounded","Noto Sans SC","PingFang SC",sans-serif;
   --body:"Urbanist","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   --cond:"Oswald","Noto Sans SC",sans-serif;
@@ -100,7 +99,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .chips span{display:block;padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px;background:#F1F0EB;color:var(--ink);transition:background .12s ease,transform .12s ease}
 .chips small{font-weight:500;font-size:13px;opacity:.75;margin-left:4px}
-.chips input:checked + span{background:var(--pop);transform:rotate(-1.5deg)}
+.chips input:checked + span{background:var(--ink);color:#fff;transform:rotate(-1.5deg)}
 .chips input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
 .form .bigbtn{margin-top:26px;width:100%}
 .form .bigbtn:disabled{opacity:.5}
@@ -386,7 +385,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   }
 
   /* confetti: one small burst on open */
-  var COLORS = ["#EE7A1B", "#1D1D1F", "#FFFFFF", "#FFD25A", "#EE7A1B"];
+  var COLORS = ["#1D1D1F", "#FFFFFF", "#BEC6D8", "#1D1D1F", "#FFFFFF"];
   var cv = $("confetti"), ctx = cv.getContext && cv.getContext("2d"), parts = [], running = false;
   function resize() { var r = window.devicePixelRatio || 1; cv.width = innerWidth * r; cv.height = innerHeight * r; }
   addEventListener("resize", resize); resize();
