@@ -112,6 +112,10 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .who b{font-family:var(--hand);font-weight:600;font-size:25px;line-height:1;white-space:nowrap}
 .who span{margin-left:auto;font-size:13.5px;color:var(--soft);text-align:right;line-height:1.2}
 .who .none{color:var(--soft);font-size:15px}
+.who em{font-style:normal;font-size:12px;font-weight:700;border:1.5px solid var(--ink);border-radius:999px;padding:0 7px;line-height:1.5}
+.teams li{height:80px;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.teams span{margin-left:0;text-align:left;font-size:14px}
+[hidden]{display:none !important}
 
 /* ---------- buttons: little stickers ---------- */
 .bigbtn,.btn{appearance:none;display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 18px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.1);transition:transform .12s ease}
@@ -222,6 +226,14 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
             <label><input type="radio" name="arrive" value="14"><span>2 PM grocery run<small>3–4 people</small></span></label>
           </div>
         </fieldset>
+        <fieldset id="r-cook" hidden><legend class="fl">In the kitchen I'll</legend>
+          <div class="chips">
+            <label><input type="radio" name="role" value="chef"><span>Be a chef</span></label>
+            <label><input type="radio" name="role" value="helper"><span>Help out</span></label>
+          </div>
+          <label class="sr" for="r-dish">What will you cook?</label>
+          <input id="r-dish" type="text" maxlength="40" placeholder="What will you cook?" style="margin-top:14px" hidden>
+        </fieldset>
         <fieldset><legend class="fl">Tonight I'm</legend>
           <div class="chips">
             <label><input type="radio" name="mode" value="dodge" required><span>Dodging drinks</span></label>
@@ -243,6 +255,16 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       <i class="tape" aria-hidden="true"></i>
       <p class="sub">Who's coming <span id="who-n" style="margin-left:6px;color:var(--soft);font-weight:500"></span></p>
       <ul class="who" id="who"></ul>
+    </div>
+  </section>
+
+  <section class="page" id="teams" hidden>
+    <img class="stk corner" src="stk/judge.webp" width="285" height="284" loading="lazy" alt="A bearded judge dog banging a gavel" style="width:92px">
+    <h2 class="hd sec pad">Kitchen teams</h2>
+    <p class="say pad">Two or three to a team, one dish each.</p>
+    <div class="sheet" style="margin-top:34px">
+      <i class="tape" aria-hidden="true"></i>
+      <ul class="who teams" id="teams-list"></ul>
     </div>
   </section>
 
@@ -324,7 +346,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Before you come", "rsvp_say": "So I know how much food and drink to get.", "f_name": "Name", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "A drink or two", "m_all": "Going all in", "m_sleep": "Sleeping at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9"}, "mode_s": {"dodge": "dodging drinks", "sip": "a drink or two", "all": "all in", "sleep": "sleeping over"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
+var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "November 21st", "place_l": "Where: ", "intro": "Let's party!", "note": "see you<br>there!", "d": "d", "h": "h", "m": "m", "s": "s", "t_date_l": "DATE", "t_date": "Sat, Nov 21", "t_time_l": "TIME", "t_time": "7:30 PM", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "Just look good.", "plan_h": "The plan", "p1_when": "4 PM", "p1_say": "Want to cook with us? Come at 4. We'll drink a little while we're at it, then head to 1440 together at 7. The grocery run is around 2 and only needs three or four people, so text me if you want in.", "p2_when": "7:30 PM", "p2_say": "Busy in the afternoon? Just come here. There's cake and a jam session, so bring your instrument if you play.", "play_h": "Things to play", "play": [["🎮", "Switch"], ["🎲", "Board games"], ["🎱", "Pool"], ["🏓", "Ping pong"], ["⚽", "Foosball"], ["⛳", "Mini golf"], ["🍻", "Drinks & snacks"]], "tour_title": "1440 Amsterdam 3D tour", "tour_note": "Tap to walk around. 3D tour from 1440 Amsterdam's own site.", "rsvp_h": "Before you come", "rsvp_say": "So I know how much food and drink to get.", "f_name": "Name", "f_arrive": "Around what time?", "a14": "2 PM grocery run<small>3–4 people<\/small>", "a16": "4 PM, cooking", "a1930": "7:30 PM", "a21": "After 9 PM", "f_mode": "Tonight I'm", "m_dodge": "Dodging drinks", "m_sip": "A drink or two", "m_all": "Going all in", "m_sleep": "Sleeping at Tianlai's", "f_diet": "Anything you can't eat?", "diet_note": "pick any, or none. Only I see this", "diet_ph": "Anything else? Write it here", "diet_sep": ", ", "diet": ["I'm a foodie, I eat everything", "Vegetarian", "No pork", "No beef", "No spicy food", "No cilantro", "Seafood allergy", "Egg allergy", "Nut allergy", "Lactose intolerant"], "send": "Send", "sent": "Got it! Send again if anything changes.", "send_fail": "Didn't go through. Try again.", "who_h": "Who's coming", "who_empty": "Nobody yet. Be the first.", "f_role": "In the kitchen I'll", "role_chef": "Be a chef", "role_helper": "Help out", "dish_ph": "What will you cook?", "chef_tag": "chef", "teams_h": "Kitchen teams", "teams_say": "Two or three to a team, one dish each.", "dish_tbd": "dish to be decided", "arrive_s": {"14": "2 PM groceries", "16": "4 PM", "1930": "7:30 PM", "21": "after 9"}, "mode_s": {"dodge": "dodging drinks", "sip": "a drink or two", "all": "all in", "sleep": "sleeping over"}, "where_h": "Getting here", "where_say": "Call or text me when you're downstairs. I'll come get you.", "call": "Call", "text": "Text", "copy_num": "Copy number", "copy_addr": "Copy address", "copied": "Copied", "copy_fail": "Press and hold to copy", "nav1": "Directions to 99 Claremont", "nav2": "Directions to 1440 Amsterdam", "tag1": "4 PM", "tag2": "7:30 PM", "bring": "No gifts. Tell me ahead if there's anything you can't eat.", "venue_h": "The places", "cap1": "entrance of 99 Claremont Ave", "cap2": "we cook here", "credit": "Photos from Columbia. Tap to enlarge.", "zoom_door": "Enlarge the entrance photo", "zoom_kitchen": "Enlarge the kitchen photo", "close": "Close", "role_h": "Your role", "role_say": "Type your name and draw tonight's secret mission. One draw only.", "name_ph": "Your name", "draw": "Draw", "tag_pre": "tonight I'm the", "tag_empty": "Draw before you come.", "tag_who": "{n}, tonight you're the", "tag_fine": "Keep it secret or not. Up to you.", "board_h": "Scoreboard", "board_say": "Tap once for every drink, every drink you dodged, and every snack.", "board_ph": "Your name first", "ok": "OK", "you_are": "You're ", "b_drink": "Had a drink +1", "b_dodge": "Dodged a drink +1", "b_snack": "Had a snack +1", "mine": "me {c}", "undo": "Undo last tap", "tab_drink": "Drinks", "tab_dodge": "Dodges", "tab_snack": "Snacks", "nobody": "Nobody yet", "sync_on": "Live. Everyone sees the same board.", "sync_off": "Not connected yet. Counts stay on your phone for now.", "sync_fail": "Didn't save. Tap again.", "bye": "see you Saturday!", "thanks": "Special thanks to <b>@Lucy<\/b> <b>@Yerin<\/b> for the space", "cd_before": "to go", "cd_over": "Thanks for coming!", "cd_bday": "It's midnight. It's my birthday!", "cd_on": "It's on. Get over here!", "cd_today": "Today!", "roles": [["Live Commentator", "Narrate something happening right now like it's an Olympic final."], ["Hype Captain", "Start the cheering after every song, even the bad ones."], ["Food Critic", "Rate every dish out of 10. Be dramatic about it."], ["Paparazzi", "Sneak 5 candid photos and send them to me."], ["Compliment Sniper", "Compliment 3 people you just met. Be specific."], ["Secret Agent", "Get 3 people to say \"cake\" without saying it yourself."], ["Matchmaker", "Introduce two people who haven't met."], ["Time Traveler", "You're from 2009. Be suspicious of everything."], ["Fun Fact Machine", "Tell every new person one fun fact."], ["Head DJ", "You pick one song tonight. Don't blow it."], ["Bad Referee", "Settle any argument. The worse the ruling, the better."], ["Toastmaster", "Give a 20-second toast at cake time."], ["Detective", "Dig up one surprising thing about 3 people. Report at cake time."], ["Talk Show Host", "Interview someone like a late-night host. One minute."], ["Name Champion", "Learn 10 new names and prove it before you leave."], ["Dirt Collector", "Get one embarrassing story about me from someone. Tell it at cake time."], ["Tournament Boss", "Run a rock-paper-scissors tournament with 6+ people."], ["Dance Starter", "Start a 10-second dance break. Pull in at least 2 people."], ["Jam MC", "Announce every song at the jam. The bigger the better."], ["Backup Vocals", "Handle every \"ooh\" and \"aah\" at the jam."]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -400,7 +422,8 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
     try { var saved = JSON.parse(localStorage.getItem(RK) || "null"); if (saved) {
       $("r-name").value = saved.name || ""; $("r-diet").value = saved.other || "";
       (saved.tags || []).forEach(function (v) { form.querySelectorAll('[name="tag"]').forEach(function (el) { if (el.value === v) el.checked = true; }); });
-      ["arrive", "mode"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
+      $("r-dish").value = saved.dish || "";
+      ["arrive", "mode", "role"].forEach(function (k) { var el = form.querySelector('[name="' + k + '"][value="' + saved[k] + '"]'); if (el) el.checked = true; });
     } } catch (e) {}
     if (!$("r-name").value && name) $("r-name").value = name;
     /* the first diet chip means "no restrictions", so it and the others switch each other off */
@@ -412,12 +435,19 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
         else tagEls[0].checked = false;
       });
     });
+    /* the kitchen question only matters to people who come in the afternoon */
+    function cookUI() {
+      var a = (form.querySelector('[name="arrive"]:checked') || {}).value, cook = a === "14" || a === "16";
+      var chef = cook && (form.querySelector('[name="role"]:checked') || {}).value === "chef";
+      $("r-cook").hidden = !cook; $("r-dish").hidden = !chef;
+    }
+    form.addEventListener("change", cookUI); cookUI();
     function list() {
-      return rpc("bday_rsvp_list").then(function (rows) {
+      return rpc("bday_rsvp_list2").catch(function () { return rpc("bday_rsvp_list"); }).then(function (rows) {
         rows = rows || [];
         $("who-n").textContent = rows.length ? "· " + rows.length : "";
         $("who").innerHTML = rows.length ? rows.map(function (r) {
-          return "<li><b>" + esc(r.name) + "</b><span>" + esc((T.arrive_s[r.arrive] || "") + " · " + (T.mode_s[r.mode] || "")) + "</span></li>";
+          return "<li><b>" + esc(r.name) + "</b>" + (r.role === "chef" ? "<em>" + esc(T.chef_tag) + "</em>" : "") + "<span>" + esc((T.arrive_s[r.arrive] || "") + " · " + (T.mode_s[r.mode] || "")) + "</span></li>";
         }).join("") : '<li class="none">' + esc(T.who_empty) + "</li>";
       }).catch(function () {});
     }
@@ -425,9 +455,13 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       e.preventDefault();
       var fd = new FormData(form), d = { name: $("r-name").value.trim(), arrive: fd.get("arrive"), mode: fd.get("mode"), tags: fd.getAll("tag"), other: $("r-diet").value.trim() };
       d.diet = d.tags.concat(d.other ? [d.other] : []).join(T.diet_sep);
+      var cook = d.arrive === "14" || d.arrive === "16";
+      d.role = cook ? (fd.get("role") || "") : ""; d.dish = d.role === "chef" ? $("r-dish").value.trim() : "";
       if (!d.name || !d.arrive || !d.mode) return;
       $("r-send").disabled = true; msg.textContent = "";
-      rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet }).then(function () {
+      rpc("bday_rsvp_save2", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet, p_role: d.role, p_dish: d.dish }).catch(function () {
+        return rpc("bday_rsvp_save", { p_name: d.name, p_arrive: d.arrive, p_mode: d.mode, p_diet: d.diet });
+      }).then(function () {
         try { localStorage.setItem(RK, JSON.stringify(d)); } catch (e2) {}
         setName(d.name);
         msg.textContent = T.sent; burst(50, form.getBoundingClientRect().bottom - 40);
@@ -435,6 +469,13 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
       }).catch(function () { msg.textContent = T.send_fail; }).then(function () { $("r-send").disabled = false; });
     });
     list();
+    rpc("bday_teams_get").then(function (teams) {
+      if (!teams || !teams.length) return;
+      $("teams").hidden = false;
+      $("teams-list").innerHTML = teams.map(function (t) {
+        return "<li><b>" + esc([t.chef].concat(t.helpers || []).join(" + ")) + "</b><span>" + esc(t.dish || T.dish_tbd) + "</span></li>";
+      }).join("");
+    }).catch(function () {});
   })();
 
   /* photo lightbox */

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>生日后台</title>
+<style>
+:root{
+  /* Host-only back office: the same paper and black ink as the party page, laid out as a plain table. */
+  --paper:#F6F5F1; --ink:#1D1D1F; --soft:#72726E; --line:rgba(29,29,31,.16);
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:30px;font-weight:900;line-height:1.1;margin:0 0 4px}
+h2{font-size:19px;font-weight:900;margin:36px 0 10px}
+p{margin:0}
+.soft{color:var(--soft);font-size:13.5px}
+[hidden]{display:none !important}
+.card{background:#fff;padding:18px;box-shadow:0 2px 3px rgba(0,0,0,.12),0 10px 20px rgba(0,0,0,.07)}
+form.login{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;max-width:420px}
+input[type=password],input[type=text]{flex:1;min-width:180px;font:inherit;padding:11px 12px;border:1.5px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
+button{appearance:none;font:inherit;font-weight:700;padding:10px 16px;border:1.5px solid var(--ink);border-radius:10px;background:var(--ink);color:#fff;cursor:pointer}
+button.ghost{background:#fff;color:var(--ink)}
+button.small{padding:4px 10px;font-size:13px;border-radius:8px}
+button:disabled{opacity:.5;cursor:default}
+.msg{min-height:1.5em;margin-top:10px;font-weight:700}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.tile b{display:block;font-size:30px;font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile span{font-size:13.5px;color:var(--soft)}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.kv{list-style:none;margin:0;padding:0}
+.kv li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.kv li:last-child{border-bottom:0}
+.kv b{font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--soft);font-weight:700;white-space:nowrap}
+td.name{font-weight:800;white-space:nowrap}
+td.diet{min-width:160px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.team{padding:10px 0;border-bottom:1px solid var(--line)}
+.team:last-child{border-bottom:0}
+.team b{font-weight:800}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>生日后台</h1>
+  <p class="soft">只有你能看。这个页面的地址别发给别人。</p>
+
+  <form class="login" id="login">
+    <label for="pass" style="position:absolute;left:-9999px">口令</label>
+    <input id="pass" type="password" placeholder="口令" autocomplete="current-password" required>
+    <button type="submit">进去</button>
+  </form>
+  <p class="msg" id="msg" role="status"></p>
+
+  <div id="app" hidden>
+    <div class="bar">
+      <button type="button" class="ghost" id="refresh">刷新</button>
+      <button type="button" class="ghost" id="copy">复制全部名单</button>
+      <span class="soft" id="stamp"></span>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <h2>分布</h2>
+    <div class="split">
+      <div class="card"><p class="soft">几点到</p><ul class="kv" id="by-arrive"></ul></div>
+      <div class="card"><p class="soft">当晚状态</p><ul class="kv" id="by-mode"></ul></div>
+      <div class="card"><p class="soft">忌口</p><ul class="kv" id="by-diet"></ul></div>
+    </div>
+
+    <h2>所有人</h2>
+    <div class="card scroll">
+      <table>
+        <thead><tr><th>名字</th><th>几点到</th><th>状态</th><th>做饭</th><th>想做的菜</th><th>忌口</th><th>填写时间</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <h2>厨房分组</h2>
+    <p class="soft">只算下午 2 点和 4 点来的人。一位大厨配一个帮手，多出来的人加进现有的组。点「发布」后，大家在网页上就能看到。</p>
+    <div class="bar">
+      <button type="button" id="roll">随机分组</button>
+      <button type="button" id="publish" disabled>发布到网页</button>
+      <button type="button" class="ghost" id="unpublish">从网页撤下</button>
+      <span class="soft" id="team-state"></span>
+    </div>
+    <div class="card" id="teams"><p class="soft">还没分组。</p></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var SB_URL = "https://ckzfcplwgpniaosxbrkg.supabase.co", SB_KEY = "sb_publishable_5YQNSlzqL1OonmQBKrl0AQ_NAX582Yx";
+  var ARRIVE = { "14": "下午 2 点买菜", "16": "下午 4 点做饭", "1930": "晚上 7 点半", "21": "晚上 9 点后" };
+  var MODE = { dodge: "逃酒", sip: "小酌", all: "不醉不归", sleep: "睡 Tianlai 家" };
+  var ROLE = { chef: "大厨", helper: "打下手", "": "" };
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+  function rpc(fn, args) {
+    return fetch(SB_URL + "/rest/v1/rpc/" + fn, { method: "POST", cache: "no-store",
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify(args || {}) })
+      .then(function (r) { return r.text().then(function (t) { if (!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
+  }
+
+  var pass = "", rows = [], draft = null, published = [];
+  try { pass = sessionStorage.getItem("bday-admin") || ""; } catch (e) {}
+
+  function count(list, key, labels) {
+    var c = {};
+    list.forEach(function (r) { var k = r[key]; c[k] = (c[k] || 0) + 1; });
+    return Object.keys(labels).filter(function (k) { return c[k]; }).map(function (k) { return [labels[k], c[k]]; });
+  }
+  function kv(el, pairs, empty) {
+    el.innerHTML = pairs.length ? pairs.map(function (p) { return "<li><span>" + esc(p[0]) + "</span><b>" + p[1] + "</b></li>"; }).join("") : '<li><span class="soft">' + esc(empty) + "</span></li>";
+  }
+  function render() {
+    var cooks = rows.filter(function (r) { return r.arrive === "14" || r.arrive === "16"; });
+    $("tiles").innerHTML = [[rows.length, "人报名"], [cooks.length, "人下午来做饭"], [rows.length - cooks.length, "人只来晚上"],
+      [rows.filter(function (r) { return r.role === "chef"; }).length, "位大厨"], [rows.filter(function (r) { return r.mode === "sleep"; }).length, "人要睡你家"]]
+      .map(function (t) { return '<div class="card tile"><b>' + t[0] + "</b><span>" + t[1] + "</span></div>"; }).join("");
+    kv($("by-arrive"), count(rows, "arrive", ARRIVE), "还没人");
+    kv($("by-mode"), count(rows, "mode", MODE), "还没人");
+    var diet = {};
+    rows.forEach(function (r) { String(r.diet || "").split(/[、,]\s*/).forEach(function (d) { d = d.trim(); if (d) diet[d] = (diet[d] || 0) + 1; }); });
+    kv($("by-diet"), Object.keys(diet).sort(function (a, b) { return diet[b] - diet[a]; }).map(function (k) { return [k, diet[k]]; }), "没人填忌口");
+    $("rows").innerHTML = rows.length ? rows.map(function (r) {
+      return '<tr><td class="name">' + esc(r.name) + "</td><td>" + esc(ARRIVE[r.arrive] || r.arrive) + "</td><td>" + esc(MODE[r.mode] || r.mode) + "</td><td>" + esc(ROLE[r.role || ""] || "") +
+        "</td><td>" + esc(r.dish) + '</td><td class="diet">' + esc(r.diet) + '</td><td class="soft">' + esc(new Date(r.updated_at).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })) +
+        '</td><td><button type="button" class="ghost small" data-del="' + esc(r.name) + '">删除</button></td></tr>';
+    }).join("") : '<tr><td colspan="8" class="soft">还没人填。</td></tr>';
+    $("stamp").textContent = "更新于 " + new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
+    renderTeams();
+  }
+  function renderTeams() {
+    var show = draft || published;
+    $("teams").innerHTML = show.length ? show.map(function (t) {
+      return '<div class="team"><b>' + esc([t.chef].concat(t.helpers || []).join(" + ")) + "</b><br><span class=\"soft\">" + esc(t.dish || "做什么到时候商量") + "</span></div>";
+    }).join("") : '<p class="soft">还没分组。</p>';
+    $("publish").disabled = !draft;
+    $("team-state").textContent = draft ? "这是草稿，还没发布" : (published.length ? "已发布，网页上看得到" : "");
+  }
+  function load() {
+    return rpc("bday_admin_list", { p_pass: pass }).then(function (r) {
+      rows = r || [];
+      return rpc("bday_teams_get");
+    }).then(function (t) {
+      published = t || [];
+      $("login").hidden = true; $("app").hidden = false; $("msg").textContent = "";
+      try { sessionStorage.setItem("bday-admin", pass); } catch (e) {}
+      render();
+    });
+  }
+  function fail(e) {
+    var bad = /bad passcode/.test(String(e && e.message));
+    $("msg").textContent = bad ? "口令不对。" : "没连上，或者数据库的新脚本还没运行。";
+    if (bad) { pass = ""; try { sessionStorage.removeItem("bday-admin"); } catch (e2) {} $("login").hidden = false; $("app").hidden = true; }
+  }
+  $("login").addEventListener("submit", function (e) { e.preventDefault(); pass = $("pass").value; $("msg").textContent = "…"; load().catch(fail); });
+  $("refresh").addEventListener("click", function () { load().catch(fail); });
+  $("copy").addEventListener("click", function () {
+    var text = rows.map(function (r) { return [r.name, ARRIVE[r.arrive], MODE[r.mode], ROLE[r.role || ""], r.dish, r.diet].filter(Boolean).join(" | "); }).join("\n");
+    var b = $("copy");
+    function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "复制全部名单"; }, 1500); }
+    try { navigator.clipboard.writeText(text).then(function () { done("已复制"); }, function () { done("复制不了"); }); } catch (e) { done("复制不了"); }
+  });
+
+  /* delete needs a second click on the same button */
+  var armed = null;
+  $("rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-del]");
+    if (!b) return;
+    if (armed !== b) { if (armed) armed.textContent = "删除"; armed = b; b.textContent = "再点一次确认"; return; }
+    b.disabled = true;
+    rpc("bday_admin_delete", { p_pass: pass, p_name: b.dataset.del }).then(load).catch(fail);
+    armed = null;
+  });
+
+  /* kitchen teams: every chef gets a helper; spare helpers join existing teams; spare chefs pair up */
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function makeTeams() {
+    var cooks = rows.filter(function (r) { return r.arrive === "14" || r.arrive === "16"; });
+    var chefs = shuffle(cooks.filter(function (r) { return r.role === "chef"; }));
+    var helpers = shuffle(cooks.filter(function (r) { return r.role !== "chef"; }));
+    var teams = chefs.map(function (c) { return { chef: c.name, dish: c.dish || "", helpers: [] }; });
+    if (!teams.length) {
+      for (var i = 0; i < helpers.length; i += 2) {
+        var pair = helpers.slice(i, i + 2);
+        if (pair.length === 1 && teams.length) teams[teams.length - 1].helpers.push(pair[0].name);
+        else teams.push({ chef: pair[0].name, dish: "", helpers: pair.slice(1).map(function (p) { return p.name; }) });
+      }
+      return teams;
+    }
+    helpers.forEach(function (h, k) { teams[k % teams.length].helpers.push(h.name); });
+    var solo = teams.filter(function (t) { return !t.helpers.length; }), rest = teams.filter(function (t) { return t.helpers.length; });
+    while (solo.length >= 2) {
+      var a = solo.shift(), b2 = solo.shift();
+      rest.push({ chef: a.chef, dish: [a.dish, b2.dish].filter(Boolean).join(" + "), helpers: [b2.chef] });
+    }
+    return rest.concat(solo);
+  }
+  $("roll").addEventListener("click", function () { draft = makeTeams(); renderTeams(); });
+  $("publish").addEventListener("click", function () {
+    if (!draft) return;
+    var d = draft;
+    rpc("bday_admin_set_teams", { p_pass: pass, p_teams: d }).then(function () { published = d; draft = null; renderTeams(); }).catch(fail);
+  });
+  $("unpublish").addEventListener("click", function () {
+    rpc("bday_admin_set_teams", { p_pass: pass, p_teams: [] }).then(function () { published = []; draft = null; renderTeams(); }).catch(fail);
+  });
+
+  if (pass) load().catch(fail);
+})();
+</script>
+</body>
+</html>
