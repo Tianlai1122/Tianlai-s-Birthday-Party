@@ -101,6 +101,8 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .match b{font-weight:800}
 .match span{flex:1;min-width:0;font-size:13px;color:var(--soft)}
 .match em{flex:none;font-style:normal;font-size:13px;font-weight:800;background:var(--ink);color:#fff;border-radius:999px;padding:3px 11px}
+.match-q{margin:0 0 2px;font-size:14px;font-weight:800}
+.match button.match-no{border-style:dashed;justify-content:center;min-height:42px}.match button.match-no b{font-weight:700;font-size:14px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips label{position:relative;cursor:pointer}
 .chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
@@ -610,7 +612,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </div>
 
 <script>
-var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "耍起！", "note": "see you<br>there!", "music_t": "肖邦 · 第二钢琴协奏曲 · 第二乐章", "play_l": "播放或暂停音乐", "seek_l": "播放进度", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "plan_more": "到了怎么找我：电话和导航 ↓", "p1_when": "下午 4 点", "p1_say": "想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，三四个人就够，想去的跟我说。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "mem_note": "这是当时网页的存档，{d} 导出。只能看，不能再改。", "guests_h": "有谁来", "guests_say": "点开卡片，可以留一句、点个表情。", "c_count": "{n} 句", "pic_del": "删除", "pic_sure": "再点一次", "pic_delfail": "没删成，再试一次。", "c_nophoto": "去掉封面照", "c_useplain": "不抠图，用原图", "c_usecut": "还是抠出来", "pic_add": "加照片", "pic_busy": "正在传…", "pic_fail": "没传上，换一张试试。", "pic_by": "{who} 传的", "add_tile": "加一个", "add_h": "加一个人", "add_me_pre": "是你自己？", "add_me": "去填报名表", "add_me_post": "，填完就有你的卡片。", "add_friend": "帮朋友加一张，写名字：", "add_ph": "朋友的名字", "add_ok": "加上", "add_fail": "没加上，再试一次。", "f_talk": "可以找我聊", "talk_note": "选填，会写在你的卡片上", "talk_ph": "滑雪、猫、哪家火锅好吃…", "talk_pre": "找我聊：", "c_open": "写一句", "c_notes": "大家说", "c_none": "还没人写，你来第一句。", "c_ph": "写一句关于 TA 的", "c_anon": "匿名", "c_sign": "你的名字（不写就是匿名）", "pic_cover": "当封面", "c_send": "发", "c_fail": "没发出去，再试一次。", "c_photo": "换封面照", "c_photo0": "放一张封面照", "album_h": "相册", "me": "你", "rname_ph": "大家认得出的名字就行", "c_busy": "正在抠图…", "c_bad": "这张不行，换一张。", "c_saved": "换好了", "anon": "匿名", "tl_h": "整一下寿星", "tl_alt": "像素小人 Tianlai", "tl_open": "整一下 Tianlai", "tl_cake": "抹他一脸蛋糕", "tl_drink": "跟他喝一杯", "tl_stats": "被抹 {c} 次 · 喝了 {d} 杯", "tl_last_cake": "{who} 刚抹了他一脸蛋糕", "tl_last_drink": "{who} 刚跟他喝了一杯", "someone": "有人", "tl_b": {"idle": "来呀", "cake": "谁？！", "drink": "干杯！", "tipsy": "我没醉", "drunk": "再…再来一杯", "sofa": "喝趴了… Zzz", "sofa_drink": "（躺着又被灌了一杯）", "sofa_cake": "嗯…？（没醒）", "slow": "你喝得太猛了，歇一会儿再来"}, "tl_wait": "你已经跟他喝了 {n} 杯，歇 {m} 分钟再来", "tl_dv": ["干杯！", "嗝——", "够劲！", "走一个！", "…洒了"], "tl_cv": ["谁？！", "谁干的？！", "我的发型！", "…还挺甜", "还来？！"], "tl_invite": ["来呀", "点我试试", "敢抹我一脸蛋糕吗"], "tl_ctop": "抹蛋糕榜", "tl_times": "{n} 次", "tl_tag": "点我，整一下寿星", "tl_nameme": "想上榜？写个名字", "tl_taken": "已经有人叫「{n}」了，是你吗？", "tl_other": "不是，换个名字", "tl_top": "碰杯榜", "tl_all": "看全部 {n} 人", "tl_less": "收起", "tl_rule": "榜上前三名，当晚寿星帮你喝一杯，或者你指定寿星喝一杯。", "tl_cups": "{n} 杯", "rx": {"like": "赞", "lol": "笑死", "love": "爱了"}, "rx_n": "{n} 人点过", "rx_ask": "先写个名字", "rx_ph": "名字", "rx_ok": "好", "emoji_credit": "会动的表情：Google Noto Emoji", "f_arrive": "大概几点到", "a14": "下午 2 点买菜<small>三四个人就够<\/small>", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "aremote": "远程参加", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "喝到直接睡在 Tianlai 家", "f_diet": "忌口", "diet_note": "可以多选，没有就不选。只有我看得到", "diet_ph": "还有别的？写这儿", "diet_sep": "、", "diet": ["我是 foodie，啥都吃", "素食", "不吃猪肉", "不吃牛肉", "不吃辣", "不吃香菜", "海鲜过敏", "鸡蛋过敏", "坚果过敏", "乳糖不耐"], "send": "提交", "sent": "收到了！下面带「你」的那张是你的卡片，点开可以放照片。", "send_fail": "没交上，再试一次。", "autosaved": "已自动存好，不点提交也行。", "found": "找到你之前填的了，接着用就行。", "match_me": "是我", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "f_role": "做饭你想", "role_chef": "我来当大厨", "role_helper": "我打下手", "dish_ph": "想做什么菜？", "chef_tag": "大厨", "teams_h": "厨房分组", "teams_say": "两三个人一组，一起做一道菜。", "dish_tbd": "做什么到时候商量", "arrive_s": {"14": "下午 2 点买菜", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后", "remote": "远程参加"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "喝到睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 4 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
+var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "title": "Tianlai's Birthday", "h_blk": "Saturday", "h_out": "birthday", "meta_l": "11 月 21 日", "place_l": "地点：", "intro": "耍起！", "note": "see you<br>there!", "music_t": "肖邦 · 第二钢琴协奏曲 · 第二乐章", "play_l": "播放或暂停音乐", "seek_l": "播放进度", "d": "天", "h": "时", "m": "分", "s": "秒", "t_date_l": "DATE", "t_date": "11.21 周六", "t_time_l": "TIME", "t_time": "晚上 7:30", "t_place_l": "PLACE", "t_place": "1440 Amsterdam Ave", "t_dress_l": "DRESS CODE", "t_dress": "打扮得帅气美丽就行。", "plan_h": "当天安排", "plan_more": "到了怎么找我：电话和导航 ↓", "p1_when": "下午 4 点", "p1_say": "想一起做饭的 4 点来，边做边喝点。吃完 7 点一起去 1440。买菜 2 点多去，三四个人就够，想去的跟我说。", "p2_when": "晚上 7 点半", "p2_say": "下午没空就直接来这儿。有蛋糕，有 Jam Session，会乐器的带上。", "play_h": "现场能玩的", "play": [["🎮", "Switch"], ["🎲", "桌游"], ["🎱", "台球"], ["🏓", "乒乓球"], ["⚽", "桌上足球"], ["⛳", "迷你 golf"], ["🍻", "酒水零食"]], "tour_title": "1440 Amsterdam 3D 看房", "tour_note": "点一下就能在里面走。3D 来自 1440 Amsterdam 官网。", "rsvp_h": "来之前填一下", "rsvp_say": "我好准备吃的喝的。", "f_name": "名字", "mem_note": "这是当时网页的存档，{d} 导出。只能看，不能再改。", "guests_h": "有谁来", "guests_say": "点开卡片，可以留一句、点个表情。", "c_count": "{n} 句", "pic_del": "删除", "pic_sure": "再点一次", "pic_delfail": "没删成，再试一次。", "c_nophoto": "去掉封面照", "c_useplain": "不抠图，用原图", "c_usecut": "还是抠出来", "pic_add": "加照片", "pic_busy": "正在传…", "pic_fail": "没传上，换一张试试。", "pic_by": "{who} 传的", "add_tile": "加一个", "add_h": "加一个人", "add_me_pre": "是你自己？", "add_me": "去填报名表", "add_me_post": "，填完就有你的卡片。", "add_friend": "帮朋友加一张，写名字：", "add_ph": "朋友的名字", "add_ok": "加上", "add_fail": "没加上，再试一次。", "f_talk": "可以找我聊", "talk_note": "选填，会写在你的卡片上", "talk_ph": "滑雪、猫、哪家火锅好吃…", "talk_pre": "找我聊：", "c_open": "写一句", "c_notes": "大家说", "c_none": "还没人写，你来第一句。", "c_ph": "写一句关于 TA 的", "c_anon": "匿名", "c_sign": "你的名字（不写就是匿名）", "pic_cover": "当封面", "c_send": "发", "c_fail": "没发出去，再试一次。", "c_photo": "换封面照", "c_photo0": "放一张封面照", "album_h": "相册", "me": "你", "rname_ph": "大家认得出的名字就行", "c_busy": "正在抠图…", "c_bad": "这张不行，换一张。", "c_saved": "换好了", "anon": "匿名", "tl_h": "整一下寿星", "tl_alt": "像素小人 Tianlai", "tl_open": "整一下 Tianlai", "tl_cake": "抹他一脸蛋糕", "tl_drink": "跟他喝一杯", "tl_stats": "被抹 {c} 次 · 喝了 {d} 杯", "tl_last_cake": "{who} 刚抹了他一脸蛋糕", "tl_last_drink": "{who} 刚跟他喝了一杯", "someone": "有人", "tl_b": {"idle": "来呀", "cake": "谁？！", "drink": "干杯！", "tipsy": "我没醉", "drunk": "再…再来一杯", "sofa": "喝趴了… Zzz", "sofa_drink": "（躺着又被灌了一杯）", "sofa_cake": "嗯…？（没醒）", "slow": "你喝得太猛了，歇一会儿再来"}, "tl_wait": "你已经跟他喝了 {n} 杯，歇 {m} 分钟再来", "tl_dv": ["干杯！", "嗝——", "够劲！", "走一个！", "…洒了"], "tl_cv": ["谁？！", "谁干的？！", "我的发型！", "…还挺甜", "还来？！"], "tl_invite": ["来呀", "点我试试", "敢抹我一脸蛋糕吗"], "tl_ctop": "抹蛋糕榜", "tl_times": "{n} 次", "tl_tag": "点我，整一下寿星", "tl_nameme": "想上榜？写个名字", "tl_taken": "已经有人叫「{n}」了，是你吗？", "tl_other": "不是，换个名字", "tl_top": "碰杯榜", "tl_all": "看全部 {n} 人", "tl_less": "收起", "tl_rule": "榜上前三名，当晚寿星帮你喝一杯，或者你指定寿星喝一杯。", "tl_cups": "{n} 杯", "rx": {"like": "赞", "lol": "笑死", "love": "爱了"}, "rx_n": "{n} 人点过", "rx_ask": "先写个名字", "rx_ph": "名字", "rx_ok": "好", "emoji_credit": "会动的表情：Google Noto Emoji", "f_arrive": "大概几点到", "a14": "下午 2 点买菜<small>三四个人就够<\/small>", "a16": "下午 4 点，做饭", "a1930": "晚上 7 点半", "a21": "晚上 9 点以后", "aremote": "远程参加", "f_mode": "当晚状态", "m_dodge": "逃酒", "m_sip": "小酌", "m_all": "不醉不归", "m_sleep": "喝到直接睡在 Tianlai 家", "f_diet": "忌口", "diet_note": "可以多选，没有就不选。只有我看得到", "diet_ph": "还有别的？写这儿", "diet_sep": "、", "diet": ["我是 foodie，啥都吃", "素食", "不吃猪肉", "不吃牛肉", "不吃辣", "不吃香菜", "海鲜过敏", "鸡蛋过敏", "坚果过敏", "乳糖不耐"], "send": "提交", "sent": "收到了！下面带「你」的那张是你的卡片，点开可以放照片。", "send_fail": "没交上，再试一次。", "autosaved": "已自动存好，不点提交也行。", "found": "找到你之前填的了，接着用就行。", "match_me": "是我", "match_q": "这张卡片是你吗？名字可能被寿星改过写法。", "match_no": "不是我，我是新来的", "match_first": "先看一下名字下面：那张卡片是不是你？", "who_h": "谁来", "who_empty": "还没人填，你来当第一个。", "f_role": "做饭你想", "role_chef": "我来当大厨", "role_helper": "我打下手", "dish_ph": "想做什么菜？", "chef_tag": "大厨", "teams_h": "厨房分组", "teams_say": "两三个人一组，一起做一道菜。", "dish_tbd": "做什么到时候商量", "arrive_s": {"14": "下午 2 点买菜", "16": "下午 4 点", "1930": "晚上 7 点半", "21": "晚上 9 点后", "remote": "远程参加"}, "mode_s": {"dodge": "逃酒", "sip": "小酌", "all": "不醉不归", "sleep": "喝到睡在 Tianlai 家"}, "where_h": "怎么来", "where_say": "到楼下给我打电话或者发消息，我下来接。", "call": "打电话", "text": "发短信", "copy_num": "复制号码", "copy_addr": "复制地址", "copied": "已复制", "copy_fail": "长按手动复制", "nav1": "导航去 99 Claremont", "nav2": "导航去 1440 Amsterdam", "tag1": "下午 4 点", "tag2": "晚上 7 点半", "bring": "不用带礼物。有忌口提前跟我说。", "venue_h": "场地", "cap1": "99 Claremont Ave 的入口", "cap2": "做饭在这儿", "credit": "照片来自 Columbia，点一下放大。", "zoom_door": "放大看门口照片", "zoom_kitchen": "放大看厨房照片", "close": "关闭", "role_h": "今晚身份", "role_say": "输名字，抽一个今晚的秘密任务。只能抽一次。", "name_ph": "你的名字", "draw": "抽一个", "tag_pre": "今晚我是", "tag_empty": "来之前先抽好。", "tag_who": "{n}，今晚你是", "tag_fine": "保不保密随你。", "board_h": "排行榜", "board_say": "喝一杯、逃一次酒、吃一份，各点一下。", "board_ph": "先输个名字", "ok": "确定", "you_are": "你是 ", "b_drink": "喝了一杯 +1", "b_dodge": "逃了一次酒 +1", "b_snack": "吃了一份 +1", "mine": "我 {c}", "undo": "撤回上一下", "tab_drink": "酒量榜", "tab_dodge": "逃酒榜", "tab_snack": "小馋猫榜", "nobody": "还没人上榜", "sync_on": "实时同步，大家看到的是同一个榜。", "sync_off": "还没连上服务器，现在只记在你自己手机上。", "sync_fail": "没记上，再点一次。", "bye": "see you Saturday!", "thanks": "特别感谢 <b>@Lucy<\/b> <b>@Yerin<\/b> 借场地", "cd_before": "后开场", "cd_over": "谢谢你来！", "cd_bday": "零点了，我生日啦！", "cd_on": "开始啦，快来！", "cd_today": "就今天！", "roles": [["现场解说员", "像奥运决赛一样，解说一件正在发生的事。"], ["气氛组组长", "每首歌唱完带头欢呼，唱得再烂也要。"], ["美食评论家", "给每道菜打分，满分 10 分，点评要浮夸。"], ["狗仔队", "偷拍 5 张照片发给我。"], ["夸夸狙击手", "夸 3 个刚认识的人，越具体越好。"], ["卧底特工", "让 3 个人说出「蛋糕」，你自己不能说。"], ["交友红娘", "介绍两个不认识的人认识。"], ["穿越者", "你从 2009 年来，看什么都怀疑。"], ["冷知识机器", "每认识一个人，就讲一个冷知识。"], ["首席 DJ", "歌单里有一首归你选，别选砸了。"], ["乱判裁判", "有争议你来判，越离谱越好。"], ["祝酒官", "切蛋糕时说 20 秒祝酒词。"], ["侦探", "挖出 3 个人的一件意外小事，切蛋糕时汇报。"], ["脱口秀主持", "像深夜节目一样采访一个人，一分钟。"], ["记名字冠军", "记住 10 个新名字，散场前证明给我看。"], ["黑历史收集员", "跟别人打听我一件糗事，切蛋糕时讲。"], ["猜拳锦标赛主办", "组织一场 6 人以上的石头剪刀布大赛。"], ["尬舞发起人", "突然发起 10 秒尬舞，至少拉 2 个人。"], ["Jam 报幕员", "Jam 时给每首歌报幕，越夸张越好。"], ["和声担当", "Jam 时负责所有「啊～哦～」。"]]};
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -784,7 +786,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     var sentKey = keyOf(collect()), autoTimer = 0, autoBusy = false;
     function autosave() {
       var d = collect();
-      if (!d.name || autoBusy || keyOf(d) === sentKey) return;
+      if (!d.name || autoBusy || twin || keyOf(d) === sentKey) return;
       autoBusy = true;
       send(d).then(function () { remember(d); msg.textContent = T.autosaved; return loadCards(); }).catch(function () {}).then(function () { autoBusy = false; if (keyOf(collect()) !== sentKey) plan(1500); });
     }
@@ -802,31 +804,60 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
     /* coming back in another browser: typing your name finds the entry you already made */
     var matchBox = $("r-match"), adopted = "";
     function same(a, b) { return norm(a) === norm(b); }
+    /* the host sometimes stretches a name for fun ("Sooooophia"). Names that read the same once repeated letters are
+       folded count as possibly the same person: the card is offered, and nothing is saved under the plain spelling
+       until the person says whether it is them. */
+    function fold(s) { return norm(s).replace(/(.)\1+/g, "$1"); }
+    var twin = "", notMe = {};
     function adopt(p, quiet) {
       $("r-name").value = p.name; setName(p.name); adopted = p.name;
       ["arrive", "mode", "role"].forEach(function (k) { var el = p[k] ? form.querySelector('[name="' + k + '"][value="' + p[k] + '"]') : null; if (el) el.checked = true; });
       var mine = null; try { mine = JSON.parse(localStorage.getItem(RK) || "null"); } catch (e) {}
       dietKnown = dishKnown = !!(mine && same(mine.name, p.name));
-      cookUI(); matchBox.hidden = true; sentKey = keyOf(collect()); clearTimeout(autoTimer);
+      twin = ""; cookUI(); matchBox.hidden = true; sentKey = keyOf(collect()); clearTimeout(autoTimer);
       if (!quiet) msg.textContent = T.found;
+      loadCards();          // so the card that is now theirs gets its "you" mark
     }
     function matchName() {
       var v = norm($("r-name").value);
-      if (!v || same(v, adopted)) { matchBox.hidden = true; if (!v) adopted = ""; return; }
-      adopted = "";
+      if (!v || same(v, adopted)) { matchBox.hidden = true; twin = ""; if (!v) adopted = ""; return; }
+      adopted = ""; twin = "";
       var exact = people.filter(function (p) { return same(p.name, v) && p.arrive !== undefined; })[0];
       if (exact) { adopt(exact); return; }
-      var near = people.filter(function (p) { return p.arrive !== undefined && norm(p.name).indexOf(v) === 0; }).slice(0, 3);
-      matchBox.innerHTML = near.map(function (p) {
+      var fv = fold(v);
+      var near = people.filter(function (p) { return p.arrive !== undefined && !notMe[p.name] && (norm(p.name).indexOf(v) === 0 || fold(p.name).indexOf(fv) === 0); })
+        .sort(function (a, b) { return (fold(b.name) === fv) - (fold(a.name) === fv); }).slice(0, 3);
+      twin = near.length && fold(near[0].name) === fv ? near[0].name : "";
+      matchBox.innerHTML = (twin ? '<p class="match-q">' + esc(T.match_q) + "</p>" : "") + near.map(function (p) {
         var meta = [T.arrive_s[p.arrive], T.mode_s[p.mode]].filter(Boolean).join(" · ");
         return '<button type="button" data-n="' + esc(p.name) + '"><b>' + esc(p.name) + "</b><span>" + esc(meta) + "</span><em>" + esc(T.match_me) + "</em></button>";
-      }).join("");
+      }).join("") + (twin ? '<button type="button" class="match-no" data-no="1"><b>' + esc(T.match_no) + "</b></button>" : "");
       matchBox.hidden = !near.length;
     }
     matchBox.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.no) { people.forEach(function (p) { if (fold(p.name) === fold($("r-name").value)) notMe[p.name] = 1; }); matchName(); plan(300); return; }
       var p = person(b.dataset.n); if (p) adopt(p);
     });
+    /* this browser signed up before and the host has since changed how the name is written: pick the entry up under
+       its new name, so the card still says "you" and saving does not turn the name back */
+    var claimed = false;
+    function claim() {
+      if (claimed || MEM) return; claimed = true;
+      if (!name || person(name)) return;
+      var old = name;
+      function take(p) {
+        if (!p || p.arrive === undefined) return false;
+        try { var mine = JSON.parse(localStorage.getItem(RK) || "null"); if (mine && same(mine.name, old)) { mine.name = p.name; localStorage.setItem(RK, JSON.stringify(mine)); } } catch (e) {}
+        var typed = $("r-name").value.trim();
+        if (!typed || same(typed, old)) adopt(p, true); else { setName(p.name); loadCards(); }
+        return true;
+      }
+      rpc("bday_whoami", { p_token: TOKEN }).then(function (n) { if (!take(n ? person(n) : null)) throw 0; }).catch(function () {
+        var like = people.filter(function (p) { return p.arrive !== undefined && fold(p.name) === fold(old); });
+        if (like.length === 1) take(like[0]);
+      });
+    }
     knownPerson = function (v) { return people.filter(function (x) { return same(x.name, v); })[0] || null; };
     onIdentity = function (v) {
       if ($("r-name").value.trim()) return;
@@ -839,6 +870,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
       e.preventDefault();
       var d = collect();
       if (!d.name || !d.arrive || !d.mode) return;
+      if (twin) { msg.textContent = T.match_first; $("r-name").scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); return; }
       clearTimeout(autoTimer);
       $("r-send").disabled = true; msg.textContent = "";
       send(d).then(function () {
@@ -1246,6 +1278,7 @@ var T = {"lang": "zh-CN", "other_href": "en.html", "other_label": "English", "ti
           h.innerHTML = '<svg viewBox="0 0 64 60" width="64" height="60"><path d="M32 55C12 41 4 31 4 19.5 4 10.5 11 4 19.5 4 25 4 29.6 6.7 32 11c2.4-4.3 7-7 12.5-7C53 4 60 10.5 60 19.5 60 31 52 41 32 55z" fill="#E8394F" stroke="#1D1D1F" stroke-width="3.5" stroke-linejoin="round"/><path d="M16 15c2.5-3.5 6.5-4.5 9.5-3" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>';
           li.appendChild(h); gl.appendChild(li);
         });
+        claim();
         if (MEM) { if (current && dlg.open) redraw(current); return; }
         var plus = document.createElement("li"); plus.className = "g";
         plus.innerHTML = '<button type="button" class="g-open g-plus"><span class="g-ph"><span aria-hidden="true">+</span></span><b>' + esc(T.add_tile) + "</b></button>";

@@ -587,6 +587,15 @@ end $$;
 revoke all on function bday_flags_get(), bday_flag_set(text, text) from public;
 grant execute on function bday_flags_get(), bday_flag_set(text, text) to anon, authenticated;
 
+-- ---------- a browser that signed up finds its entry again after the host changed the name ----------
+-- The token is the private random id each browser keeps; it gives back only the name of its own entry.
+create or replace function bday_whoami(p_token text)
+returns text language sql security definer set search_path = public as $$
+  select name from bday_rsvp where char_length(coalesce(p_token, '')) >= 16 and token = p_token limit 1;
+$$;
+revoke all on function bday_whoami(text) from public;
+grant execute on function bday_whoami(text) to anon, authenticated;
+
 -- ==================== 最后一步：后台口令 ====================
 -- 把下面一行里的 口令 换成你自己的（至少 6 个字符），去掉开头的两个减号再跑：
 -- update bday_admin set pass = '口令' where id = 1;
