@@ -11,12 +11,13 @@
 <style>
 :root{
   /* A scrapbook page: textured white paper, die-cut stickers with white borders, a few pen doodles,
-     and paper notes taped on. Black ink on white paper only; all the colour comes from the stickers. */
+     and paper notes taped on. Black ink on white paper; the stickers bring the colour, and their orange
+     is borrowed for a few small marks. The sign-up sheet stays black and white. */
   --paper:#F6F5F1;
   --ink:#1D1D1F;
   --soft:#72726E;
   --blue:#1D1D1F;
-  --pop:#1D1D1F;
+  --pop:#EE7A1B;
   --wide:"Unbounded","Noto Sans SC","PingFang SC",sans-serif;
   --body:"Urbanist","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   --cond:"Oswald","Noto Sans SC",sans-serif;
@@ -103,7 +104,7 @@ h1.hd .out{color:#DCDCD8;-webkit-text-stroke:1.4px #8B8B86;text-transform:none}
 .chips input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
 .form .bigbtn{margin-top:26px;width:100%}
 .form .bigbtn:disabled{opacity:.5}
-.form-msg{min-height:1.4em;margin-top:10px;font-family:var(--hand);font-weight:700;font-size:22px;line-height:1.1;color:var(--pop);text-align:center}
+.form-msg{min-height:1.4em;margin-top:10px;font-family:var(--hand);font-weight:700;font-size:22px;line-height:1.1;color:var(--ink);text-align:center}
 .who-sheet{margin-top:44px}
 .who-sheet .sub{margin:0;height:40px;display:flex;align-items:flex-end;padding-bottom:7px;font-size:16px}
 .who{list-style:none;margin:0;padding:0}
@@ -385,7 +386,7 @@ var T = {"lang": "en", "other_href": "./", "other_label": "中文", "title": "Ti
   }
 
   /* confetti: one small burst on open */
-  var COLORS = ["#1D1D1F", "#FFFFFF", "#BEC6D8", "#1D1D1F", "#FFFFFF"];
+  var COLORS = ["#EE7A1B", "#1D1D1F", "#FFFFFF", "#FFD25A", "#EE7A1B"];
   var cv = $("confetti"), ctx = cv.getContext && cv.getContext("2d"), parts = [], running = false;
   function resize() { var r = window.devicePixelRatio || 1; cv.width = innerWidth * r; cv.height = innerHeight * r; }
   addEventListener("resize", resize); resize();
